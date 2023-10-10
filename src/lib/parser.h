@@ -1,16 +1,18 @@
+#include <string>
+
 struct Node {
-  string value;
+  std::string value;
   
   virtual int getValue();
-  virtual string toString();
+  virtual std::string toString();
 };
 
 struct NumNode : public Node {
   int getValue();
-  int toString();
+  std::string toString();
 };
 
 struct OpNode : public Node {
   int getValue();
-  int toString();
+  std::string toString();
 };
