@@ -3,7 +3,8 @@
 enum TokenType {
   NUMBER,
   OPERATOR,
-  PARENTHESIS  
+  PARENTHESIS,
+  END  
 };
 
 class Token {
