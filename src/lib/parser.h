@@ -13,3 +13,4 @@ struct NumNode : public Node {
 struct OpNode : public Node {
   int getValue();
   int toString();
+};
