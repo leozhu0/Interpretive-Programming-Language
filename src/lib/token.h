@@ -8,10 +8,11 @@ enum TokenType {
 };
 
 class Token {
-  int line;
-  int column;
-  std::string token;
-  TokenType type;
+  public:   
+    int line;
+    int column;
+    std::string token;
+    TokenType type;
 
   // add functions if need be for lexer
   
