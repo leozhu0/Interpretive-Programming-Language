@@ -14,7 +14,7 @@ struct NumNode : public Node {
 };
 
 struct OpNode : public Node {
-  std::vector<Node> children;
+  std::vector<Node*> children;
 
   double getValue();
   std::string toString();
