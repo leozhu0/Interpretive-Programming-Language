@@ -1,4 +1,6 @@
 #include <string>
+#include <vector>
+#include "token.h"
 
 struct Node {
   std::string value;
@@ -13,6 +15,8 @@ struct NumNode : public Node {
 };
 
 struct OpNode : public Node {
+  std::vector<Token> tokens;
+
   int getValue();
   std::string toString();
 };
