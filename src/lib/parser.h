@@ -1,5 +1,15 @@
 #include <string>
 #include <vector>
+#include "token.h"
+
+class Parser {
+  Node root;
+
+public:
+  void createTree(std::vector<Token> tokens);
+  std::string toString();
+  double calculate();
+}
 
 struct Node {
   std::string value;

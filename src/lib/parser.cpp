@@ -1,6 +1,12 @@
 #include "parser.h"
 #include "token.h"
 
+void Parser::createTree(std::vector<Token> tokens) {
+  for (Token& token : tokens) {
+    if (token)
+}
+
+
 int Node::getValue() {
   return 0;
 }
