@@ -5,7 +5,8 @@ enum TokenType {
   OPERATOR,
   PARENTHESIS,
   END,
-  NULLTYPE 
+  NULLTYPE,
+  SPACE,
 };
 
 class Token {
