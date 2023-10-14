@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-//#include "parser.h"
 #include "token.h"
 
 
@@ -21,17 +20,20 @@ class Lexer {
                 return PARENTHESIS;
             }
 
-             if(token == '+' || token == '-' || token == '*' || token == '/') {
+            if(token == '+' || token == '-' || token == '*' || token == '/') {
                 return OPERATOR;
+            }
+
+            if(isspace(token)){
+                return SPACE;
             }
 
             return NULLTYPE;
         }
 
-        void pushseq(std::string element, TokenType type, int line, int &column, std::vector<Token> &sequence){
+        void pushseq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
             if(element != ""){
-                sequence.push_back(Token{line+1,column, element, type});
-                column++;
+                sequence.push_back(Token{line,column, element, type});
             }
         }
 
@@ -40,64 +42,42 @@ class Lexer {
     public:
         Lexer(std::string filename){
             file.open(filename);
-
-          /*   if (!inputFile.is_open()) {
-                std::cerr << "Error opening the file: " << filename << std::endl;
-                return 1;
-            }*/
         }
 
         std::vector<Token> lexer(){
-            //std::string raw_input
-
             std::vector<Token> sequence;
-            
-            //bool decimalExists = false;
             std::string raw_input;
-            int line = 0;
+            int line = 1;
             while (std::getline(file, raw_input)) {
-                int column = 1;
+                int num_decimal = 0;
                 std::string element = "";
                 for(int i = 0; i < raw_input.length(); i++){
                     TokenType type = tokentype(raw_input[i]);
-                    if(type != NULLTYPE){
-                        if(raw_input[i] == '.' || ((int)raw_input[i] >= 48 && (int)raw_input[i] <= 57)) {
-                            element += raw_input[i];
-                            /*if(raw_input[i] == '.' && decimalExists == true){
-                                return NULL; //, "Invalid float, more than one decimals";
-                            }
 
+                    if(type == NULLTYPE || (num_decimal > 0 && raw_input[i] == '.')){
+                        std::cout << "Syntax error on line "<< line <<" column "<< i+1 <<"." << std::endl;
+                        exit(1);
+                    }
+
+                    if(type != SPACE){
+                        if(raw_input[i] == '.' || ((int)raw_input[i] >= 48 && (int)raw_input[i] <= 57)) {
                             if(raw_input[i] == '.'){
-                                decimalExists = true;
-                            }*/
-                            
+                                num_decimal++;
+                            }
+                            element += raw_input[i];
                         } else {
-                            /*if(element != ""){
-                                sequence.push_back(Token{line+1,column,element, NUMBER});
-                                column++;
-                            }*/
-                            pushseq(element, NUMBER, line, column, sequence);
-                            pushseq(raw_input.substr(i, 1), type, line, column, sequence);
-                            /*if(raw_input.substr(i, 1) != ""){
-                                sequence.push_back(Token{line+1,column,raw_input.substr(i, 1), type});
-                                column++;
-                            }*/
-                            
+                            pushseq(element, NUMBER, line, i+1 - element.size(), sequence);
+                            num_decimal = 0;
+                            pushseq(raw_input.substr(i, 1), type, line, i+1, sequence);
                             element = "";
                         }
                     } else {
-                        /*if(element != ""){
-                            sequence.push_back(Token{line+1,column,element, NUMBER});
-                            column++;
-                        }*/pushseq(element, NUMBER, line, column, sequence);
-                        
-
-                            element = "";
+                        pushseq(element, NUMBER, line, i+1 - element.size(), sequence);
+                        element = "";
                     }
 
                     if(i == raw_input.length()-1 && tokentype(element[0]) != NULLTYPE){ //ALWAYS NUMBER 
-                        sequence.push_back(Token{line+1,column,element, tokentype(element[0])});
-                        column++;
+                        sequence.push_back(Token{line,i+1,element, tokentype(element[0])});
                     }
 
                 }
@@ -107,7 +87,7 @@ class Lexer {
 
             file.close();
 
-            sequence.push_back(Token{line+2,1,"END", END});
+            sequence.push_back(Token{line,1,"END", END});
 
 
             return sequence;
@@ -119,13 +99,3 @@ class Lexer {
 
 
 
-//Syntax error on line 1 column 9.
-/*int main() {
-    Lexer lexer = Lexer("code.txt");
-    
-    std::vector<Token> seq= lexer.lexer();
-    for(int i = 0; i < seq.size(); i++){
-        std::cout << seq.at(i).line << " " << seq.at(i).column << " " << seq.at(i).token << " " <<  seq.at(i).type << std::endl;
-    }
-    return 0;
-}*/
