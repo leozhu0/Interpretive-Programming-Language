@@ -51,7 +51,7 @@ class Lexer {
             while (std::getline(file, raw_input)) {
                 int num_decimal = 0;
                 std::string element = "";
-                for(int i = 0; i < raw_input.length(); i++){
+                for(int i = 0; i < (int)raw_input.length(); i++){
                     TokenType type = tokentype(raw_input[i]);
 
                     if(type == NULLTYPE || (num_decimal > 0 && raw_input[i] == '.')){
@@ -76,7 +76,7 @@ class Lexer {
                         element = "";
                     }
 
-                    if(i == raw_input.length()-1 && tokentype(element[0]) != NULLTYPE){ //ALWAYS NUMBER 
+                    if(i == (int)(raw_input.length()-1) && tokentype(element[0]) != NULLTYPE){ //ALWAYS NUMBER 
                         sequence.push_back(Token{line,i+1,element, tokentype(element[0])});
                     }
 
