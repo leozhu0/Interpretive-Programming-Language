@@ -19,6 +19,7 @@ struct NumNode : public Node {
 struct OpNode : public Node {
   std::vector<Node*> children;
 
+  ~OpNode();
   double getValue();
   std::string toString();
 };
@@ -27,6 +28,7 @@ class Parser {
   Node* root;
 
 public:
+  ~Parser();
   void createTree(std::vector<Token> tokens);
   Node* createNode(std::vector<Token> tokens);
   std::string toString();

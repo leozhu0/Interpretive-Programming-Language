@@ -1,4 +1,4 @@
-#include "lib/parser.h"
+#include "lib/parser.cpp"
 #include "lib/lexer.cpp"
 #include <iostream>
 

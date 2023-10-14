@@ -2,7 +2,7 @@
 #include <iostream>
 
 Parser::~Parser() {
-  for()
+  delete root;
 }
 
 void Parser::createTree(std::vector<Token> tokens) {
@@ -88,6 +88,12 @@ double NumNode::getValue() {
     
 std::string NumNode::toString() {
   return value;
+}
+
+OpNode::~OpNode() {
+  for (Node* child : children) {
+    delete child;
+  }
 }
 
 double OpNode::getValue() {
