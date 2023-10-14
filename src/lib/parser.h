@@ -1,21 +1,13 @@
+#pragma once
+
 #include <string>
 #include <vector>
 #include "token.h"
 
-class Parser {
-  Node root;
-
-public:
-  void createTree(std::vector<Token> tokens);
-  Node* createNode(std::vector<Token> tokens);
-  std::string toString();
-  double calculate();
-}
-
 struct Node {
   std::string value;
   
-  virtual int getValue();
+  virtual double getValue();
   virtual std::string toString();
 };
 
@@ -30,3 +22,14 @@ struct OpNode : public Node {
   double getValue();
   std::string toString();
 };
+
+class Parser {
+  Node* root;
+
+public:
+  void createTree(std::vector<Token> tokens);
+  Node* createNode(std::vector<Token> tokens);
+  std::string toString();
+  double calculate();
+};
+

@@ -1,5 +1,9 @@
 #include "parser.h"
-#include "token.h"
+#include <iostream>
+
+Parser::~Parser() {
+  for()
+}
 
 void Parser::createTree(std::vector<Token> tokens) {
   for (Token& token : tokens) {
@@ -21,16 +25,18 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     NumNode* node = new NumNode;
     node->value = tokens[0].token;
 
-  } else (tokens[0].type == OPERATOR) {
+    return node;
+
+  } else if (tokens[0].type == OPERATOR) {
     OpNode* node = new OpNode;
     node->value = tokens[0].token;
 
     for (size_t i = 1; i < tokens.size(); ++ i) {
-      if (tokens[i].type == NUMBER) node->children.push_back({tokens[i]});
+      if (tokens[i].type == NUMBER) node->children.push_back(createNode({tokens[i]}));
 
       else if (tokens[i].token == "(") {
 	int parenNum = 1;
-	vector<Token> tempTokens;
+	std::vector<Token> tempTokens;
 	++i;
 
 	while (true) {
@@ -51,9 +57,13 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
     }
 
+    return node;
+
+  } else {
+    std::cout << "Syntax error on line " << tokens[0].line << " column " << tokens[0].column << ".";
+    exit(1);
   }
 
-  return node;
 }
 
 std::string Parser::toString() {
@@ -64,11 +74,11 @@ double Parser::calculate() {
   return root->getValue();
 }
 
-int virtual Node::getValue() {
+double Node::getValue() {
   return 0;
 }
 
-std::string virtual  Node::toString() {
+std::string  Node::toString() {
   return "If you see this, you messed up";
 }
 
@@ -115,7 +125,7 @@ double OpNode::getValue() {
     
     for (size_t i = 1; i < children.size(); i++) {
       if (children[i]->getValue() == 0) {
-        cout << "Runtime error: division by zero.";
+	std::cout << "Runtime error: division by zero.";
 	exit(3);
       }
 
@@ -125,12 +135,12 @@ double OpNode::getValue() {
     return result;
 
   } else {
-    exit();
+    exit(2);
   }
 }
 
 std::string OpNode::toString() {
-  string result = "(";
+  std::string result = "(";
   
   for (Node* child : children) {
     result += child->toString();
