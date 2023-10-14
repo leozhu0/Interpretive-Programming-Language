@@ -3,15 +3,72 @@
 
 void Parser::createTree(std::vector<Token> tokens) {
   for (Token& token : tokens) {
-    if (token)
+    if (token.type == PARENTHESIS) continue;
+
+    if (token.type == OPERATOR || token.type == NUMBER) {
+      root = createNode(tokens);
+      return;
+    }
+
+    else {
+      return;
+    }
+  }
 }
 
+Node* Parser::createNode(std::vector<Token> tokens) {
+  if (tokens[0].type == NUMBER) {
+    NumNode* node = new NumNode;
+    node->value = tokens[0].token;
 
-int Node::getValue() {
+  } else (tokens[0].type == OPERATOR) {
+    OpNode* node = new OpNode;
+    node->value = tokens[0].token;
+
+    for (size_t i = 1; i < tokens.size(); ++ i) {
+      if (tokens[i].type == NUMBER) node->children.push_back({tokens[i]});
+
+      else if (tokens[i].token == "(") {
+	int parenNum = 1;
+	vector<Token> tempTokens;
+	++i;
+
+	while (true) {
+	  if (tokens[i].token == "(") parenNum++;
+	  else if (tokens[i].token == ")") parenNum--;
+
+	  if (parenNum == 0) break;
+
+	  else {
+	    tempTokens.push_back(tokens[i]);
+	    ++i;
+	  }
+	}
+
+	++i;
+	node->children.push_back(createNode(tempTokens));
+      }
+
+    }
+
+  }
+
+  return node;
+}
+
+std::string Parser::toString() {
+  return root->toString();
+}
+
+double Parser::calculate() {
+  return root->getValue();
+}
+
+int virtual Node::getValue() {
   return 0;
 }
 
-std::string Node::toString() {
+std::string virtual  Node::toString() {
   return "If you see this, you messed up";
 }
 
