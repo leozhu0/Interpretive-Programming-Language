@@ -20,6 +20,9 @@ Parser::Parser(std::vector<Token> tokens) {
       return;
     }
   }
+
+  std::cout << "No valid tokens" << std::endl;
+  exit(2);
 }
 
 Node* Parser::createNode(std::vector<Token> tokens) {
