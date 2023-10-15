@@ -1,5 +1,4 @@
 #include <vector>
-#include "token.h"
 #include <fstream>
 
 class Lexer {
