@@ -1,20 +1,17 @@
 #include <vector>
+#include <iostream>
 #include <fstream>
 #include "token.h"
 
 class Lexer {
     private:
-        std::ifstream file;
-
+        std::string input;
         TokenType tokentype(char token);
-
         void pushseq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence);
 
     public:
-        Lexer(std::string filename);
-
+        Lexer();
         std::vector<Token> lexer();
-
 };
 
 

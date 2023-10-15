@@ -16,7 +16,5 @@ class Token {
     int column;
     std::string token;
     TokenType type;
-
-  // add functions if need be for lexer
   
 };

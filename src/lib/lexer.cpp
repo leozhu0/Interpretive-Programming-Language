@@ -1,6 +1,11 @@
 #include <string>
+#include <sstream>
 #include <iostream>
 #include "lexer.h"
+
+Lexer::Lexer(){
+    std::cin>>input;
+}
 
 
 TokenType Lexer::tokentype(char token){
@@ -30,17 +35,12 @@ void Lexer::pushseq(std::string element, TokenType type, int line, int column, s
     }
 }
 
-    
-
-Lexer::Lexer(std::string filename){
-    file.open(filename);
-}
-
 std::vector<Token> Lexer::lexer(){
     std::vector<Token> sequence;
     std::string raw_input;
     int line = 1;
-    while (std::getline(file, raw_input)) {
+    std::istringstream alllines(input);
+    while (std::getline(alllines, raw_input)) {
         int num_decimal = 0;
         std::string element = "";
         for(int i = 0; i < (int)raw_input.length(); i++){
@@ -77,7 +77,6 @@ std::vector<Token> Lexer::lexer(){
         line++;
     }
 
-    file.close();
 
     sequence.push_back(Token{line,1,"END", END});
 

@@ -5,7 +5,7 @@
 #include "lib/lexer.h"
 
 int main() {
-    Lexer lexer = Lexer("code.txt");
+    Lexer lexer = Lexer();
     
     std::vector<Token> seq= lexer.lexer();
     for(int i = 0; i < (int)(seq.size()); i++){
