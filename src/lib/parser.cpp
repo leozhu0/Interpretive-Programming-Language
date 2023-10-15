@@ -8,7 +8,7 @@ Parser::~Parser() {
   delete root;
 }
 
-void Parser::createTree(std::vector<Token> tokens) {
+Parser::Parser(std::vector<Token> tokens) {
   for (Token& token : tokens) {
     if (token.type == PARENTHESIS) continue;
 

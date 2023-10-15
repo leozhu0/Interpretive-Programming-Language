@@ -6,8 +6,7 @@
 int main() {
   Lexer lexer = Lexer("code.txt");
 
-  Parser parser;
-  parser.createTree(lexer.lexer());
+  Parser parser = Parser(lexer.lexer());
 
   std::cout << parser.toString() << std::endl << parser.calculate();
 	  

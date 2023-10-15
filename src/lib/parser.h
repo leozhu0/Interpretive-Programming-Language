@@ -28,7 +28,8 @@ class Parser {
 
 public:
   ~Parser();
-  void createTree(std::vector<Token> tokens);
+  Parser(std::vector<Token> tokens);
+
   Node* createNode(std::vector<Token> tokens);
   std::string toString();
   double calculate();
