@@ -9,15 +9,14 @@ Parser::~Parser() {
 }
 
 Parser::Parser(std::vector<Token> tokens) {
-  for (Token& token : tokens) {
-    if (token.type == PARENTHESIS) continue;
+  if (tokens.size() == 0) {
+    cout << "No tokens" << endl;
+    exit(2);
+  }
 
+  for (Token& token : tokens) {
     if (token.type == OPERATOR || token.type == NUMBER) {
       root = createNode(tokens);
-      return;
-    }
-
-    else {
       return;
     }
   }
