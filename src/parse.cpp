@@ -1,3 +1,4 @@
+#include "lib/token.h"
 #include "lib/parser.cpp"
 #include "lib/lexer.cpp"
 #include <iostream>
