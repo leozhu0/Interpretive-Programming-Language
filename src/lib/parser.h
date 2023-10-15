@@ -7,6 +7,7 @@
 struct Node {
   std::string value;
   
+  virtual ~Node();
   virtual double getValue();
   virtual std::string toString();
 };

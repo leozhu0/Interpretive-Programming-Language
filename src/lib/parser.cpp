@@ -1,6 +1,9 @@
 #include "parser.h"
 #include <iostream>
 
+Node::~Node() {
+}
+
 Parser::~Parser() {
   delete root;
 }
