@@ -10,7 +10,7 @@ Parser::~Parser() {
 
 Parser::Parser(std::vector<Token> tokens) {
   if (tokens.size() == 0) {
-    cout << "No tokens" << endl;
+    std::cout << "No tokens" << endl;
     exit(2);
   }
 
