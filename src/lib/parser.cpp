@@ -49,7 +49,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     OpNode* node = new OpNode;
     node->value = tokens[start].token;
 
-    for (size_t i = start + 1; i < tokens.size(); ++ i) {
+    for (size_t i = start + 1; i < tokens.size(); ++i) {
       if (tokens[i].type == NUMBER) node->children.push_back(createNode({tokens[i]}));
 
       else if (tokens[i].token == "(") {
@@ -69,7 +69,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 	  }
 	}
 
-	++i;
+	//++i;
 	node->children.push_back(createNode(tempTokens));
       }
 
