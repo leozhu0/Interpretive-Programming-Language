@@ -35,6 +35,8 @@ Parser::Parser(std::vector<Token> tokens) {
 Node* Parser::createNode(std::vector<Token> tokens) {
   size_t start = 0;
 
+  if (tokens[start].token != "(") exit(2);
+
   while (tokens[start].token == "(") {
     ++start;
   } 
@@ -55,23 +57,26 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     node->value = tokens[start].token;
 
     for (size_t i = start + 1; i < tokens.size(); ++i) {
-      if (tokens[i].type == NUMBER) node->children.push_back(createNode({tokens[i]}));
+      if (tokens[i].type == NUMBER) {
+	NumNode* tempNode = new NumNode;
+	node->value = tokens[i].token;
+        node->children.push_back(tempNode);
+      }
 
       else if (tokens[i].token == "(") {
 	int parenNum = 1;
 	std::vector<Token> tempTokens;
+	tempTokens.push_back(tokens[i]);
 	++i;
 
 	while (true) {
 	  if (tokens[i].token == "(") ++parenNum;
 	  else if (tokens[i].token == ")") --parenNum;
 
-	  if (parenNum == 0) break;
+          tempTokens.push_back(tokens[i]);
 
-	  else {
-	    tempTokens.push_back(tokens[i]);
-	    ++i;
-	  }
+	  if (parenNum == 0) break;
+	  else ++i;
 	}
 
 	node->children.push_back(createNode(tempTokens));
