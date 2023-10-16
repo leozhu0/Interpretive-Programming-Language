@@ -103,7 +103,7 @@ std::vector<Token> Lexer::lexer(){
     }
 
     if(extra_line){
-        sequence.push_back(Token{line,1,"END", END});
+        sequence.push_back(Token{line-1,1,"END", END});
     }else {
         sequence.push_back(Token{line-1,sequence.back().column + 1,"END", END});
     }
