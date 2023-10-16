@@ -4,8 +4,8 @@
 #include "lexer.h"
 
 Lexer::Lexer(){
-    //std::cin>>input;
-    input = "(+(-2 4.444 )\n32(* 5 13.45)(";
+    std::cin>>input;
+    //input = "(+(-2 4.444 )\n32(* 5 13.45)(";
 }
 
 
