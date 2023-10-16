@@ -37,7 +37,7 @@ void Lexer::pushseq(std::string element, TokenType type, int line, int column, s
             exit(1);
         }
         if(element.back() == '.'){
-            std::cout << "Syntax error on line "<< line <<" column "<< column + 1 <<"." << std::endl;
+            std::cout << "Syntax error on line "<< line <<" column "<< column + element.size() <<"." << std::endl;
             exit(1);
         }
     }
@@ -50,8 +50,15 @@ std::vector<Token> Lexer::lexer(){
     std::vector<Token> sequence;
     std::string raw_input;
     int line = 1;
+    bool extra_line = false;
     //std::istringstream alllines(input);
     while (std::getline(std::cin, raw_input)) {
+        if(raw_input == ""){
+            extra_line = true;
+        }else{
+            extra_line= false;
+        }
+
         int num_decimal = 0;
         std::string element = "";
         for(int i = 0; i < (int)raw_input.length(); i++){
@@ -91,8 +98,12 @@ std::vector<Token> Lexer::lexer(){
         line++;
     }
 
-
-    sequence.push_back(Token{line-1,sequence.back().column + 1,"END", END});
+    if(extra_line){
+        sequence.push_back(Token{line,1,"END", END});
+    }else {
+        sequence.push_back(Token{line-1,sequence.back().column + 1,"END", END});
+    }
+    
 
 
     return sequence;
