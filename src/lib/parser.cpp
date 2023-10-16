@@ -32,17 +32,23 @@ Parser::Parser(std::vector<Token> tokens) {
 }
 
 Node* Parser::createNode(std::vector<Token> tokens) {
-  if (tokens[0].type == NUMBER) {
+  size_t start = 0;
+
+  while (tokens[start].token == "(") {
+    ++start;
+  } 
+
+  if (tokens[start].type == NUMBER) {
     NumNode* node = new NumNode;
-    node->value = tokens[0].token;
+    node->value = tokens[start].token;
 
     return node;
 
-  } else if (tokens[0].type == OPERATOR) {
+  } else if (tokens[start].type == OPERATOR) {
     OpNode* node = new OpNode;
-    node->value = tokens[0].token;
+    node->value = tokens[start].token;
 
-    for (size_t i = 1; i < tokens.size(); ++ i) {
+    for (size_t i = start + 1; i < tokens.size(); ++ i) {
       if (tokens[i].type == NUMBER) node->children.push_back(createNode({tokens[i]}));
 
       else if (tokens[i].token == "(") {
