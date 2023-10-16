@@ -50,14 +50,14 @@ std::vector<Token> Lexer::lexer(){
     std::vector<Token> sequence;
     std::string raw_input;
     int line = 1;
-    bool extra_line = false;
+   // bool extra_line = false;
     //std::istringstream alllines(input);
     while (std::getline(std::cin, raw_input)) {
-        if(raw_input == ""){
-            extra_line = true;
-        }else{
-            extra_line= false;
-        }
+        // if(raw_input == ""){
+        //     extra_line = true;
+        // }else{
+        //     extra_line= false;
+        // }
 
         int num_decimal = 0;
         std::string element = "";
