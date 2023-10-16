@@ -87,7 +87,10 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 	node->children.push_back(createNode(tempTokens));
       }
 
-      else if (i == start + 1 && tokens[i].token == ")") exit(2);
+      else {
+        std::cout << "Unexpected token at line " << tokens[i].line << " column" << tokens[i].column << ": " << tokens[i].token << std::endl;
+	exit(2);
+      }
     }
 
     return node;
