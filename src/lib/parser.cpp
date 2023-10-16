@@ -9,12 +9,12 @@ Parser::~Parser() {
 }
 
 Parser::Parser(std::vector<Token> tokens) {
-  if (tokens.size() > 25) {
-    for (Token& token : tokens) {
-      std::cout << token.token << std::endl;
-    }
-    std::cout << "_______________" << std::endl;
-  }
+  //if (tokens.size() > 25) {
+  //  for (Token& token : tokens) {
+  //    std::cout << token.token << std::endl;
+  //  }
+  //  std::cout << "_______________" << std::endl;
+  //}
 
   if (tokens.size() == 0) {
     std::cout << "No tokens" << std::endl;
@@ -28,7 +28,7 @@ Parser::Parser(std::vector<Token> tokens) {
     }
   }
 
-  std::cout << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
+  std::cout << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token << std::endl;
   exit(2);
 }
 
@@ -69,10 +69,10 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 	  }
 	}
 
-	//++i;
 	node->children.push_back(createNode(tempTokens));
       }
 
+      else if (i == start + 1 && tokens[i].token == ")") exit(2);
     }
 
     return node;
