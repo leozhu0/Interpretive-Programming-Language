@@ -106,6 +106,10 @@ std::string  Node::toString() {
 }
 
 double NumNode::getValue() {
+  return std::stod(vaule);
+}
+
+std::string NumNode::toString() {
   std::string result = value;
   bool hasDecimal = false;
 
@@ -122,11 +126,7 @@ double NumNode::getValue() {
 
   if (result.back() == '.') result.pop_back();
       	    
-  return std::stod(result); 
-}
-    
-std::string NumNode::toString() {
-  return value;
+  return result; 
 }
 
 OpNode::~OpNode() {
