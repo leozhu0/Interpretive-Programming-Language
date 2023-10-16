@@ -5,6 +5,7 @@
 
 Lexer::Lexer(){
     std::cin>>input;
+    //input = "()+- 5.6 6.9";
 }
 
 
@@ -66,6 +67,7 @@ std::vector<Token> Lexer::lexer(){
             } else {
                 pushseq(element, NUMBER, line, i+1 - element.size(), sequence);
                 element = "";
+                num_decimal = 0;
             }
 
             if(i == (int)(raw_input.length()-1) && tokentype(element[0]) != NULLTYPE){ //ALWAYS NUMBER 

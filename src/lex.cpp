@@ -9,7 +9,7 @@ int main() {
     
     std::vector<Token> seq= lexer.lexer();
     for(int i = 0; i < (int)(seq.size()); i++){
-        std::cout << seq.at(i).line << " " << seq.at(i).column << " " << seq.at(i).token << std::endl;
+        std::cout << "   " << seq.at(i).line << "    " << seq.at(i).column << "  " << seq.at(i).token << std::endl;
     }
     return 0;
 }
