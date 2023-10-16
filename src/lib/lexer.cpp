@@ -98,11 +98,11 @@ std::vector<Token> Lexer::lexer(){
         line++;
     }
 
-    if(extra_line){
-        sequence.push_back(Token{line,1,"END", END});
-    }else {
+    //if(extra_line){
+    //    sequence.push_back(Token{line,1,"END", END});
+    //}else {
         sequence.push_back(Token{line-1,sequence.back().column + 1,"END", END});
-    }
+    //}
     
 
 
