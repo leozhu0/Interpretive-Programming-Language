@@ -4,8 +4,8 @@
 #include "lexer.h"
 
 Lexer::Lexer(){
-    std::cin>>input;
-    //input = "()+- 5.6 6.9";
+    //std::cin>>input;
+    input = "(+(-2 4.444 )\n32(* 5 13.45)(";
 }
 
 
@@ -80,7 +80,7 @@ std::vector<Token> Lexer::lexer(){
     }
 
 
-    sequence.push_back(Token{line,1,"END", END});
+    sequence.push_back(Token{line,/*sequence.back().column + */1,"END", END});
 
 
     return sequence;

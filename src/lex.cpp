@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <fstream>
 #include "lib/lexer.h"
@@ -9,7 +10,7 @@ int main() {
     
     std::vector<Token> seq= lexer.lexer();
     for(int i = 0; i < (int)(seq.size()); i++){
-        std::cout << "   " << seq.at(i).line << "    " << seq.at(i).column << "  " << seq.at(i).token << std::endl;
+        std::cout << std::right << std::setw(4) << seq.at(i).line << std::right << std::setw(5) << seq.at(i).column << "  " << seq.at(i).token << std::endl;
     }
     return 0;
 }
