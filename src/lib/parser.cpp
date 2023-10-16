@@ -40,7 +40,10 @@ Node* Parser::createNode(std::vector<Token> tokens) {
   } 
 
   if (tokens[start].type == NUMBER) {
-    if (tokens.size() >= 3) exit(2);
+    if (tokens.size() >= 3) {
+      std::cout << "Unxpected token at line " << tokens[1].line << " column " << tokens[0].column << ": " << tokens[1].token << std::endl;
+      exit(2);
+    }
 
     NumNode* node = new NumNode;
     node->value = tokens[start].token;
