@@ -106,6 +106,11 @@ std::string  Node::toString() {
 }
 
 double NumNode::getValue() {
+	std:: result = value
+
+  for (char digit : value) {
+    if (digit == '.') {
+      	    
   return std::stod(value); 
 }
     
