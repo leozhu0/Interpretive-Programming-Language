@@ -9,11 +9,11 @@ Parser::~Parser() {
 }
 
 Parser::Parser(std::vector<Token> tokens) {
-  if (tokens.size() != 2) {
-    for (Token& token : tokens) {
-      std::cout << token.token << std::endl;
-    }
-  }
+  //if (tokens.size() != 2) {
+  //  for (Token& token : tokens) {
+  //    std::cout << token.token << std::endl;
+  //  }
+  //}
 
   if (tokens.size() == 0) {
     std::cout << "No tokens" << std::endl;
