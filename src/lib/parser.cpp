@@ -106,12 +106,19 @@ std::string  Node::toString() {
 }
 
 double NumNode::getValue() {
-	std:: result = value
+  std::string result = value;
 
-  for (char digit : value) {
+  for (char digit : result) {
     if (digit == '.') {
+      while (result.back() == '0') {
+        result.pop_back();
+      }
+
+      if (result.back() == '.') result.pop_back();
+    }
+  }
       	    
-  return std::stod(value); 
+  return std::stod(result); 
 }
     
 std::string NumNode::toString() {
