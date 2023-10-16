@@ -9,7 +9,7 @@ Parser::~Parser() {
 }
 
 Parser::Parser(std::vector<Token> tokens) {
-  for (token& token : tokens) {
+  for (Token& token : tokens) {
     std::cout << token.token << std::endl;
   }
 
