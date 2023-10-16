@@ -43,7 +43,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
   if (tokens[start].type == NUMBER) {
     if (tokens.size() > 2) {
-      std::cout << "Unxpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token << std::endl;
+      std::cout << "Unxpected token at line " << tokens[1].line << " column " << tokens[1].column << ": " << tokens[1].token << std::endl;
       exit(2);
     }
 
