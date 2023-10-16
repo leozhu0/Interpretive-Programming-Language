@@ -107,16 +107,20 @@ std::string  Node::toString() {
 
 double NumNode::getValue() {
   std::string result = value;
+  bool hasDecimal = false;
 
   for (char digit : result) {
     if (digit == '.') {
-      while (result.back() == '0') {
-        result.pop_back();
-      }
-
-      if (result.back() == '.') result.pop_back();
+      hasDecimal = true;
+      break;
     }
   }
+
+  while (hasDecimal == true && result.back() == '0') {
+    result.pop_back();
+  }
+
+  if (result.back() == '.') result.pop_back();
       	    
   return std::stod(result); 
 }
