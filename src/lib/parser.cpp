@@ -106,7 +106,7 @@ std::string  Node::toString() {
 }
 
 double NumNode::getValue() {
-  return std::stod(vaule);
+  return std::stod(value);
 }
 
 std::string NumNode::toString() {
