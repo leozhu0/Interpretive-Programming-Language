@@ -83,7 +83,7 @@ std::vector<Token> Lexer::lexer(){
 
             if(i == (int)(raw_input.length()-1) && tokentype(element[0]) != NULLTYPE){ //ALWAYS NUMBER 
                 //sequence.push_back(Token{line,i+1,element, });
-                pushseq(element, tokentype(element[0]), line, i+1 - element.size(), sequence);
+                pushseq(element, tokentype(element[0]), line, i+2 - element.size(), sequence);
             }
 
         }
@@ -92,7 +92,7 @@ std::vector<Token> Lexer::lexer(){
     }
 
 
-    sequence.push_back(Token{line,sequence.back().column + 1,"END", END});
+    sequence.push_back(Token{line-1,sequence.back().column + 1,"END", END});
 
 
     return sequence;
