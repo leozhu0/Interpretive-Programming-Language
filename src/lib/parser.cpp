@@ -13,6 +13,7 @@ Parser::Parser(std::vector<Token> tokens) {
     for (Token& token : tokens) {
       std::cout << token.token << std::endl;
     }
+    std::cout << "_______________" << std::endl;
   }
 
   if (tokens.size() == 0) {
@@ -57,8 +58,8 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 	++i;
 
 	while (true) {
-	  if (tokens[i].token == "(") parenNum++;
-	  else if (tokens[i].token == ")") parenNum--;
+	  if (tokens[i].token == "(") ++parenNum;
+	  else if (tokens[i].token == ")") --parenNum;
 
 	  if (parenNum == 0) break;
 
