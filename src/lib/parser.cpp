@@ -35,8 +35,6 @@ Parser::Parser(std::vector<Token> tokens) {
 Node* Parser::createNode(std::vector<Token> tokens) {
   size_t start = 0;
 
-  //if (tokens[start].token != "(") exit(2);
-
   while (tokens[start].token == "(") {
     ++start;
   } 
