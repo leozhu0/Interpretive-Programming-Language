@@ -65,7 +65,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     return node;
 
   } else {
-    std::cout << "Syntax error on line " << tokens[0].line << " column " << tokens[0].column << ".";
+    std::cout << "Syntax error on line " << tokens[0].line << " column " << tokens[0].column << "." << "parser";
     exit(1);
   }
 
