@@ -53,7 +53,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     return node;
 
   } else if (tokens[start].type == OPERATOR) {
-    if (tokens[start - 1].token != "(") exit(2);
+    //if (tokens[start - 1].token != "(") exit(2);
 
     OpNode* node = new OpNode;
     node->value = tokens[start].token;
