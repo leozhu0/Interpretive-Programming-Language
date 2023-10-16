@@ -32,8 +32,12 @@ TokenType Lexer::tokentype(char token){
 
 void Lexer::pushseq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
     if(type==NUMBER){
-        if(element[0]=='.' || element.back() == '.'){
+        if(element[0]=='.'){
             std::cout << "Syntax error on line "<< line <<" column "<< column <<"." << std::endl;
+            exit(1);
+        }
+        if(element.back() == '.'){
+            std::cout << "Syntax error on line "<< line <<" column "<< column + 1 <<"." << std::endl;
             exit(1);
         }
     }
@@ -70,6 +74,7 @@ std::vector<Token> Lexer::lexer(){
                     pushseq(raw_input.substr(i, 1), type, line, i+1, sequence);
                     element = "";
                 }
+
             } else {
                 pushseq(element, NUMBER, line, i+1 - element.size(), sequence);
                 element = "";
@@ -87,7 +92,7 @@ std::vector<Token> Lexer::lexer(){
     }
 
 
-    sequence.push_back(Token{line,/*sequence.back().column + */1,"END", END});
+    sequence.push_back(Token{line,sequence.back().column + 1,"END", END});
 
 
     return sequence;
