@@ -72,11 +72,11 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 }
 
 std::string Parser::toString() {
-  return (root->toString() + "\n");
+  return root->toString();
 }
 
 double Parser::calculate() {
-  return (root->getValue() + "\n");
+  return root->getValue();
 }
 
 double Node::getValue() {
