@@ -28,7 +28,7 @@ Parser::Parser(std::vector<Token> tokens) {
     }
   }
 
-  std::cout << "Syntax error on line " << tokens[0].line << " column " << tokens[0].column << ".";
+  std::cout << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
   exit(2);
 }
 
