@@ -9,6 +9,10 @@ Parser::~Parser() {
 }
 
 Parser::Parser(std::vector<Token> tokens) {
+  for (token& token : tokens) {
+    std::cout << token.token << std::endl;
+  }
+
   if (tokens.size() == 0) {
     std::cout << "No tokens" << std::endl;
     exit(2);
@@ -72,7 +76,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 }
 
 std::string Parser::toString() {
-  return (root->toString() + "\n");
+  return root->toString();
 }
 
 double Parser::calculate() {
