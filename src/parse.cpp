@@ -4,7 +4,7 @@
 #include <iostream>
 
 int main() {
-  Lexer lexer = Lexer("code.txt");
+  Lexer lexer = Lexer();
 
   Parser parser = Parser(lexer.lexer());
 
