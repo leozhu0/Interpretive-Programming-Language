@@ -5,7 +5,7 @@
 
 Lexer::Lexer(){
     std::cin>>input;
-    //input = "(+(-2 4.444 )\n32(* 5 13.45)(";
+    //input = "(+(-2 4.444  )\n \n \n32(* 5 13.45)( \n \n \n .";
 }
 
 
@@ -31,6 +31,12 @@ TokenType Lexer::tokentype(char token){
 }
 
 void Lexer::pushseq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
+    if(type==NUMBER){
+        if(element[0]=='.' || element.back() == '.'){
+            std::cout << "Syntax error on line "<< line <<" column "<< column <<"." << std::endl;
+            exit(1);
+        }
+    }
     if(element != ""){
         sequence.push_back(Token{line,column, element, type});
     }
@@ -71,7 +77,8 @@ std::vector<Token> Lexer::lexer(){
             }
 
             if(i == (int)(raw_input.length()-1) && tokentype(element[0]) != NULLTYPE){ //ALWAYS NUMBER 
-                sequence.push_back(Token{line,i+1,element, tokentype(element[0])});
+                //sequence.push_back(Token{line,i+1,element, });
+                pushseq(element, tokentype(element[0]), line, i+1, sequence);
             }
 
         }
