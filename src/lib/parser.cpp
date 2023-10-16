@@ -61,7 +61,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     for (size_t i = start + 1; i < tokens.size(); ++i) {
       if (tokens[i].type == NUMBER) {
 	NumNode* tempNode = new NumNode;
-	node->value = tokens[i].token;
+	tempNode->value = tokens[i].token;
         node->children.push_back(tempNode);
       }
 
