@@ -94,9 +94,9 @@ std::vector<Token> Lexer::lexer(){
     }
 
     if(sequence.back().type == PARENTHESIS){
-        sequence.push_back(Token{line-1,1,"END", END});
-    } else {
         sequence.push_back(Token{line-1,sequence.back().column + 1,"END", END});
+    } else {
+        sequence.push_back(Token{line-1,1,"END", END});
     }
     
 
