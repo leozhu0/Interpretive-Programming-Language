@@ -10,10 +10,10 @@ Parser::~Parser() {
 
 Parser::Parser(std::vector<Token> tokens) {
   //if (tokens.size() > 25) {
-  //  for (Token& token : tokens) {
-  //    std::cout << token.token << std::endl;
-  //  }
-  //  std::cout << "_______________" << std::endl;
+    for (Token& token : tokens) {
+      std::cout << token.token << std::endl;
+    }
+    std::cout << "_______________" << std::endl;
   //}
 
   if (tokens.size() == 0) {
@@ -149,7 +149,7 @@ double OpNode::getValue() {
     
     for (size_t i = 1; i < children.size(); i++) {
       if (children[i]->getValue() == 0) {
-	std::cout << "Runtime error: division by zero.";
+	std::cout << "Runtime error: division by zero." << std::endl;
 	exit(3);
       }
 
