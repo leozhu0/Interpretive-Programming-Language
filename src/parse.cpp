@@ -9,6 +9,7 @@ int main() {
   Parser parser = Parser(lexer.lexer());
 
   std::cout << parser.toString() << std::endl << parser.calculate();
+  std::cout << "\n";
 	  
   return 0;
 }
