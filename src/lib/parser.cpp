@@ -43,7 +43,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
   if (tokens[start].type == NUMBER) {
     if (tokens.size() > 2) {
-      std::cout << "Unxpected token at line " << tokens[1].line << " column " << tokens[1].column << ": " << tokens[1].token << std::endl;
+      std::cout << "Unexpected token at line " << tokens[1].line << " column " << tokens[1].column << ": " << tokens[1].token << std::endl;
       exit(2);
     }
 
@@ -54,7 +54,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
   } else if (tokens[start].type == OPERATOR) {
     if (start == 0 || tokens[start - 1].token != "(") {
-      std::cout << "Unxpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
+      std::cout << "Unexpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
       exit(2);
     }
 
