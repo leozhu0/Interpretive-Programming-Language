@@ -50,18 +50,9 @@ std::vector<Token> Lexer::lexer(){
     std::vector<Token> sequence;
     std::string raw_input;
     int line = 1;
-    bool extra_line = false;
     //std::istringstream alllines(input);
-    while (true) {
-        std::getline(std::cin, raw_input);
-
-        if(raw_input == "" && extra_line){
-            break;
-        } else if (raw_input == ""){
-             extra_line = true;
-        } else {
-            extra_line = false;
-        }
+    while (std::getline(std::cin, raw_input)) {
+        
 
         int num_decimal = 0;
         std::string element = "";
@@ -102,9 +93,9 @@ std::vector<Token> Lexer::lexer(){
         line++;
     }
 
-    if(extra_line){
+    if(sequence.back().type == PARENTHESIS){
         sequence.push_back(Token{line-1,1,"END", END});
-    }else {
+    } else {
         sequence.push_back(Token{line-1,sequence.back().column + 1,"END", END});
     }
     
