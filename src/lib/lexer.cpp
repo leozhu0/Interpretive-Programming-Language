@@ -3,10 +3,10 @@
 #include <iostream>
 #include "lexer.h"
 
-Lexer::Lexer(){
-    std::cin>>input;
-    //input = "(+(-2 4.444  )\n \n \n32(* 5 13.45)( \n \n \n .";
-}
+//Lexer::Lexer(){
+    //std::cin>>input;
+    //input = "(     + 9";
+//}
 
 
 TokenType Lexer::tokentype(char token){
@@ -46,8 +46,8 @@ std::vector<Token> Lexer::lexer(){
     std::vector<Token> sequence;
     std::string raw_input;
     int line = 1;
-    std::istringstream alllines(input);
-    while (std::getline(alllines, raw_input)) {
+    //std::istringstream alllines(input);
+    while (std::getline(std::cin, raw_input)) {
         int num_decimal = 0;
         std::string element = "";
         for(int i = 0; i < (int)raw_input.length(); i++){
