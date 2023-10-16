@@ -35,7 +35,7 @@ Parser::Parser(std::vector<Token> tokens) {
 Node* Parser::createNode(std::vector<Token> tokens) {
   size_t start = 0;
 
-  if (tokens[start].token != "(") exit(2);
+  //if (tokens[start].token != "(") exit(2);
 
   while (tokens[start].token == "(") {
     ++start;
@@ -53,6 +53,8 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     return node;
 
   } else if (tokens[start].type == OPERATOR) {
+    if (tokens[start - 1].token != "(") exit(2);
+
     OpNode* node = new OpNode;
     node->value = tokens[start].token;
 
