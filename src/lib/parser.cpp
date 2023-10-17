@@ -9,12 +9,12 @@ Parser::~Parser() {
 }
 
 Parser::Parser(std::vector<Token> tokens) {
-  if (tokens.size() > 5) {
-    for (Token& token : tokens) {
-      std::cout << token.token << std::endl;
-    }
-    std::cout << "_______________" << std::endl;
-  }
+  //if (tokens.size() > 5) {
+  //  for (Token& token : tokens) {
+  //    std::cout << token.token << std::endl;
+  //  }
+  //  std::cout << "_______________" << std::endl;
+  //}
 
   if (tokens.size() == 0) {
     std::cout << "No tokens" << std::endl;
@@ -66,7 +66,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     for (size_t i = start + 1; i < tokens.size(); ++i) {
       if (allowedParenthesis == 0 && i != tokens.size() - 1) {
         std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-	std::cout << "1";
+	//std::cout << "1";
 	exit(2);
       }
 
@@ -95,7 +95,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
 	  if (i == tokens.size()) {  
             std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
-	    std::cout << "2";
+	    //std::cout << "2";
 	    exit(2);
 	  }
 	}
@@ -112,7 +112,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
     if (allowedParenthesis != 0) {
       std::cout << "Unexpected token at line " << tokens[tokens.size() - 1].line << " column " << tokens[tokens.size() - 2].column << ": " << tokens[tokens.size() - 2].token << std::endl;
-      std::cout << "3";
+      //std::cout << "3";
       exit(2);
     }
 
