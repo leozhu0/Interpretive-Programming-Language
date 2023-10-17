@@ -9,12 +9,12 @@ Parser::~Parser() {
 }
 
 Parser::Parser(std::vector<Token> tokens) {
-  //if (tokens.size() > 5) {
-  //  for (Token& token : tokens) {
-  //    std::cout << token.token << std::endl;
-  //  }
-  //  std::cout << "_______________" << std::endl;
-  //}
+  if (tokens.size() == 2) {
+    for (Token& token : tokens) {
+      std::cout << token.token << std::endl;
+    }
+    std::cout << "_______________" << std::endl;
+  }
 
   if (tokens.size() == 0) {
     std::cout << "No tokens" << std::endl;
@@ -120,7 +120,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
   } else {
     std::cout << "Syntax error on line " << tokens[0].line << " column " << tokens[0].column << ".";
-    exit(1);
+    exit(2);
   }
 
 }
