@@ -40,10 +40,6 @@ Parser::Parser(std::vector<Token> tokens) {
 Node* Parser::createNode(std::vector<Token> tokens) {
   size_t start = 0;
 
-  while (tokens[start].token == "(") {
-    ++start;
-  } 
-
   if (tokens[start].type == NUMBER) {
     if (tokens.size() > 2) {
       std::cout << "Unexpected token at line " << tokens[1].line << " column " << tokens[1].column << ": " << tokens[1].token << std::endl;
@@ -55,31 +51,35 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
     return node;
 
-  } else if (tokens[start].type == OPERATOR) {
-    if (start == 0 || tokens[start - 1].token != "(") {
-      std::cout << "Unexpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
+  } else if (tokens[start].token == "(") {
+    if (tokens[start + 1].type != OPERATOR) {
+      std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
       exit(2);
     }
+
+    ++start;
+    size_t allowedParenthesis = 1;
 
     OpNode* node = new OpNode;
     node->value = tokens[start].token;
 
-    int allowedParenthesis = 1;
-
     for (size_t i = start + 1; i < tokens.size(); ++i) {
-      if ((allowedParenthesis == 0 && i != tokens.size() - 1) || (i == tokens.size() - 1 && allowedParenthesis > 0)) {
+      if (allowedParenthesis == 0 && i != tokens.size() - 1) {
         std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
         exit(2);
       }
 
-      if (tokens[i].type == NUMBER) {
+      if (tokens[i].token == ")") --allowedParenthesis;
+      
+      else if (tokens[i].type == NUMBER) {
 	NumNode* tempNode = new NumNode;
 	tempNode->value = tokens[i].token;
         node->children.push_back(tempNode);
       }
 
       else if (tokens[i].token == "(") {
-	int parenNum = 1;
+	++allowedParenthesis
+	size_t parenNum = 1;
 	std::vector<Token> tempTokens;
 	tempTokens.push_back(tokens[i]);
 	++i;
@@ -93,10 +93,10 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 	  if (parenNum == 0) break;
 	  else ++i;
 
-	  //if (i == tokens.size()) {  
-          //  std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
-	  //  exit(2);
-	  //}
+	  if (i == tokens.size()) {  
+            std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl << "unsure";
+	    exit(2);
+	  }
 	}
 
 	tempTokens.push_back(tokens[tokens.size() - 1]);
@@ -107,6 +107,11 @@ Node* Parser::createNode(std::vector<Token> tokens) {
         std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
 	exit(2);
       }
+    }
+
+    if (allowedParenthesis != 0) {
+      std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
+      exit(2);
     }
 
     return node;
