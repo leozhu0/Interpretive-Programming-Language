@@ -9,7 +9,7 @@ Parser::~Parser() {
 }
 
 Parser::Parser(std::vector<Token> tokens) {
-  if (tokens.size() == 3) {
+  if (tokens.size() > 4) {
     for (Token& token : tokens) {
       std::cout << token.token << std::endl;
     }
@@ -119,7 +119,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     return node;
 
   } else {
-    std::cout << "Unexpected token at line " << tokens[tokens.size() - 1].line << " column " << tokens[tokens.size() - 1].column << ": " << tokens[tokens.size() - 1].token << std::endl;
+    std::cout << "Unexpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
     exit(2);
   }
 
