@@ -5,12 +5,10 @@
 
 class Lexer {
     private:
-       // std::string input;
-        TokenType tokentype(char token);
-        void pushseq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence);
+        TokenType tokenType(char token);
+        void pushSeq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence);
 
     public:
-        //Lexer();
         std::vector<Token> lexer();
 };
 
