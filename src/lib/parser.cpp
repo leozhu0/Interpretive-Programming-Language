@@ -9,12 +9,12 @@ Parser::~Parser() {
 }
 
 Parser::Parser(std::vector<Token> tokens) {
-  if (tokens.size() != 18 && tokens.size() != 7) {
-    for (Token& token : tokens) {
-      std::cout << token.token << std::endl;
-    }
-    std::cout << "_______________" << std::endl;
-  }
+  //if (tokens.size() != 18 && tokens.size() != 7) {
+  //  for (Token& token : tokens) {
+  //    std::cout << token.token << std::endl;
+  //  }
+  //  std::cout << "_______________" << std::endl;
+  //}
 
   if (tokens.size() == 0) {
     std::cout << "No tokens" << std::endl;
@@ -70,7 +70,14 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 	exit(2);
       }
 
-      if (tokens[i].token == ")") --allowedParenthesis;
+      if (tokens[i].token == ")") {
+	if (i == start + 1) {
+          std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
+	  exit(2);
+	}
+
+        --allowedParenthesis;
+      }
       
       else if (tokens[i].type == NUMBER) {
 	NumNode* tempNode = new NumNode;
@@ -104,7 +111,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 	node->children.push_back(createNode(tempTokens));
       }
 
-      else if ((i == start + 1 && tokens[i].token == ")") || tokens[i].type == OPERATOR) {
+      else if (tokens[i].type == OPERATOR) {
         std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
 	exit(2);
       }
