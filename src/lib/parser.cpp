@@ -9,27 +9,27 @@ Parser::~Parser() {
 }
 
 Parser::Parser(std::vector<Token> tokens) {
-  if (tokens.size() != 5) {
-    for (Token& token : tokens) {
-      std::cout << token.token << std::endl;
-    }
-    std::cout << "_______________" << std::endl;
-  }
+  //if (tokens.size() != 5) {
+  //  for (Token& token : tokens) {
+  //    std::cout << token.token << std::endl;
+  //  }
+  //  std::cout << "_______________" << std::endl;
+  //}
 
   if (tokens.size() == 0) {
     std::cout << "No tokens" << std::endl;
     exit(2);
   }
 
-  for (Token& token : tokens) {
-    if (token.type == OPERATOR || token.type == NUMBER) {
+  //for (Token& token : tokens) {
+  //  if (token.type == OPERATOR || token.type == NUMBER) {
       root = createNode(tokens);
-      return;
-    }
-  }
+  //    return;
+  //  }
+  //}
 
-  std::cout << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token << std::endl;
-  exit(2);
+  //std::cout << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token << std::endl;
+  //exit(2);
 }
 
 Node* Parser::createNode(std::vector<Token> tokens) {
