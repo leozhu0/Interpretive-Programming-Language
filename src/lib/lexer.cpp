@@ -3,12 +3,6 @@
 #include <iostream>
 #include "lexer.h"
 
-//Lexer::Lexer(){
-    //std::cin>>input;
-    //input = "(     + 9";
-//}
-
-
 TokenType Lexer::tokentype(char token){
     
     if(token == '.' || ((int)token >= 48 && (int)token <= 57) ){
@@ -50,7 +44,6 @@ std::vector<Token> Lexer::lexer(){
     std::vector<Token> sequence;
     std::string raw_input;
     int line = 1;
-    //std::istringstream alllines(input);
     while (std::getline(std::cin, raw_input)) {
         
 
@@ -83,8 +76,8 @@ std::vector<Token> Lexer::lexer(){
                 num_decimal = 0;
             }
 
-            if(i == (int)(raw_input.length()-1) && tokentype(element[0]) != NULLTYPE){ //ALWAYS NUMBER 
-                //sequence.push_back(Token{line,i+1,element, });
+            //This will always be a number
+            if(i == (int)(raw_input.length()-1) && tokentype(element[0]) != NULLTYPE){ 
                 pushseq(element, tokentype(element[0]), line, i+2 - element.size(), sequence);
             }
 
@@ -93,10 +86,10 @@ std::vector<Token> Lexer::lexer(){
         line++;
     }
 
-    if(sequence.size() > 0 && sequence.back().type == NUMBER){
-        sequence.push_back(Token{line,1,"END", END});
+    if(sequence.size() > 0 && sequence.back().type == PARENTHESIS){
+        sequence.push_back(Token{line-1,sequence.back().column + 1,"END", END});
     } else {
-         sequence.push_back(Token{line-1,sequence.back().column + 1,"END", END});
+        sequence.push_back(Token{line,1,"END", END});
     }
     
 
