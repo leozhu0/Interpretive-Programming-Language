@@ -5,9 +5,9 @@
 struct Node {
   std::string value;
   
-  virtual ~Node();
-  virtual double getValue();
-  virtual std::string toString();
+  virtual ~Node() {};
+  virtual double getValue() = 0;
+  virtual std::string toString() = 0;
 };
 
 struct NumNode : public Node {
@@ -22,6 +22,11 @@ struct OpNode : public Node {
   double getValue();
   std::string toString();
 };
+
+struct AssignNode : public Node {
+  // TODO
+  ;
+}
 
 class Parser {
   Node* root;
