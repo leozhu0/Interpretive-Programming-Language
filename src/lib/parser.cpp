@@ -9,7 +9,7 @@ Parser::~Parser() {
 }
 
 Parser::Parser(std::vector<Token> tokens) {
-  if (tokens.size() == 2) {
+  if (tokens.size() == 1) {
     for (Token& token : tokens) {
       std::cout << token.token << std::endl;
     }
@@ -119,7 +119,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     return node;
 
   } else {
-    std::cout << "Syntax error on line " << tokens[0].line << " column " << tokens[0].column << ".";
+    std::cout << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token << std::endl;
     exit(2);
   }
 
