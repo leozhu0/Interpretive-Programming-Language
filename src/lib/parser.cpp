@@ -9,7 +9,7 @@ Parser::~Parser() {
 }
 
 Parser::Parser(std::vector<Token> tokens) {
-  if (tokens.size() > 4) {
+  if (tokens.size() > 4 && tokens.size() != 7) {
     for (Token& token : tokens) {
       std::cout << token.token << std::endl;
     }
