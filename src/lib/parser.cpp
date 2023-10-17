@@ -21,6 +21,11 @@ Parser::Parser(std::vector<Token> tokens) {
     exit(2);
   }
 
+  if (tokens.size() > 2 && tokens[tokens.size() - 2] ) {
+    std::cout << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column << ": " << tokens[tokens.size() - 2].token << std::endl;
+    exit(2);
+  }
+
   for (Token& token : tokens) {
     if (token.type == OPERATOR || token.type == NUMBER) {
       root = createNode(tokens);
@@ -80,6 +85,11 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
 	  if (parenNum == 0) break;
 	  else ++i;
+
+	  if (i == tokens.size()) {  
+            std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
+	    exit(2);
+	  }
 	}
 
 	node->children.push_back(createNode(tempTokens));
