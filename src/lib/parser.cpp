@@ -23,7 +23,7 @@ Parser::Parser(std::vector<Token> tokens) {
 
   //for (Token& token : tokens) {
   //  if (token.type == OPERATOR || token.type == NUMBER) {
-      root = createNode(tokens);
+  root = createNode(tokens);
   //    return;
   //  }
   //}
@@ -113,7 +113,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     }
 
     if (allowedParenthesis != 0) {
-      std::cout << "Unexpected token at line " << tokens[tokens.size() - 1].line << " column " << tokens[tokens.size() - 1].column << ": " << tokens[tokens.size() - 1].token << std::endl;
+      std::cout << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << std::stod(tokens[tokens.size() - 2].column) + 1 << ": " << tokens[tokens.size() - 1].token << std::endl;
       //std::cout << "3";
       exit(2);
     }
