@@ -79,7 +79,6 @@ Node* Parser::createNode(std::vector<Token> tokens) {
       }
 
       else if (tokens[i].token == "(") {
-	++allowedParenthesis;
 	size_t parenNum = 1;
 	std::vector<Token> tempTokens;
 	tempTokens.push_back(tokens[i]);
