@@ -1,9 +1,6 @@
 #include "parser.h"
 #include <iostream>
 
-Node::~Node() {
-}
-
 Parser::~Parser() {
   delete root;
 }
@@ -123,14 +120,6 @@ std::string Parser::toString() {
 
 double Parser::calculate() {
   return root->getValue();
-}
-
-double Node::getValue() {
-  return 0;
-}
-
-std::string  Node::toString() {
-  return "If you see this, you messed up";
 }
 
 double NumNode::getValue() {
