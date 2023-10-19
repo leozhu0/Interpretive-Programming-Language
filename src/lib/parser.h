@@ -40,3 +40,11 @@ public:
   double calculate();
 };
 
+class InfixParser {
+  Node* root;
+
+public:
+  
+  std::string toString();
+  double calculate();
+};
