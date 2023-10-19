@@ -219,3 +219,53 @@ std::string OpNode::toString() {
   result += ')';
   return result;
 }
+
+InfixParser::InfixParser(std::vector<Token> tokens) {
+  if (tokens.size() == 0) {
+    std::cout << "No tokens" << std::endl;
+    exit(2);
+  }
+
+  if (tokens.size() == 1) {
+    //TODO
+    std::cout << "placeholder error" << std::endl;
+    exit(2);
+  }
+
+  NumNode* leftHandSide = new NumNode;
+  leftHandSide->value = tokens[0].token;
+
+  root = createTree(leftHandSide, 0, tokens);
+}
+
+InfixParser::~InfixParser() {
+  delete root;
+}
+
+Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector<Token> tokens) {
+  std::string nextOp = peak(tokens).token;
+
+  while (precedence(nextOp) >= minPrecedence) {
+    std::string currOp = nextOp;
+    
+    //TODO add variable case
+    NumNode* rightHandSide = new NumNode;
+    rightHandSide->value = nextNum(tokens).token;
+
+    nextOp = peak(tokens).token;
+
+    //TODO add equivalent case with right-associative operator
+    while (precedence(nextOp) > precedence(currOp)) {
+      rightHandSide = createTree(rightHandSide, precedence(currOp) + 1, tokens);
+      nextOp = peak(tokens).token;
+    }
+
+    OpNode tempNode = new OpNode;
+    tempNode->left = leftHandSide;
+    tempNode->right = rightHandSide;
+
+    leftHandSide = tempNode;
+  }
+
+  return leftHandSide;
+}
