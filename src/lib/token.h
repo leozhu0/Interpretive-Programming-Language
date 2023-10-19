@@ -8,6 +8,8 @@ enum TokenType {
   END,
   NULLTYPE,
   SPACE,
+  VARIABLE,
+  ASSIGNMENT
 };
 
 class Token {
