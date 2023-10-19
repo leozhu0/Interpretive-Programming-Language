@@ -17,6 +17,16 @@ TokenType Lexer::tokenType(char token){
         return OPERATOR;
     }
 
+    if(token== '='){
+        return ASSIGNMENT;
+    }
+
+    if(token == '_' || ((int)token >= 65 && (int)token <= 90) || ((int)token >= 97 && (int)token <= 122) ){
+        return VARIABLE;
+    }
+
+    if((int)token)
+
     if(isspace(token)){
         return SPACE;
     }
@@ -49,6 +59,7 @@ std::vector<Token> Lexer::lexer(){
     //This will later be used to check for more than one decimal in number
     int numDecimal = 0;
     std::string element = "";
+    TokenType elementType = NULLTYPE;
     while (std::cin.get(rawInput)) {
         if(rawInput == '\n'){
             indents++;
@@ -80,21 +91,53 @@ std::vector<Token> Lexer::lexer(){
         }
 
         if(type != SPACE){
-                if(rawInput == '.' || ((int)rawInput >= 48 && (int)rawInput <= 57)) {
-                    if(rawInput == '.'){
-                        numDecimal++;
+                if(tokenType(rawInput)==NUMBER) {
+                    if(tokenType(element[0]) == NUMBER || element == ""){
+                        if(rawInput == '.'){
+                            numDecimal++;
+                        }
+                        element += rawInput;
+                    } else if (tokenType(element[0]) == VARIABLE){
+                        if(rawInput == '.'){
+                            std::cout << "Syntax error on line "<< line <<" column "<< i+1 <<"." << std::endl;
+                            exit(0);
+                        }
+                        element += rawInput;
+                    } else {
+                        pushSeq(element, NUMBER, line, i+1 - element.size(), sequence);
+                        numDecimal = 0;
+                        std::string rawInputString(1, rawInput);
+                        pushSeq(rawInputString, type, line, i+1, sequence);
+                        element = "";
                     }
-                    element += rawInput;
+                    
+                } else if(tokenType(rawInput)==VARIABLE){
+                    if(tokenType(element[0]) == NUMBER){
+                        std::cout << "Syntax error on line "<< line <<" column "<< i+1 <<"." << std::endl;
+                        exit(0);
+                    } else if (tokenType(element[0]) == VARIABLE || element == ""){
+                        element += rawInput;
+                    } else {
+                        pushSeq(element, VARIABLE, line, i+1 - element.size(), sequence);
+                        numDecimal = 0;
+                        std::string rawInputString(1, rawInput);
+                        pushSeq(rawInputString, type, line, i+1, sequence);
+                        element = "";
+                    }
+
                 } else {
-                    pushSeq(element, NUMBER, line, i+1 - element.size(), sequence);
+                    pushSeq(element, tokenType(element[0]), line, i+1 - element.size(), sequence);
                     numDecimal = 0;
                     std::string rawInputString(1, rawInput);
                     pushSeq(rawInputString, type, line, i+1, sequence);
                     element = "";
+                    //elementType = NULLTYPE;
                 }
+                
+                
 
         } else {
-            pushSeq(element, NUMBER, line, i+1 - element.size(), sequence);
+            pushSeq(element, tokenType(element[0]), line, i+1 - element.size(), sequence);
             element = "";
             numDecimal = 0;
         }
