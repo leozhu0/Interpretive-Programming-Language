@@ -236,6 +236,7 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
   leftHandSide->value = tokens[0].token;
 
   root = createTree(leftHandSide, 0, tokens);
+  index = 0;
 }
 
 InfixParser::~InfixParser() {
@@ -269,3 +270,27 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
 
   return leftHandSide;
 }
+
+int InfixParser::precedence(std::string op) {
+  if (op == "=") return 0;
+
+  else if (op == "+" || op == "-") return 1;
+
+  else if (op == "*" || op == "/") return 2;
+
+  else {
+    //TODO
+    std::cout << "placeholder error 2" << std::endl;
+    exit(2;)
+  }
+}
+
+Token& InfixParser::peak(std::vector<Token> tokens) {
+  for (size_t i = index; i < tokens.size(); ++i) {
+    if (tokens[i].type == OPERATOR) return tokens[i];
+  }
+
+  return tokens.back();
+}
+
+

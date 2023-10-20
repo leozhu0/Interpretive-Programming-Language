@@ -46,6 +46,7 @@ class InfixParser {
   static size_t index = 0;
 
   Node* createTree(Node* leftHandSide, int minPrecedence, std::vector<Token> tokens);
+  int precedence(std::string op);
 
 public:
   InfixParser(std::vector<Token> tokens);
