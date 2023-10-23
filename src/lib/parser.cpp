@@ -251,7 +251,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     
     //TODO add variable case
     NumNode* rightHandSide = new NumNode;
-    rightHandSide->value = nextNum(tokens).token;
+    rightHandSide->value = nextToken(tokens).token;
 
     nextOp = peak(tokens).token;
 
@@ -293,14 +293,14 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
   return tokens.back();
 }
 
-Token& InfixParser::nextNum(std::vector<Token> tokens) {
+Token& InfixParser::nextToken(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
-    if (tokens[i].type == NUMBER) {
+    if (tokens[i].type == NUMBER //TODO add variable case) {
       index = i;
       return tokens[i];
     }
 
-    //TODO add variable case
+    else if (token)
 
   }
 
