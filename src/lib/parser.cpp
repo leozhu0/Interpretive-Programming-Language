@@ -281,7 +281,7 @@ int InfixParser::precedence(std::string op) {
   else {
     //TODO
     std::cout << "placeholder error 2" << std::endl;
-    exit(2;)
+    exit(2);
   }
 }
 
@@ -291,6 +291,22 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
   }
 
   return tokens.back();
+}
+
+Token& InfixParser::nextNum(std::vector<Token> tokens) {
+  for (size_t i = index + 1; i < tokens.size(); ++i) {
+    if (tokens[i].type == NUMBER) {
+      index = i;
+      return tokens[i];
+    }
+
+    //TODO add variable case
+
+  }
+
+  //TODO
+  std::cout << "placeholder error 3" << std::end;
+  exit(2);
 }
 
 
