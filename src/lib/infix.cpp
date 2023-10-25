@@ -111,3 +111,11 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 }
 
 
+std::string InfixParser::toString() {
+  return root->toString();
+}
+
+double InfixParser::calculate() {
+  return root->getValue();
+}
+
