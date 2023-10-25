@@ -45,8 +45,8 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     //TODO add assignment case
     OpNode tempNode = new OpNode;
     tempNode.value = currOp;
-    tempNode->left = leftHandSide;
-    tempNode->right = rightHandSide;
+    tempNode->children[0] = leftHandSide;
+    tempNode->children[1] = rightHandSide;
 
     leftHandSide = tempNode;
   }
