@@ -59,7 +59,7 @@ std::vector<Token> Lexer::lexer(){
     //This will later be used to check for more than one decimal in number
     int numDecimal = 0;
     std::string element = "";
-    TokenType elementType = NULLTYPE;
+    //TokenType elementType = NULLTYPE;
     while (std::cin.get(rawInput)) {
         if(rawInput == '\n'){
             indents++;
