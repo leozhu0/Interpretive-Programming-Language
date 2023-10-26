@@ -107,7 +107,7 @@ std::vector<Token> Lexer::lexer(){
                         pushSeq(element, NUMBER, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
-                        pushSeq(rawInputString, type, line, i, sequence);
+                        pushSeq(rawInputString, type, line, i+1, sequence);
                         element = "";
                     }
                     
@@ -121,7 +121,7 @@ std::vector<Token> Lexer::lexer(){
                         pushSeq(element, VARIABLE, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
-                        pushSeq(rawInputString, type, line, i, sequence);
+                        pushSeq(rawInputString, type, line, i+1, sequence);
                         element = "";
                     }
 
@@ -129,7 +129,7 @@ std::vector<Token> Lexer::lexer(){
                     pushSeq(element, tokenType(element[0]), line, i - element.size(), sequence);
                     numDecimal = 0;
                     std::string rawInputString(1, rawInput);
-                    pushSeq(rawInputString, type, line, i, sequence);
+                    pushSeq(rawInputString, type, line, i+1, sequence);
                     element = "";
                     //elementType = NULLTYPE;
                 }
