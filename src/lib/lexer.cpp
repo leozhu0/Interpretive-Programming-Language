@@ -63,12 +63,12 @@ std::vector<Token> Lexer::lexer(){
     while (std::cin.get(rawInput)) {
         if(rawInput == '\n'){
             indents++;
-            if(indents > 1){
+           /* if(indents > 1){
                 //std::cout << "EARLY"<<std::endl;
                 sequence.push_back(Token{line,1,"END", END});
                 return sequence;
                 //break;
-            }
+            }*/
 
             //When you start a newline, take what was inside element and add it to sequence. 
             //This will always be a number
@@ -153,7 +153,7 @@ std::vector<Token> Lexer::lexer(){
     } else {
         sequence.push_back(Token{line,1,"END", END});
     }*/
-    if(sequence.size() == 0 /*|| indents >= 1*/){
+    if(sequence.size() == 0  indents >= 1){
         sequence.push_back(Token{line,1,"END", END});
     } else {
         sequence.push_back(Token{line,sequence.back().column,"END", END});
