@@ -90,6 +90,13 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
     }
 
     //TODO add variable case
+    /*
+    else if (tokens[i].type == VARIABLE) {
+      index = i;
+
+
+    }
+    */
 
     else if (tokens[i].token == "(") {
       if (tokens[i + 1].token == ")") {
