@@ -41,7 +41,7 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
             exit(1);
         }
         if(element.back() == '.'){
-            std::cout << "Syntax error on line "<< line <<" column "<< column + element.size() <<"." << std::endl;
+            std::cout << "Syntax error on line "<< line <<" column "<< column + element.size() - 1 <<"." << std::endl;
             exit(1);
         }
     }
@@ -156,7 +156,7 @@ std::vector<Token> Lexer::lexer(){
     if(sequence.size() == 0 || indents >= 1){
         sequence.push_back(Token{line,1,"END", END});
     } else {
-        sequence.push_back(Token{line,sequence.back().column + 1,"END", END});
+        sequence.push_back(Token{line,sequence.back().column,"END", END});
     }
     
 
