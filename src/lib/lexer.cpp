@@ -64,7 +64,7 @@ std::vector<Token> Lexer::lexer(){
         if(rawInput == '\n'){
             indents++;
             if(indents > 1){
-                sequence.push_back(Token{line,1,"END", END});
+                sequence.push_back(Token{line+1,1,"END", END});
                 return sequence;
                 //break;
             }

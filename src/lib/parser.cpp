@@ -368,7 +368,7 @@ std::string VarNode::toString(){
    return value;
 }
 
-double AssignNode::getValue() {
+/*double AssignNode::getValue() {
     for (Node* child : children) {
       //If it's a double
       if(stringOfDouble(child->value)){ 
@@ -379,4 +379,8 @@ double AssignNode::getValue() {
     }
 
   return 0.0;
+}*/
+
+double AssignNode::getValue() {
+    return children.at(0)->getValue();
 }
