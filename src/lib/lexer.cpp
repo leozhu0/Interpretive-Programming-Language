@@ -153,7 +153,7 @@ std::vector<Token> Lexer::lexer(){
     } else {
         sequence.push_back(Token{line,1,"END", END});
     }*/
-    if(sequence.size() == 0  indents >= 1){
+    if(sequence.size() == 0 || indents >= 1){
         sequence.push_back(Token{line,1,"END", END});
     } else {
         sequence.push_back(Token{line,sequence.back().column,"END", END});
