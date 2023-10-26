@@ -47,56 +47,57 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     for (size_t i = start + 1; i < tokens.size(); ++i) {
       if (allowedParenthesis == 0 && i != tokens.size() - 1) {
         std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-	exit(2);
+	      exit(2);
       }
 
       if (tokens[i].token == ")") {
-	if (i == start + 1) {
+        if (i == start + 1) {
           std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-	  exit(2);
-	}
+          exit(2);
+        }
 
         --allowedParenthesis;
       }
       
       // adding a number to the child pointers
       else if (tokens[i].type == NUMBER) {
-	NumNode* tempNode = new NumNode;
-	tempNode->value = tokens[i].token;
+        NumNode* tempNode = new NumNode;
+        tempNode->value = tokens[i].token;
         node->children.push_back(tempNode);
       }
 
       // adding an operator to the child pointers
       else if (tokens[i].token == "(") {
-	size_t parenNum = 1;
-	std::vector<Token> tempTokens;
-	tempTokens.push_back(tokens[i]);
-	++i;
-
-	// creating a new vector to be called recursively
-	while (true) {
-	  if (tokens[i].token == "(") ++parenNum;
-	  else if (tokens[i].token == ")") --parenNum;
-
+          size_t parenNum = 1;
+          std::vector<Token> tempTokens;
           tempTokens.push_back(tokens[i]);
+          ++i;
 
-	  if (parenNum == 0) break;
-	  else ++i;
+          // creating a new vector to be called recursively
+          while (true) {
+            if (tokens[i].token == "(") ++parenNum;
+            else if (tokens[i].token == ")") --parenNum;
 
-	  if (i == tokens.size()) {  
-            std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
-	    exit(2);
-	  }
-	}
+            tempTokens.push_back(tokens[i]);
 
-	tempTokens.push_back(tokens[tokens.size() - 1]);
-	node->children.push_back(createNode(tempTokens));
+            if (parenNum == 0) break;
+            else ++i;
+
+            if (i == tokens.size()) {  
+              std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
+              exit(2);
+            }
+          }
+
+          tempTokens.push_back(tokens[tokens.size() - 1]);
+          node->children.push_back(createNode(tempTokens));
       }
 
       else if (tokens[i].type == OPERATOR) {
         std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-	exit(2);
+	      exit(2);
       }
+
     }
 
     if (allowedParenthesis != 0) {
@@ -146,6 +147,11 @@ std::string NumNode::toString() {
       	    
   return result; 
 }
+
+
+
+
+
 
 OpNode::~OpNode() {
   for (Node* child : children) {
@@ -203,6 +209,8 @@ double OpNode::getValue() {
   }
 }
 
+
+
 std::string OpNode::toString() {
   std::string result = "(";
   
@@ -220,112 +228,12 @@ std::string OpNode::toString() {
   return result;
 }
 
-InfixParser::InfixParser(std::vector<Token> tokens) {
-  if (tokens.size() == 0) {
-    std::cout << "No tokens" << std::endl;
-    exit(2);
-  }
 
-  if (tokens.size() == 1) {
-    //TODO
-    std::cout << "placeholder error" << std::endl;
-    exit(2);
-  }
-
-  NumNode* leftHandSide = new NumNode;
-  leftHandSide->value = tokens[0].token;
-
-  root = createTree(leftHandSide, 0, tokens);
-  index = 0;
-}
-
-InfixParser::~InfixParser() {
-  delete root;
-}
-
-Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector<Token> tokens) {
-  std::string nextOp = peak(tokens).token;
-
-  while (precedence(nextOp) >= minPrecedence) {
-    std::string currOp = nextOp;
-    
-    Node* rightHandSide = nextNode(tokens);
-
-    nextOp = peak(tokens).token;
-
-    while ((precedence(nextOp) > precedence(currOp)) || (nextOp == "=" && precedence(nextOp) == precedence(currOp))) {
-      int addedPrecedence = 1;
-      if (nextOp == "=") --addedPrecedence;
-
-      rightHandSide = createTree(rightHandSide, precedence(currOp) + addedPrecedence, tokens);
-      nextOp = peak(tokens).token;
-    }
-
-    OpNode tempNode = new OpNode;
-    tempNode.value = currOp;
-    tempNode->left = leftHandSide;
-    tempNode->right = rightHandSide;
-
-    leftHandSide = tempNode;
-  }
-
-  return leftHandSide;
-}
-
-int InfixParser::precedence(std::string op) {
-  if (op == "=") return 0;
-
-  else if (op == "+" || op == "-") return 1;
-
-  else if (op == "*" || op == "/") return 2;
-
-  else if (op = "END" || op == ")") return -1;
-
-  else {
-    //TODO
-    std::cout << "placeholder error 2" << std::endl;
-    exit(2);
-  }
-}
-
-Token& InfixParser::peak(std::vector<Token> tokens) {
-  for (size_t i = index; i < tokens.size(); ++i) {
-    if (tokens[i].type == OPERATOR || tokens[i].token == ")") return tokens[i];
-  }
-
-  return tokens.back();
-}
-
-Node* InfixParser::nextNode(std::vector<Token> tokens) {
-  for (size_t i = index + 1; i < tokens.size(); ++i) {
-    if (tokens[i].type == NUMBER {
-      index = i;
-
-      NumNode tempNode = new NumNode;
-      tempNode.value = token[i].token;
-
-      return tempNode;
-    }
-
-    //TODO add variable case
-
-    else if (token[i].token == "(") {
-      index = i;
-      Node* tempNode = createTree();
-
-      if (token[index + 1].token != ")") {
-        std::cout << "placeholder error 4" << std:endl;
-	exit(2);
-      }
-
-      return tempNode;
-    }
-
-  }
-
-  //TODO
-  std::cout << "placeholder error 3" << std::endl;
-  exit(2);
+AssignNode::~AssignNode() {
+    delete assignment;
 }
 
 
+double AssignNode::getValue() {
+    return assignment->getValue();
+}

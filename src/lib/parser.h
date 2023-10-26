@@ -24,9 +24,13 @@ struct OpNode : public Node {
 };
 
 struct AssignNode : public Node {
-  // TODO
-  ;
-}
+  std::string varName;
+  Node* assignment;
+
+  ~AssignNode();
+  double getValue();
+
+};
 
 class Parser {
   Node* root;
