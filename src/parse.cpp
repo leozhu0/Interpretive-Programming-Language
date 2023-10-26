@@ -36,18 +36,18 @@ int index = 0;
 
 
 
-
+Parser parser = Parser();
 
 for ( const auto &line : multilineTokens )
 {
-  Parser parser = Parser(line);
+  parser.ParserFunc(line);
   std::cout << parser.toString() << std::endl << parser.calculate() << std::endl;
 }
 
 
-  for (const auto& pair : variables) {
+  /*for (const auto& pair : variables) {
         std::cout << "Key: " << pair.first << ", Value: " << pair.second << std::endl;
-    }
+    }*/
 
 
 	  
