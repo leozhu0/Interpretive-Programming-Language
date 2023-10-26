@@ -34,7 +34,7 @@ struct VarNode : public Node {
   std::string toString();
 };
 
-std::map<std::string, double> variables; //was VarNode*
+
 class Parser {
   Node* root;
 
@@ -42,7 +42,7 @@ class Parser {
   
 public:
   ~Parser();
-  Parser(std::vector<Token> tokens);
+  void ParserFunc(std::vector<Token> tokens);
 
   std::string toString();
   double calculate();
