@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "infix.h"
 #include <iostream>
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
@@ -43,8 +43,8 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     }
 
     //TODO add assignment case
-    OpNode tempNode = new OpNode;
-    tempNode.value = currOp;
+    OpNode* tempNode = new OpNode;
+    tempNode->value = currOp;
     tempNode->children[0] = leftHandSide;
     tempNode->children[1] = rightHandSide;
 
@@ -61,7 +61,7 @@ int InfixParser::precedence(std::string op) {
 
   else if (op == "*" || op == "/") return 2;
 
-  else if (op = "END" || op == ")") return -1;
+  else if (op == "END" || op == ")") return -1;
 
   else {
     //TODO
@@ -80,23 +80,35 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
 
 Node* InfixParser::nextNode(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
-    if (tokens[i].type == NUMBER {
+    if (tokens[i].type == NUMBER) {
       index = i;
 
-      NumNode tempNode = new NumNode;
-      tempNode.value = token[i].token;
+      NumNode* tempNode = new NumNode;
+      tempNode->value = tokens[i].token;
 
       return tempNode;
     }
 
     //TODO add variable case
-
-    else if (token[i].token == "(") {
+    /*
+    else if (tokens[i].type == VARIABLE) {
       index = i;
-      Node* tempNode = createTree();
 
-      if (token[index + 1].token != ")") {
-        std::cout << "placeholder error 4" << std:endl;
+
+    }
+    */
+
+    else if (tokens[i].token == "(") {
+      if (tokens[i + 1].token == ")") {
+        std::cout << "placeholder error 5" << std::endl;
+	exit(2);
+      }
+      
+      index = i;
+      Node* tempNode = createTree(nextNode(tokens), 0, tokens);
+
+      if (tokens[index + 1].token != ")") {
+        std::cout << "placeholder error 4" << std::endl;
 	exit(2);
       }
 
