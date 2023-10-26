@@ -84,19 +84,24 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       index = i;
 
       NumNode* tempNode = new NumNode;
-      tempNode.value = token[i].token;
+      tempNode->value = tokens[i].token;
 
       return tempNode;
     }
 
     //TODO add variable case
 
-    else if (token[i].token == "(") {
+    else if (tokens[i].token == "(") {
+      if (tokens[i + 1].token == ")") {
+        std::cout << "placeholder error 5" << std::endl;
+	exit(2);
+      }
+      
       index = i;
-      Node* tempNode = createTree();
+      Node* tempNode = createTree(nextNode(tokens), 0, tokens);
 
       if (token[index + 1].token != ")") {
-        std::cout << "placeholder error 4" << std:endl;
+        std::cout << "placeholder error 4" << std::endl;
 	exit(2);
       }
 
