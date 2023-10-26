@@ -45,8 +45,8 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     //TODO add assignment case
     OpNode tempNode = new OpNode;
     tempNode.value = currOp;
-    tempNode->left = leftHandSide;
-    tempNode->right = rightHandSide;
+    tempNode->children[0] = leftHandSide;
+    tempNode->children[1] = rightHandSide;
 
     leftHandSide = tempNode;
   }
@@ -110,4 +110,12 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
   exit(2);
 }
 
+
+std::string InfixParser::toString() {
+  return root->toString();
+}
+
+double InfixParser::calculate() {
+  return root->getValue();
+}
 
