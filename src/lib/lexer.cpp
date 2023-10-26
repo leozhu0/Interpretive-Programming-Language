@@ -72,7 +72,7 @@ std::vector<Token> Lexer::lexer(){
             //When you start a newline, take what was inside element and add it to sequence. 
             //This will always be a number
             if(tokenType(element[0]) != NULLTYPE){ 
-                pushSeq(element, tokenType(element[0]), line, i+2 - element.size(), sequence);
+                pushSeq(element, tokenType(element[0]), line, i - element.size(), sequence);
             }
 
 
@@ -104,10 +104,10 @@ std::vector<Token> Lexer::lexer(){
                         }
                         element += rawInput;
                     } else {
-                        pushSeq(element, NUMBER, line, i+1 - element.size(), sequence);
+                        pushSeq(element, NUMBER, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
-                        pushSeq(rawInputString, type, line, i+1, sequence);
+                        pushSeq(rawInputString, type, line, i, sequence);
                         element = "";
                     }
                     
@@ -118,18 +118,18 @@ std::vector<Token> Lexer::lexer(){
                     } else if (tokenType(element[0]) == VARIABLE || element == ""){
                         element += rawInput;
                     } else {
-                        pushSeq(element, VARIABLE, line, i+1 - element.size(), sequence);
+                        pushSeq(element, VARIABLE, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
-                        pushSeq(rawInputString, type, line, i+1, sequence);
+                        pushSeq(rawInputString, type, line, i, sequence);
                         element = "";
                     }
 
                 } else {
-                    pushSeq(element, tokenType(element[0]), line, i+1 - element.size(), sequence);
+                    pushSeq(element, tokenType(element[0]), line, i - element.size(), sequence);
                     numDecimal = 0;
                     std::string rawInputString(1, rawInput);
-                    pushSeq(rawInputString, type, line, i+1, sequence);
+                    pushSeq(rawInputString, type, line, i, sequence);
                     element = "";
                     //elementType = NULLTYPE;
                 }
@@ -137,7 +137,7 @@ std::vector<Token> Lexer::lexer(){
                 
 
         } else {
-            pushSeq(element, tokenType(element[0]), line, i+1 - element.size(), sequence);
+            pushSeq(element, tokenType(element[0]), line, i - element.size(), sequence);
             element = "";
             numDecimal = 0;
         }
