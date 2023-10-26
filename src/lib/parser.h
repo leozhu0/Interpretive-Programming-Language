@@ -1,41 +1,49 @@
 #include <string>
 #include <vector>
 #include "token.h"
+#include <map>
 
+enum NodeType {
+  NUMNODE,
+  OPNODE,
+  ASSIGNMENTNODE,
+  UNKNOWNNODE
+};
 struct Node {
   std::string value;
-  
+  NodeType type = UNKNOWNNODE;
   virtual ~Node() {};
   virtual double getValue() = 0;
   virtual std::string toString() = 0;
 };
 
 struct NumNode : public Node {
+   NodeType type = NUMNODE;
   double getValue();
   std::string toString();
 };
 
 struct OpNode : public Node {
+   NodeType type = OPNODE;
   std::vector<Node*> children;
 
   ~OpNode();
-  double getValue();
+  virtual double getValue();
   std::string toString();
 };
 
-struct AssignNode : public Node {
-  std::string varName;
-  Node* assignment;
-
-  ~AssignNode();
+struct AssignNode : public OpNode {
+   NodeType type = ASSIGNMENTNODE;
   double getValue();
-
 };
 
 class Parser {
   Node* root;
 
   Node* createNode(std::vector<Token> tokens);
+
+  std::map<AssignNode*, double> variables;
+
 
 public:
   ~Parser();

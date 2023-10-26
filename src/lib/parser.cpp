@@ -1,5 +1,6 @@
 #include "parser.h"
 #include <iostream>
+#include <map>
 
 Parser::~Parser() {
   delete root;
@@ -210,30 +211,12 @@ double OpNode::getValue() {
 }
 
 
-
-std::string OpNode::toString() {
-  std::string result = "(";
-  
-  for (Node* child : children) {
-    result += child->toString();
-
-    if (child != children[children.size() - 1]) {
-      result += ' ';
-      result += value;
-      result += ' ';
-    }
-  }
-
-  result += ')';
-  return result;
-}
-
-
-AssignNode::~AssignNode() {
-    delete assignment;
-}
-
-
 double AssignNode::getValue() {
-    return assignment->getValue();
+    for (Node* child : children) {
+      if(child->type == NUMNODE || child->type == OPNODE){
+        return child->getValue();
+      }
+    }
+
+  return 0.0;
 }
