@@ -100,7 +100,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       index = i;
       Node* tempNode = createTree(nextNode(tokens), 0, tokens);
 
-      if (token[index + 1].token != ")") {
+      if (tokens[index + 1].token != ")") {
         std::cout << "placeholder error 4" << std::endl;
 	exit(2);
       }
