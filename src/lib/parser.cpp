@@ -229,7 +229,6 @@ std::string OpNode::toString() {
 }
 
 
-
 AssignNode::~AssignNode() {
     delete assignment;
 }
@@ -238,5 +237,3 @@ AssignNode::~AssignNode() {
 double AssignNode::getValue() {
     return assignment->getValue();
 }
-
-
