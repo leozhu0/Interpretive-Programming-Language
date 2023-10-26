@@ -3,11 +3,18 @@
 #include <iostream>
 
 int main() {
-  Lexer lexer = Lexer();
+  Lexer lexer;
 
-  InfixParser infixParser = InfixParser(lexer.lexer());
+  while (lexer = Lexer()) {
+    try {
+      InfixParser infixParser = InfixParser(lexer.lexer());
+      std::cout << infixParser.toString() << std::endl << infixParser.calculate() << std::endl;
+    }
 
-  std::cout << infixParser.toString() << std::endl << infixParser.calculate() << std::endl;
-	  
+    catch (const std::exception& e) {
+      std::cerr << e.what() << std::endl;
+    }
+  }
+
   return 0;
 }
