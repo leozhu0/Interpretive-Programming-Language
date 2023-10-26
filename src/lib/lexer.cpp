@@ -64,7 +64,7 @@ std::vector<Token> Lexer::lexer(){
         if(rawInput == '\n'){
             indents++;
             if(indents > 1){
-                std::cout << "EARLY"<<std::endl;
+                //std::cout << "EARLY"<<std::endl;
                 sequence.push_back(Token{line,1,"END", END});
                 return sequence;
                 //break;
@@ -153,7 +153,7 @@ std::vector<Token> Lexer::lexer(){
     } else {
         sequence.push_back(Token{line,1,"END", END});
     }*/
-    if(sequence.size() == 0 || indents > 1){
+    if(sequence.size() == 0 || indents >= 1){
         sequence.push_back(Token{line,1,"END", END});
     } else {
         sequence.push_back(Token{line,sequence.back().column + 1,"END", END});
