@@ -47,56 +47,57 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     for (size_t i = start + 1; i < tokens.size(); ++i) {
       if (allowedParenthesis == 0 && i != tokens.size() - 1) {
         std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-	exit(2);
+	      exit(2);
       }
 
       if (tokens[i].token == ")") {
-	if (i == start + 1) {
+        if (i == start + 1) {
           std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-	  exit(2);
-	}
+          exit(2);
+        }
 
         --allowedParenthesis;
       }
       
       // adding a number to the child pointers
       else if (tokens[i].type == NUMBER) {
-	NumNode* tempNode = new NumNode;
-	tempNode->value = tokens[i].token;
+        NumNode* tempNode = new NumNode;
+        tempNode->value = tokens[i].token;
         node->children.push_back(tempNode);
       }
 
       // adding an operator to the child pointers
       else if (tokens[i].token == "(") {
-	size_t parenNum = 1;
-	std::vector<Token> tempTokens;
-	tempTokens.push_back(tokens[i]);
-	++i;
-
-	// creating a new vector to be called recursively
-	while (true) {
-	  if (tokens[i].token == "(") ++parenNum;
-	  else if (tokens[i].token == ")") --parenNum;
-
+          size_t parenNum = 1;
+          std::vector<Token> tempTokens;
           tempTokens.push_back(tokens[i]);
+          ++i;
 
-	  if (parenNum == 0) break;
-	  else ++i;
+          // creating a new vector to be called recursively
+          while (true) {
+            if (tokens[i].token == "(") ++parenNum;
+            else if (tokens[i].token == ")") --parenNum;
 
-	  if (i == tokens.size()) {  
-            std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
-	    exit(2);
-	  }
-	}
+            tempTokens.push_back(tokens[i]);
 
-	tempTokens.push_back(tokens[tokens.size() - 1]);
-	node->children.push_back(createNode(tempTokens));
+            if (parenNum == 0) break;
+            else ++i;
+
+            if (i == tokens.size()) {  
+              std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
+              exit(2);
+            }
+          }
+
+          tempTokens.push_back(tokens[tokens.size() - 1]);
+          node->children.push_back(createNode(tempTokens));
       }
 
       else if (tokens[i].type == OPERATOR) {
         std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-	exit(2);
+	      exit(2);
       }
+
     }
 
     if (allowedParenthesis != 0) {
@@ -146,6 +147,11 @@ std::string NumNode::toString() {
       	    
   return result; 
 }
+
+
+
+
+
 
 OpNode::~OpNode() {
   for (Node* child : children) {
@@ -203,6 +209,8 @@ double OpNode::getValue() {
   }
 }
 
+
+
 std::string OpNode::toString() {
   std::string result = "(";
   
@@ -219,3 +227,16 @@ std::string OpNode::toString() {
   result += ')';
   return result;
 }
+
+
+
+AssignNode::~AssignNode() {
+    delete assignment;
+}
+
+
+double AssignNode::getValue() {
+    return assignment->getValue();
+}
+
+
