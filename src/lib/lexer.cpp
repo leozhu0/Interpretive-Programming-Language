@@ -64,6 +64,7 @@ std::vector<Token> Lexer::lexer(){
         if(rawInput == '\n'){
             indents++;
             if(indents > 1){
+                std::cout << "EARLY"<<std::endl;
                 sequence.push_back(Token{line,1,"END", END});
                 return sequence;
                 //break;
@@ -86,7 +87,7 @@ std::vector<Token> Lexer::lexer(){
         TokenType type = tokenType(rawInput);
 
         if(type == NULLTYPE || (numDecimal > 0 && rawInput == '.')){
-            std::cout << "Syntax error on line "<< line <<" column "<< i+1 <<"." << std::endl;
+            std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
             exit(1);
         }
 
@@ -99,7 +100,7 @@ std::vector<Token> Lexer::lexer(){
                         element += rawInput;
                     } else if (tokenType(element[0]) == VARIABLE){
                         if(rawInput == '.'){
-                            std::cout << "Syntax error on line "<< line <<" column "<< i+1 <<"." << std::endl;
+                            std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
                             exit(0);
                         }
                         element += rawInput;
@@ -113,7 +114,7 @@ std::vector<Token> Lexer::lexer(){
                     
                 } else if(tokenType(rawInput)==VARIABLE){
                     if(tokenType(element[0]) == NUMBER){
-                        std::cout << "Syntax error on line "<< line <<" column "<< i+1 <<"." << std::endl;
+                        std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
                         exit(0);
                     } else if (tokenType(element[0]) == VARIABLE || element == ""){
                         element += rawInput;
@@ -147,10 +148,15 @@ std::vector<Token> Lexer::lexer(){
         i++;
     }
 
-    if(sequence.size() > 0){
+    /*if(sequence.size() > 0){
         sequence.push_back(Token{line,sequence.back().column + 1,"END", END});
     } else {
         sequence.push_back(Token{line,1,"END", END});
+    }*/
+    if(sequence.size() == 0 || indents > 1){
+        sequence.push_back(Token{line,1,"END", END});
+    } else {
+        sequence.push_back(Token{line,sequence.back().column + 1,"END", END});
     }
     
 
