@@ -1,5 +1,4 @@
 #include "infix.h"
-#include "parser.h"
 #include <iostream>
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
@@ -44,7 +43,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     }
 
     //TODO add assignment case
-    OpNode tempNode = new OpNode;
+    OpNode* tempNode = new OpNode;
     tempNode.value = currOp;
     tempNode->children[0] = leftHandSide;
     tempNode->children[1] = rightHandSide;
@@ -84,7 +83,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
     if (tokens[i].type == NUMBER {
       index = i;
 
-      NumNode tempNode = new NumNode;
+      NumNode* tempNode = new NumNode;
       tempNode.value = token[i].token;
 
       return tempNode;
