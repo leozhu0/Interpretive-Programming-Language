@@ -16,16 +16,16 @@ Parser::Parser(std::vector<Token> tokens) {
 }
 
 //PUT IN SOME CLASS
-bool stringOfDouble(const std::string& str) {
+bool stringOfDouble(std::string attempt){
     try {
-        size_t pos = 0;
-        double d = std::stod(str, &pos);
-        return pos == str.length();
-    } catch (const std::invalid_argument&) {
-        return false;  // Not a valid double, so not a number.
-    } catch (const std::out_of_range&) {
-        return false;  // Number is too large.
+        double number = std::stod(attempt);
+        return number;
+    } catch (const std::invalid_argument& e) {
+        return 0;
+    } catch (const std::out_of_range& e) {
+        return 0;
     }
+    return 0;
 }
 
 Node* Parser::createNode(std::vector<Token> tokens) {
@@ -196,11 +196,11 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
 
                       if(stringOfDouble(tempTokens[tokens.size() - 1].token)){
-                        for(int t = 0; t < tokens.size() - 1; t++){
+                        for(int t = 0; t < (int)(tokens.size() - 1); t++){
                           variables[tempTokens[t].token] = std::stod(tempTokens[tokens.size() - 1].token);
                         }
                       } else {
-                         for(int t = 0; t < tokens.size() - 1; t++){
+                         for(int t = 0; t < (int)(tokens.size() - 1); t++){
                           variables[tempTokens[t].token] = variables[tempTokens[tokens.size() - 1].token];
                         }
                       }
