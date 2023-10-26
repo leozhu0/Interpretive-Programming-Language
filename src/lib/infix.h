@@ -5,7 +5,8 @@
 
 class InfixParser {
   Node* root;
-  size_t index = 0;
+  int index = -1;
+  size_t parenNum = 0;
 
   Node* createTree(Node* leftHandSide, int minPrecedence, std::vector<Token> tokens);
   int precedence(std::string op);

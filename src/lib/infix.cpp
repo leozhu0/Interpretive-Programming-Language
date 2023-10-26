@@ -13,10 +13,14 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
     exit(2);
   }
 
-  NumNode* leftHandSide = new NumNode;
-  leftHandSide->value = tokens[0].token;
+  root = createTree(nextNode(tokens), 0, tokens);
 
-  root = createTree(leftHandSide, 0, tokens);
+  if (parenNum != 0) {
+    //TODO
+    std::cout << "placeholder error 7" << std::endl;
+    exit(2);
+  }
+
   index = 0;
 }
 
@@ -76,15 +80,27 @@ int InfixParser::precedence(std::string op) {
 }
 
 Token& InfixParser::peak(std::vector<Token> tokens) {
-  for (size_t i = index; i < tokens.size(); ++i) {
-    if (tokens[i].type == OPERATOR || tokens[i].token == ")") return tokens[i];
+  for (int i = index; i < tokens.size(); ++i) {
+    if (tokens[i].type == OPERATOR) return tokens[i];
+
+    else if (tokens[i].token == ")") {
+      if (parenNum == 0) {
+	//TODO
+        std::cout << "placeholder error 6" << std::endl;
+	exit(2);
+      }
+
+      --parenNum;
+      return tokens[i];
+    }
+
   }
 
   return tokens.back();
 }
 
 Node* InfixParser::nextNode(std::vector<Token> tokens) {
-  for (size_t i = index + 1; i < tokens.size(); ++i) {
+  for (int i = index + 1; i < tokens.size(); ++i) {
     if (tokens[i].type == NUMBER) {
       index = i;
 
@@ -108,14 +124,17 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 
     else if (tokens[i].token == "(") {
       if (tokens[i + 1].token == ")") {
+	//TODO
         std::cout << "placeholder error 5" << std::endl;
 	exit(2);
       }
       
       index = i;
+      ++parenNum;
       Node* tempNode = createTree(nextNode(tokens), 0, tokens);
 
       if (tokens[index + 1].token != ")") {
+	//TODO
         std::cout << "placeholder error 4" << std::endl;
 	exit(2);
       }
