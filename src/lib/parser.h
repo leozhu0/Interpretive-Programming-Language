@@ -28,16 +28,18 @@ struct AssignNode : public OpNode {
 };
 
 
-struct VarNode : public NumNode {
-  std::string varValue;
+struct VarNode : public Node {
+ // std::string varValue;
   double getValue();
+  std::string toString();
 };
 
+std::map<std::string, double> variables; //was VarNode*
 class Parser {
   Node* root;
 
   Node* createNode(std::vector<Token> tokens);
-  std::map<std::string, VarNode*> variables;
+  
 public:
   ~Parser();
   Parser(std::vector<Token> tokens);
