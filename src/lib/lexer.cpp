@@ -54,7 +54,7 @@ std::vector<Token> Lexer::lexer(){
     std::vector<Token> sequence;
     char rawInput;
     int line = 1;
-    int i = 0;
+    int i = 1;
     int indents = 0;
     //This will later be used to check for more than one decimal in number
     int numDecimal = 0;
@@ -107,7 +107,7 @@ std::vector<Token> Lexer::lexer(){
                         pushSeq(element, NUMBER, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
-                        pushSeq(rawInputString, type, line, i+1, sequence);
+                        pushSeq(rawInputString, type, line, i, sequence);
                         element = "";
                     }
                     
@@ -121,7 +121,7 @@ std::vector<Token> Lexer::lexer(){
                         pushSeq(element, VARIABLE, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
-                        pushSeq(rawInputString, type, line, i+1, sequence);
+                        pushSeq(rawInputString, type, line, i, sequence);
                         element = "";
                     }
 
@@ -129,7 +129,7 @@ std::vector<Token> Lexer::lexer(){
                     pushSeq(element, tokenType(element[0]), line, i - element.size(), sequence);
                     numDecimal = 0;
                     std::string rawInputString(1, rawInput);
-                    pushSeq(rawInputString, type, line, i+1, sequence);
+                    pushSeq(rawInputString, type, line, i, sequence);
                     element = "";
                     //elementType = NULLTYPE;
                 }
