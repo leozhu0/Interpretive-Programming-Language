@@ -44,7 +44,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
 
     //TODO add assignment case
     OpNode* tempNode = new OpNode;
-    tempNode.value = currOp;
+    tempNode->value = currOp;
     tempNode->children[0] = leftHandSide;
     tempNode->children[1] = rightHandSide;
 
@@ -61,7 +61,7 @@ int InfixParser::precedence(std::string op) {
 
   else if (op == "*" || op == "/") return 2;
 
-  else if (op = "END" || op == ")") return -1;
+  else if (op == "END" || op == ")") return -1;
 
   else {
     //TODO
@@ -80,7 +80,7 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
 
 Node* InfixParser::nextNode(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
-    if (tokens[i].type == NUMBER {
+    if (tokens[i].type == NUMBER) {
       index = i;
 
       NumNode* tempNode = new NumNode;
