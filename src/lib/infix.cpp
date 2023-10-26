@@ -1,3 +1,4 @@
+#include "infix.h"
 #include "parser.h"
 #include <iostream>
 
