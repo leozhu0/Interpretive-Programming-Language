@@ -78,7 +78,9 @@ int InfixParser::precedence(std::string op) {
 
 Token& InfixParser::peak(std::vector<Token> tokens) {
   for (size_t i = index; i < tokens.size(); ++i) {
-    if (tokens[i].type == OPERATOR) return tokens[i];
+    if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT) {
+      return tokens[i];
+    }
 
     else if (tokens[i].token == ")") {
       if (parenNum == 0) {
