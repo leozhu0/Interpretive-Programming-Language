@@ -10,6 +10,7 @@ class Lexer {
 
     public:
         std::vector<Token> lexer();
+        std::vector<Token> lexer(std::string raw);
 };
 
 
