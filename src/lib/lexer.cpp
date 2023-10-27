@@ -74,7 +74,8 @@ std::vector<Token> Lexer::lexer(){
             //When you start a newline, take what was inside element and add it to sequence. 
             //This will always be a number
             if(tokenType(element[0]) != NULLTYPE){ 
-                pushSeq(element, tokenType(element[0]), line, i +1 - element.size(), sequence);
+                //std::cout << "A: " << i + 1 - element.size() << element << ":::";
+                pushSeq(element, tokenType(element[0]), line, i - element.size(), sequence);
             }
 
 
@@ -106,9 +107,11 @@ std::vector<Token> Lexer::lexer(){
                         }
                         element += rawInput;
                     } else {
+                        //std::cout << "B: " << i - element.size();
                         pushSeq(element, NUMBER, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
+                        //std::cout << "C: " << i;
                         pushSeq(rawInputString, type, line, i, sequence);
                         element = "";
                     }
@@ -123,14 +126,17 @@ std::vector<Token> Lexer::lexer(){
                         pushSeq(element, VARIABLE, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
+                        //std::cout << "D: " << i;
                         pushSeq(rawInputString, type, line, i, sequence);
                         element = "";
                     }
 
                 } else {
+                    //std::cout << "E: " <<i - element.size();
                     pushSeq(element, tokenType(element[0]), line, i - element.size(), sequence);
                     numDecimal = 0;
                     std::string rawInputString(1, rawInput);
+                    //std::cout << "F: " <<i;
                     pushSeq(rawInputString, type, line, i, sequence);
                     element = "";
                     //elementType = NULLTYPE;
@@ -139,6 +145,7 @@ std::vector<Token> Lexer::lexer(){
                 
     
         } else {
+            //std::cout << "G: " << i - element.size();
             pushSeq(element, tokenType(element[0]), line, i - element.size(), sequence);
             element = "";
             numDecimal = 0;
@@ -175,5 +182,11 @@ std::vector<Token> Lexer::lexer(){
 
 
 
-
-
+ 
+/*
+x 7.899-f(temp)    
+_67*)_+B =
+  lot49/50
+(())
+_v4rl4b13=42
+*/
