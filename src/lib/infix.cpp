@@ -1,5 +1,7 @@
 #include "infix.h"
 #include <iostream>
+#include <sstream>
+#include <stdexcept>
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
   if (tokens.size() == 0) {
@@ -8,9 +10,9 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
   }
 
   if (tokens.size() == 1) {
-    //TODO
-    std::cout << "placeholder error" << std::endl;
-    exit(2);
+    std::ostringstream error;
+    error << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
+    throw std::runtime_error(error.str());
   }
 
   root = createTree(nextNode(tokens), 0, tokens);
@@ -46,8 +48,10 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
       nextOp = peak(tokens).token;
     }
 
-    if (currOp == "=") AssignNode* tempNode = new AssignNode;
-    else OpNode* tempNode = new OpNode;
+    Node* tempNode;
+
+    if (currOp == "=") tempNode = new AssignNode;
+    else tempNode = new OpNode;
 
     //OpNode* tempNode = new OpNode;
     tempNode->value = currOp;
