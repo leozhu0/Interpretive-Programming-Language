@@ -193,7 +193,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
     char rawInput;
     for(int r = 0; r <= (int)raw.length(); r++) {
 
-        if(r == raw.length()){
+        if(r == (int)raw.length()){
             if(tokenType(element[0]) != NULLTYPE){ 
                 //std::cout << "A: " << i + 1 - element.size() << element << ":::";
                 pushSeq(element, tokenType(element[0]), line, i - element.size(), sequence);
