@@ -144,15 +144,15 @@ std::vector<Token> Lexer::lexer(){
             numDecimal = 0;
         }
 
-        if(type != SPACE || !lastWasSpace){
+        /*if(type != SPACE || !lastWasSpace){
             i++;
         }
         if(type == SPACE){
             lastWasSpace=1;
         } else{
             lastWasSpace = 0;
-        }
-        //i++;
+        }*/
+        i++;
     }
 
     /*if(sequence.size() > 0){
