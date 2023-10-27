@@ -48,7 +48,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
       nextOp = peak(tokens).token;
     }
 
-    Node* tempNode;
+    OpNode* tempNode;
 
     if (currOp == "=") tempNode = new AssignNode;
     else tempNode = new OpNode;
