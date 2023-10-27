@@ -113,6 +113,12 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
         throw std::runtime_error(error.str());
       }
 
+      if (tokens[i + 1].token == "(") {
+        std::ostringstream error;
+	error << "Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
+	throw std::runtime_error(error.str());
+      }
+
       --parenNum;
       return tokens[i];
     }
@@ -179,6 +185,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       ++parenNum;
       Node* tempNode = createTree(nextNode(tokens), 0, tokens);
 
+      /*
       if (tokens[index + 1].token != ")") {
         std::ostringstream error;
         error << "Unexpected token at line " << tokens[index + 1].line << " column " << tokens[index + 1].column << ": " << tokens[index + 1].token;
@@ -190,6 +197,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
         error << "Unexpected token at line " << tokens[index + 2].line << " column " << tokens[index + 2].column << ": " << tokens[index + 2].token;
         throw std::runtime_error(error.str());
       }
+      */
 
       return tempNode;
     }
