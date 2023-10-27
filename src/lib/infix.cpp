@@ -80,7 +80,7 @@ int InfixParser::precedence(std::string op) {
 }
 
 Token& InfixParser::peak(std::vector<Token> tokens) {
-  for (int i = index; i < tokens.size(); ++i) {
+  for (size_t i = index; i < tokens.size(); ++i) {
     if (tokens[i].type == OPERATOR) return tokens[i];
 
     else if (tokens[i].token == ")") {
@@ -100,7 +100,7 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
 }
 
 Node* InfixParser::nextNode(std::vector<Token> tokens) {
-  for (int i = index + 1; i < tokens.size(); ++i) {
+  for (size_t i = index + 1; i < tokens.size(); ++i) {
     if (tokens[i].type == NUMBER) {
       index = i;
 
