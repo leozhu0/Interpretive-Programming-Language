@@ -60,6 +60,7 @@ std::vector<Token> Lexer::lexer(){
     int numDecimal = 0;
     std::string element = "";
     //TokenType elementType = NULLTYPE;
+    bool lastWasSpace = 0;
     while (std::cin.get(rawInput)) {
         if(rawInput == '\n'){
             indents++;
@@ -136,15 +137,21 @@ std::vector<Token> Lexer::lexer(){
                 }
                 
                 
-    i++;
+    
         } else {
             pushSeq(element, tokenType(element[0]), line, i - element.size(), sequence);
             element = "";
             numDecimal = 0;
         }
 
-        
-
+        if(type != SPACE || !lastWasSpace){
+            i++;
+        }
+        if(type == SPACE){
+            lastWasSpace=1;
+        } else{
+            lastWasSpace = 0;
+        }
         //i++;
     }
 
