@@ -4,10 +4,12 @@
 #include <stdexcept>
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
+/*
   for (Token token : tokens) {
     std::cout << token.token << std::endl;
   }
   std::cout << "_______________________________________" << std::endl;
+*/
 
   if (tokens.size() == 0) {
     throw std::runtime_error("No tokens");
@@ -120,7 +122,7 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
       }
 
       --parenNum;
-      std::cout << "PN: " << parenNum << std::endl;
+      //std::cout << "PN: " << parenNum << std::endl;
       return tokens[i];
     }
 
@@ -184,7 +186,8 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       
       index = i;
       ++parenNum;
-      std::cout << "PN: " << parenNum << std::endl;
+      //std::cout << "PN: " << parenNum << std::endl;
+
       Node* tempNode = createTree(nextNode(tokens), 0, tokens);
 
       ++index;
