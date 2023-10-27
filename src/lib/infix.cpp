@@ -14,6 +14,12 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
     throw std::runtime_error(error.str());
   }
 
+  if (tokens[0].type == OPERATOR || tokens[0].type == ASSIGNMENT) {
+    std::ostringstream error;
+    error << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
+    throw std::runtime_error(error.str());
+  }
+
   root = createTree(nextNode(tokens), 0, tokens);
 
   if (parenNum != 0) {
@@ -53,8 +59,8 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     else tempNode = new OpNode;
 
     tempNode->value = currOp;
-    tempNode->children[0] = leftHandSide;
-    tempNode->children[1] = rightHandSide;
+    tempNode->children.push_back(leftHandSide);
+    tempNode->children.push_back(rightHandSide);
 
     leftHandSide = tempNode;
   }
@@ -79,6 +85,19 @@ int InfixParser::precedence(std::string op) {
 Token& InfixParser::peak(std::vector<Token> tokens) {
   for (size_t i = index; i < tokens.size(); ++i) {
     if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT) {
+
+      if (tokens[i - 1].type == OPERATOR || tokens[i - 1].type == ASSIGNMENT || tokens[i - 1].token == "(") {
+        std::ostringstream error;
+        error << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token;
+        throw std::runtime_error(error.str());
+      }
+
+      else if (tokens[i + 1].type == OPERATOR || tokens[i + 1].type == ASSIGNMENT || tokens[i + 1].token == ")") {
+        std::ostringstream error;
+        error << "Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
+        throw std::runtime_error(error.str());
+      }
+
       return tokens[i];
     }
 
