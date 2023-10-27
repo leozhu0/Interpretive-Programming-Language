@@ -86,9 +86,9 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
   for (size_t i = index; i < tokens.size(); ++i) {
     if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT) {
 
-      if (tokens[i - 1].type == OPERATOR || tokens[i - 1].type == ASSIGNMENT || tokens[i - 1].token == "(") {
+      if (tokens[i - 1].token == "(") {
         std::ostringstream error;
-        error << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token;
+        error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token;
         throw std::runtime_error(error.str());
       }
 
@@ -120,6 +120,19 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
 Node* InfixParser::nextNode(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
     if (tokens[i].type == NUMBER) {
+
+      if (tokens[i + 1].type == NUMBER || tokens[i + 1].type == VARIABLE || tokens[i + 1].token == "(") {
+        std::ostringstream error;
+        error << "Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
+        throw std::runtime_error(error.str());
+      }
+
+      else if (i != 0 && tokens[i - 1].token == ")") {
+        std::ostringstream error;
+        error << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token;
+        throw std::runtime_error(error.str());
+      }
+
       index = i;
 
       NumNode* tempNode = new NumNode;
@@ -129,6 +142,19 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
     }
 
     else if (tokens[i].type == VARIABLE) {
+      
+      if (tokens[i + 1].type == NUMBER || tokens[i + 1].type == VARIABLE || tokens[i + 1].token == "(") {
+        std::ostringstream error;
+        error << "Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
+        throw std::runtime_error(error.str());
+      }
+
+      else if (i != 0 && tokens[i - 1].token == ")") {
+        std::ostringstream error;
+        error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token;
+        throw std::runtime_error(error.str());
+      }
+
       index = i;
 
       VarNode* tempNode = new VarNode;
