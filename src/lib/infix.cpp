@@ -1,24 +1,25 @@
 #include "infix.h"
 #include <iostream>
+#include <sstream>
+#include <stdexcept>
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
   if (tokens.size() == 0) {
-    std::cout << "No tokens" << std::endl;
-    exit(2);
+    throw std::runtime_error("No tokens");
   }
 
   if (tokens.size() == 1) {
-    //TODO
-    std::cout << "placeholder error" << std::endl;
-    exit(2);
+    std::ostringstream error;
+    error << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
+    throw std::runtime_error(error.str());
   }
 
   root = createTree(nextNode(tokens), 0, tokens);
 
   if (parenNum != 0) {
-    //TODO
-    std::cout << "placeholder error 7" << std::endl;
-    exit(2);
+    std::ostringstream error;
+    error << "Unexpected token at line " << tokens[tokens.size() - 1].line << " column " << tokens[tokens.size() - 1].column << ": " << tokens[tokens.size() - 1].token;
+    throw std::runtime_error(error.str());
   }
 
   index = 0;
@@ -46,13 +47,11 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
       nextOp = peak(tokens).token;
     }
 
-    //TODO add assignment case
-    /*
-    if (currOp == "=") AssignNode* tempNode = new AssignNode;
-    else OpNode* tempBode = new OpNode;
-    */
+    OpNode* tempNode;
 
-    OpNode* tempNode = new OpNode;
+    if (currOp == "=") tempNode = new AssignNode;
+    else tempNode = new OpNode;
+
     tempNode->value = currOp;
     tempNode->children[0] = leftHandSide;
     tempNode->children[1] = rightHandSide;
@@ -73,21 +72,21 @@ int InfixParser::precedence(std::string op) {
   else if (op == "END" || op == ")") return -1;
 
   else {
-    //TODO
-    std::cout << "placeholder error 2" << std::endl;
-    exit(2);
+    throw std::runtime_error("Undefined operator");
   }
 }
 
 Token& InfixParser::peak(std::vector<Token> tokens) {
   for (size_t i = index; i < tokens.size(); ++i) {
-    if (tokens[i].type == OPERATOR) return tokens[i];
+    if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT) {
+      return tokens[i];
+    }
 
     else if (tokens[i].token == ")") {
       if (parenNum == 0) {
-	//TODO
-        std::cout << "placeholder error 6" << std::endl;
-	exit(2);
+        std::ostringstream error;
+        error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token;
+        throw std::runtime_error(error.str());
       }
 
       --parenNum;
@@ -110,8 +109,6 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       return tempNode;
     }
 
-    //TODO add variable case
-    /*
     else if (tokens[i].type == VARIABLE) {
       index = i;
 
@@ -120,13 +117,12 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 
       return tempNode;
     }
-    */
 
     else if (tokens[i].token == "(") {
       if (tokens[i + 1].token == ")") {
-	//TODO
-        std::cout << "placeholder error 5" << std::endl;
-	exit(2);
+        std::ostringstream error;
+        error << "Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
+        throw std::runtime_error(error.str());
       }
       
       index = i;
@@ -134,9 +130,9 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       Node* tempNode = createTree(nextNode(tokens), 0, tokens);
 
       if (tokens[index + 1].token != ")") {
-	//TODO
-        std::cout << "placeholder error 4" << std::endl;
-	exit(2);
+        std::ostringstream error;
+        error << "Unexpected token at line " << tokens[index + 1].line << " column " << tokens[index + 1].column << ": " << tokens[index + 1].token;
+        throw std::runtime_error(error.str());
       }
 
       return tempNode;
@@ -144,9 +140,9 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 
   }
 
-  //TODO
-  std::cout << "placeholder error 3" << std::endl;
-  exit(2);
+  std::ostringstream error;
+  error << "Unexpected token at line " << tokens[tokens.size() - 1].line << " column " << tokens[tokens.size() - 1].column << ": " << tokens[tokens.size() - 1].token;
+  throw std::runtime_error(error.str());
 }
 
 

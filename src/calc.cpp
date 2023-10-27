@@ -3,11 +3,12 @@
 #include <iostream>
 
 int main() {
-  Lexer lexer;
+  Lexer lexer = Lexer();
+  std::string line;
 
-  while (lexer = Lexer()) {
+  while (std::getline(std::cin, line)) {
     try {
-      InfixParser infixParser = InfixParser(lexer.lexer());
+      InfixParser infixParser = InfixParser(lexer.lexer(line));
       std::cout << infixParser.toString() << std::endl << infixParser.calculate() << std::endl;
     }
 
