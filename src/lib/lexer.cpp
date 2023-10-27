@@ -191,7 +191,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
     //TokenType elementType = NULLTYPE;
     //bool lastWasSpace = 0;
     char rawInput;
-    for(int r = 0; r <= raw.length(); r++) {
+    for(int r = 0; r <= (int)raw.length(); r++) {
 
         if(r == raw.length()){
             if(tokenType(element[0]) != NULLTYPE){ 
