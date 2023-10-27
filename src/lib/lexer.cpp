@@ -136,7 +136,7 @@ std::vector<Token> Lexer::lexer(){
                 }
                 
                 
-
+    i++;
         } else {
             pushSeq(element, tokenType(element[0]), line, i - element.size(), sequence);
             element = "";
@@ -145,7 +145,7 @@ std::vector<Token> Lexer::lexer(){
 
         
 
-        i++;
+        //i++;
     }
 
     /*if(sequence.size() > 0){
@@ -156,7 +156,7 @@ std::vector<Token> Lexer::lexer(){
     if(sequence.size() == 0 || indents >= 1){
         sequence.push_back(Token{line,1,"END", END});
     } else {
-        sequence.push_back(Token{line,sequence.back().column,"END", END});
+        sequence.push_back(Token{line,sequence.back().column+1,"END", END});
     }
     
 
