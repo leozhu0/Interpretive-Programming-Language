@@ -47,7 +47,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     }
 
     if (currOp == "=") AssignNode* tempNode = new AssignNode;
-    else OpNode* tempBode = new OpNode;
+    else OpNode* tempNode = new OpNode;
 
     //OpNode* tempNode = new OpNode;
     tempNode->value = currOp;
