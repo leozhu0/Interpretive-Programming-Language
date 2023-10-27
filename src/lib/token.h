@@ -18,5 +18,12 @@ class Token {
     int column;
     std::string token;
     TokenType type;
+
+    /*Token(int a, int b, std::string c, TokenType d){
+      line = a;
+      column = b;
+      token = c;
+      type = d;
+    }*/
   
 };
