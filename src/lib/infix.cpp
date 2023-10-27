@@ -4,6 +4,11 @@
 #include <stdexcept>
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
+  for (Token token : tokens) {
+    std::cout << token.token << std::endl;
+  }
+  std::cout << "_______________________________________" << std::endl;
+
   if (tokens.size() == 0) {
     throw std::runtime_error("No tokens");
   }
@@ -177,6 +182,12 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       if (tokens[index + 1].token != ")") {
         std::ostringstream error;
         error << "Unexpected token at line " << tokens[index + 1].line << " column " << tokens[index + 1].column << ": " << tokens[index + 1].token;
+        throw std::runtime_error(error.str());
+      }
+
+      if (tokens[index + 2].token == "(") {
+        std::ostringstream error;
+        error << "Unexpected token at line " << tokens[index + 2].line << " column " << tokens[index + 2].column << ": " << tokens[index + 2].token;
         throw std::runtime_error(error.str());
       }
 
