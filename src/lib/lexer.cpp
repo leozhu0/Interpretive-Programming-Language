@@ -60,7 +60,7 @@ std::vector<Token> Lexer::lexer(){
     int numDecimal = 0;
     std::string element = "";
     //TokenType elementType = NULLTYPE;
-    bool lastWasSpace = 0;
+    //bool lastWasSpace = 0;
     while (std::cin.get(rawInput)) {
         if(rawInput == '\n'){
             indents++;
