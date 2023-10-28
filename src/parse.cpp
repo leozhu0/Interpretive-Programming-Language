@@ -36,12 +36,16 @@ int index = 0;
 
 
 
-Parser parser = Parser();
+
 
 for ( const auto &line : multilineTokens )
 {
+  Parser parser = Parser();
+
   parser.ParserFunc(line);
   std::cout << parser.toString() << std::endl << parser.calculate() << std::endl;
+
+  //delete parser;
 }
 
 
