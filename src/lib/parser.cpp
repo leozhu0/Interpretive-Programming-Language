@@ -56,7 +56,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
       if(tokens[start + 1].type == OPERATOR){
                   ++start;
                 // variable to check for parenthesis error
-                size_t allowedParenthesis = 1;
+                int allowedParenthesis = 1;
                 OpNode* node = new OpNode;
                 
                 
@@ -74,7 +74,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                       std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
                       exit(2);
                     }
-
+                    
                     --allowedParenthesis;
                   }
                   
@@ -123,8 +123,9 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                   }
 
                 }
+                //std::cout << "ALLOW: " << allowedParenthesis << std::endl;
 
-                if (allowedParenthesis != 0) {
+                if (!(allowedParenthesis <= 0)) {
                   std::cout << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column + tokens[tokens.size() - 2].token.size() << ": " << tokens[tokens.size() - 1].token << std::endl;
                   exit(2);
                 }
@@ -135,7 +136,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
               } else if (tokens[start + 1].type == ASSIGNMENT){
                 ++start;
                 // variable to check for parenthesis error
-                size_t allowedParenthesis = 1;
+                int allowedParenthesis = 1;
                 OpNode* node = new AssignNode;
                 
                 node->value = tokens[start].token;
@@ -217,7 +218,23 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
                 }
 
-                if (allowedParenthesis != 0) {
+
+               
+                      for(int t = 0; t < (int)(node->children.size() - 1); t++){
+                          variables[node->children.at(t)->value] = node->children.at(node->children.size() - 1)->getValue();
+                        }
+
+                    /* if(stringOfDouble(node->children.at(node->children.size() - 1)->value)){
+                        for(int t = 0; t < (int)(node->children.size() - 1); t++){
+                          variables[node->children.at(t)->value] = std::stod(node->children.at(node->children.size() - 1)->value);
+                        }
+                      } else {
+                         for(int t = 0; t < (int)(node->children.size() - 1); t++){
+                          variables[node->children.at(t)->value] = variables[node->children.at(node->children.size() - 1)->value];
+                        }
+                      }*/
+
+                if (!(allowedParenthesis <= 0)) {
                   std::cout << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column + tokens[tokens.size() - 2].token.size() << ": " << tokens[tokens.size() - 1].token << std::endl;
                   exit(2);
                 }
