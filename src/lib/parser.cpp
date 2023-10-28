@@ -2,7 +2,7 @@
 #include <iostream>
 #include <map>
 
-
+std::map<std::string, double> variables;
 
 Parser::~Parser() {
   delete root;

@@ -50,4 +50,4 @@ public:
 };
 
 
-std::map<std::string, double> variables; //was VarNode*
+extern std::map<std::string, double> variables; //was VarNode*
