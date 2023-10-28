@@ -13,9 +13,9 @@ int main() {
   //run though each line
   std::vector<Token> tokens = lexer.lexer();
 
-  for(int i = 0; i < (int)(tokens.size()); i++){
+  /*for(int i = 0; i < (int)(tokens.size()); i++){
         std::cout << std::right << std::setw(4) << tokens.at(i).line << std::right << std::setw(5) << tokens.at(i).column << "  " << tokens.at(i).token << std::endl;
-    }
+    }*/
 
   std::vector<std::vector<Token>> multilineTokens;
  
