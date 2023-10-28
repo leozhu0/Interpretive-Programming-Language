@@ -37,11 +37,11 @@ TokenType Lexer::tokenType(char token){
 void Lexer::pushSeq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
     if(type==NUMBER){
         if(element[0]=='.'){
-            std::cout << "Syntax error on line "<< line <<" column "<< column +1<<"." << std::endl;
+            std::cout << "1Syntax error on line "<< line <<" column "<< column<<"." << std::endl;
             exit(1);
         }
         if(element.back() == '.'){
-            std::cout << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()) <<"." << std::endl;
+            std::cout << "2Syntax error on line "<< line <<" column "<< (int)(column + element.size()-1) <<"." << std::endl;
             exit(1);
         }
     }
@@ -92,7 +92,7 @@ std::vector<Token> Lexer::lexer(){
         TokenType type = tokenType(rawInput);
 
         if(type == NULLTYPE || (numDecimal > 0 && rawInput == '.')){
-            std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+            std::cout << "3Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
             exit(1);
         }
 
@@ -105,7 +105,7 @@ std::vector<Token> Lexer::lexer(){
                         element += rawInput;
                     } else if (tokenType(element[0]) == VARIABLE){
                         if(rawInput == '.'){
-                            std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+                            std::cout << "4Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
                             exit(0);
                         }
                         element += rawInput;
@@ -121,7 +121,7 @@ std::vector<Token> Lexer::lexer(){
                     
                 } else if(tokenType(rawInput)==VARIABLE){
                     if(tokenType(element[0]) == NUMBER){
-                        std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+                        std::cout << "5Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
                         exit(0);
                     } else if (tokenType(element[0]) == VARIABLE || element == ""){
                         element += rawInput;
