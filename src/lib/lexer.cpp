@@ -37,11 +37,11 @@ TokenType Lexer::tokenType(char token){
 void Lexer::pushSeq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
     if(type==NUMBER){
         if(element[0]=='.'){
-            std::cout << "Syntax error on line "<< line <<" column "<< column <<"." << std::endl;
+            std::cout << "Syntax error on line "<< line <<" column "<< column +1<<"." << std::endl;
             exit(1);
         }
         if(element.back() == '.'){
-            std::cout << "Syntax error on line "<< line <<" column "<< (int)(column + element.size() - 1) <<"." << std::endl;
+            std::cout << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()) <<"." << std::endl;
             exit(1);
         }
     }
@@ -61,11 +61,11 @@ std::vector<Token> Lexer::lexer(){
     std::string element = "";
     //TokenType elementType = NULLTYPE;
     //bool lastWasSpace = 0;
-    int numLineChars = 0;
+    //int numLineChars = 0;
     while (std::cin.get(rawInput)) {
-        numLineChars ++;
+        //numLineChars ++;
         if(rawInput == '\n'){
-            numLineChars = 0;
+            //numLineChars = 0;
             indents++;
            /* if(indents > 1){
                 //std::cout << "EARLY"<<std::endl;
@@ -173,8 +173,8 @@ std::vector<Token> Lexer::lexer(){
     if(sequence.size() == 0 || indents >= 1){
         sequence.push_back(Token{line,1,"END", END});
     } else {
-        sequence.push_back(Token{line,numLineChars,"END", END});
-        //sequence.back().column+1
+        sequence.push_back(Token{line,sequence.back().column+1,"END", END});
+        //
     }
     
 
