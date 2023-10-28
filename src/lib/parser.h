@@ -3,6 +3,7 @@
 #include "token.h"
 #include <map>
 
+
 struct Node {
   std::string value;
   virtual ~Node() {};
@@ -47,3 +48,6 @@ public:
   std::string toString();
   double calculate();
 };
+
+
+std::map<std::string, double> variables; //was VarNode*
