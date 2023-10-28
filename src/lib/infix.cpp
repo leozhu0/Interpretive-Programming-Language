@@ -69,6 +69,8 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     tempNode->children.push_back(leftHandSide);
     tempNode->children.push_back(rightHandSide);
 
+    if (currOp == "=") variables[leftHandSide->toString()] = rightHandSide->getValue();
+
     leftHandSide = tempNode;
   }
 
