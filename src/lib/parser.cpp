@@ -2,7 +2,7 @@
 #include <iostream>
 #include <map>
 
-std::map<std::string, double> variables; //was VarNode*
+
 
 Parser::~Parser() {
   delete root;
@@ -74,7 +74,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                       std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
                       exit(2);
                     }
-                    
+                    //std::cout << "MUNU";
                     --allowedParenthesis;
                   }
                   
@@ -170,6 +170,8 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                   }
                 
 
+                
+
                   // adding an operator to the child pointers
                   else if (tokens[i].token == "(") {
                       size_t parenNum = 1;
@@ -198,15 +200,6 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                       tempTokens.push_back(tokens[tokens.size() - 1]);
 
 
-                      if(stringOfDouble(tempTokens[tokens.size() - 1].token)){
-                        for(int t = 0; t < (int)(tokens.size() - 1); t++){
-                          variables[tempTokens[t].token] = std::stod(tempTokens[tokens.size() - 1].token);
-                        }
-                      } else {
-                         for(int t = 0; t < (int)(tokens.size() - 1); t++){
-                          variables[tempTokens[t].token] = variables[tempTokens[tokens.size() - 1].token];
-                        }
-                      }
 
                       node->children.push_back(createNode(tempTokens));
                   }
@@ -219,7 +212,16 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                 }
 
 
-               
+                /*if(stringOfDouble(tokens[tokens.size() - 1].token)){
+                        variables[tokens[i].token] = std::stod(tokens[tokens.size() - 1].token);
+                        std::cout << ":::: "<< variables[tokens[i].token];
+                  } else {
+                        variables[tokens[i].token] = variables[tokens[tokens.size() - 1].token]; 
+                        std::cout << ":::" << variables[tokens[i].token];
+                  }*/
+
+                  /*for (Node* n: node->children){
+                      std::cout << n->value << ", ";}*/
                       for(int t = 0; t < (int)(node->children.size() - 1); t++){
                           variables[node->children.at(t)->value] = node->children.at(node->children.size() - 1)->getValue();
                         }
@@ -238,6 +240,9 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                   std::cout << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column + tokens[tokens.size() - 2].token.size() << ": " << tokens[tokens.size() - 1].token << std::endl;
                   exit(2);
                 }
+
+
+                 
 
                 return node;
 
