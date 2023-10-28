@@ -3,8 +3,6 @@
 #include <sstream>
 #include <stdexcept>
 
-//std::map<std::string, double> variables;
-
 InfixParser::InfixParser(std::vector<Token> tokens) {
 /*
   for (Token token : tokens) {
@@ -29,6 +27,7 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
     throw std::runtime_error(error.str());
   }
 
+  // creating the tree
   root = createTree(nextNode(tokens), 0, tokens);
 
   if (parenNum != 0) {
@@ -37,6 +36,7 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
     throw std::runtime_error(error.str());
   }
 
+  // resetting the index after parsing through a list of tokens
   index = 0;
 }
 
