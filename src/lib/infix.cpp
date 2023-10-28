@@ -93,13 +93,13 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
     if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT) {
 
-      if (tokens[i - 1].token == "(") {
+      if ((tokens[i - 1].token == "(") || (tokens[i].type == ASSIGNMENT && tokens[i - 1].type != VARIABLE)) {
         std::ostringstream error;
         error << "9 Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token;
         throw std::runtime_error(error.str());
       }
 
-      else if (tokens[i + 1].type == OPERATOR || tokens[i + 1].type == ASSIGNMENT || tokens[i + 1].token == ")") {
+      else if (tokens[i + 1].type == OPERATOR || tokens[i + 1].type == ASSIGNMENT || tokens[i + 1].token == ")" || tokens[i + 1].type == END) {
         std::ostringstream error;
         error << "10 Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
         throw std::runtime_error(error.str());

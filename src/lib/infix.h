@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 #include "token.h"
-#include "parser.cpp"
+#include "parser.h"
 
 class InfixParser {
   Node* root;
