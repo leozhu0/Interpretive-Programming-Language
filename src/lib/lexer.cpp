@@ -37,11 +37,11 @@ TokenType Lexer::tokenType(char token){
 void Lexer::pushSeq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
     if(type==NUMBER){
         if(element[0]=='.'){
-            std::cout << "Syntax error on line "<< line <<" column "<< int(column +1)<<"." << std::endl;
+            std::cout << "Syntax error on line "<< line <<" column "<< int(column +1)+100<<"." << std::endl;
             exit(1);
         }
         if(element.back() == '.'){
-            std::cout << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()-2) <<"." << std::endl;
+            std::cout << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()-1)+1000 <<"." << std::endl;
             exit(1);
         }
     }
