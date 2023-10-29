@@ -37,11 +37,11 @@ TokenType Lexer::tokenType(char token){
 void Lexer::pushSeq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
     if(type==NUMBER){
         if(element[0]=='.'){
-            std::cout << "Syntax error on line "<< line <<" column "<< column <<"." << std::endl;
+            std::cout << "Syntax error on line "<< line <<" column "<< column +1<<"." << std::endl;
             exit(1);
         }
         if(element.back() == '.'){
-            std::cout << "Syntax error on line "<< line <<" column "<< (int)(column + element.size() - 1) <<"." << std::endl;
+            std::cout << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()) <<"." << std::endl;
             exit(1);
         }
     }
@@ -61,8 +61,11 @@ std::vector<Token> Lexer::lexer(){
     std::string element = "";
     //TokenType elementType = NULLTYPE;
     //bool lastWasSpace = 0;
+    //int numLineChars = 0;
     while (std::cin.get(rawInput)) {
+        //numLineChars ++;
         if(rawInput == '\n'){
+            //numLineChars = 0;
             indents++;
            /* if(indents > 1){
                 //std::cout << "EARLY"<<std::endl;
@@ -171,6 +174,7 @@ std::vector<Token> Lexer::lexer(){
         sequence.push_back(Token{line,1,"END", END});
     } else {
         sequence.push_back(Token{line,sequence.back().column+1,"END", END});
+        //
     }
     
 
@@ -188,16 +192,22 @@ std::vector<Token> Lexer::lexer(std::string raw){
     //This will later be used to check for more than one decimal in number
     int numDecimal = 0;
     std::string element = "";
+    //int numlineChars = 0;
     //TokenType elementType = NULLTYPE;
     //bool lastWasSpace = 0;
     char rawInput;
     for(int r = 0; r <= (int)raw.length(); r++) {
 
+         
+
         if(r == (int)raw.length()){
             if(tokenType(element[0]) != NULLTYPE){ 
                 //std::cout << "A: " << i + 1 - element.size() << element << ":::";
                 pushSeq(element, tokenType(element[0]), line, i - element.size(), sequence);
+
             }
+
+       
             break;
         }
         
@@ -286,7 +296,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
         sequence.push_back(Token{line,1,"END", END});
     }*/
     
-    sequence.push_back(Token{line,sequence.back().column+1,"END", END});
+    sequence.push_back(Token{line,(int)raw.length()+1,"END", END});
     
     
 
