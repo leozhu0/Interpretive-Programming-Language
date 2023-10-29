@@ -135,10 +135,20 @@ Node* Parser::createNode(std::vector<Token> tokens) {
               // default error case
               } else if (tokens[start + 1].type == ASSIGNMENT){
 
-                if(tokens[start + 2].type != VARIABLE){
-                            std::cout <<"Unexpected token at line "<<tokens[start + 2].line<<" column "<<tokens[start + 2].column<<": " <<tokens[start + 2].token<<std::endl;
-                            exit(2);
-                        }
+
+                int tempErrorParens = 1;
+                for(int t = 1; tempErrorParens != 0; t++){
+                  if(tokens[start + 1 + t].token == ")"){
+                    tempErrorParens--;
+                  }
+                  if(tokens[start + 1 + t].token == "("){
+                    tempErrorParens++;
+                  }
+                  if(tokens[start + 1 + t].type != VARIABLE){
+                              std::cout <<"Unexpected token at line "<<tokens[start + 1 + t].line<<" column "<<tokens[start + 1 + t].column<<": " <<tokens[start + 2].token<<std::endl;
+                              exit(2);
+                  }
+                }
 
                 ++start;
                 // variable to check for parenthesis error
