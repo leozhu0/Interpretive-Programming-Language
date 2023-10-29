@@ -5,7 +5,7 @@
 #include "parser.h"
 
 class InfixParser {
-  Node* root = nullptr;
+  Node* root;
   int index = -1;
   size_t parenNum = 0;
 
