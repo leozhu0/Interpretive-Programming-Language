@@ -31,7 +31,7 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
   }
 
   // creating the tree
-  root = createTree(nextNode(tokens), 0, tokens);
+  root.reset(createTree(nextNode(tokens), 0, tokens));
 
   if (parenNum != 0) {
     std::ostringstream error;
