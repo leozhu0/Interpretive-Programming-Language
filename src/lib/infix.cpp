@@ -14,9 +14,9 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
   }
 */
 
-  if (tokens.size() == 0) {
-    throw std::runtime_error("No tokens");
-  }
+  //if (tokens.size() == 0) {
+  //  throw std::runtime_error("No tokens");
+  //}
 
   if (tokens.size() == 1) {
     std::ostringstream error;

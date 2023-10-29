@@ -4,7 +4,7 @@
 #include "parser.h"
 
 class InfixParser {
-  Node* root;
+  std::unique_ptr<Node> root;
   int index = -1;
   size_t parenNum = 0;
 
