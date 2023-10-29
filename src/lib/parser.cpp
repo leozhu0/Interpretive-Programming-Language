@@ -33,6 +33,8 @@ bool stringOfDouble(std::string attempt){
 Node* Parser::createNode(std::vector<Token> tokens) {
   size_t start = 0;
 
+
+
   // If the expression is just a single number
   if (tokens[start].type == NUMBER) {
     if (tokens.size() > 2) {
@@ -46,7 +48,10 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     return node;
 
   // If the expression has an operator
-  } else if (tokens[start].token == "(") {
+  } else if (tokens[start].token != "("){
+      std::cout << "Unexpected token at line " << tokens[1].line << " column " << tokens[1].column << ": " << tokens[1].token << std::endl;
+      exit(2);
+  }else if (tokens[start].token == "(") {
     if (tokens[start + 1].type != OPERATOR && tokens[start + 1].type != ASSIGNMENT) {
       std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
       exit(2);

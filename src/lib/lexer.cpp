@@ -3,7 +3,7 @@
 #include <iostream>
 #include "lexer.h"
 
-std::string wholeSeq = "";
+//std::string wholeSeq = "";
 
 void Lexer::pushSeq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
    
@@ -40,7 +40,7 @@ std::vector<Token> Lexer::lexer(){
     //bool lastWasSpace = 0;
     //int numLineChars = 0;
     while (std::cin.get(rawInput)) {
-        wholeSeq+= rawInput;
+        //wholeSeq+= rawInput;
         //numLineChars ++;
         if(rawInput == '\n'){
             //numLineChars = 0;
@@ -156,7 +156,7 @@ std::vector<Token> Lexer::lexer(){
     }
     
 
-std::cout << wholeSeq;
+//std::cout << wholeSeq;
     return sequence;
 }
 
