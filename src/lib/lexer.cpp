@@ -3,7 +3,7 @@
 #include <iostream>
 #include "lexer.h"
 
-//std::string wholeSeq = "";
+std::string wholeSeq = "";
 
 void Lexer::pushSeq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
    
@@ -37,7 +37,7 @@ std::vector<Token> Lexer::lexer(){
     //bool lastWasSpace = 0;
     //int numLineChars = 0;
     while (std::cin.get(rawInput)) {
-        //wholeSeq+= rawInput;
+        wholeSeq+= rawInput;
         //numLineChars ++;
         if(rawInput == '\n'){
             //numLineChars = 0;
@@ -52,6 +52,7 @@ std::vector<Token> Lexer::lexer(){
             //When you start a newline, take what was inside element and add it to sequence. 
             //This will always be a number
             if(Token::tokenType(element[0]) != NULLTYPE){ 
+                wholeSeq+="A";
                 //std::cout << "A: " << i + 1 - element.size() << element << ":::";
                 pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
             }
@@ -145,6 +146,13 @@ std::vector<Token> Lexer::lexer(){
     } else {
         sequence.push_back(Token{line,1,"END", END});
     }*/
+
+        if(element != ""){ 
+                //std::cout << "A: " << i + 1 - element.size() << element << ":::";
+                pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
+            }
+
+
     if(sequence.size() == 0 || indents >= 1){
         sequence.push_back(Token{line,1,"END", END});
     } else {
