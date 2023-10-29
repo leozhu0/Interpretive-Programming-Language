@@ -155,18 +155,27 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
 
 
-
+//ignore
                 //std::cout << lastOpenIndex << std::endl;
               
                 //tempErrorParens = 1;
                 //bool oneNum = 0;
-                for(int t = 1; t < lastOpenIndex; t++){
-                  if(tokens[start + 1 + t].type != VARIABLE){
-                    std::cout <<"Unexpected token at line "<<tokens[start + 1 + t].line<<" column "<<tokens[start + 1 + t].column<<": " <<tokens[start + 1 + t].token<<std::endl;
-                    exit(2);
-                  }
+        //ignore      
+              
+              
+              
+              
+                // for(int t = 1; t < lastOpenIndex; t++){
+                //   if(tokens[start + 1 + t].type != VARIABLE){
+                //     std::cout <<"Unexpected token at line "<<tokens[start + 1 + t].line<<" column "<<tokens[start + 1 + t].column<<": " <<tokens[start + 1 + t].token<<std::endl;
+                //     exit(2);
+                //   }
                   
-                }
+                // }
+
+
+
+
 
                 /*
                 for(int t = 1; tempErrorParens!=0; t++){
