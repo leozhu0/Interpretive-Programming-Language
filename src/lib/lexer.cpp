@@ -9,10 +9,8 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
     if(element != ""){
         if(type==NUMBER){
         if(element[0]=='.'){
-           if(column != 15){
-                std::cout <<":::"<<element<<std::endl;
-            }
-            std::cout << "Syntax error on line "<< line <<" column "<< int(column)<<"." <<std::endl;
+           
+            std::cout << "Syntax error on line "<< line <<" column "<< int(column)<<"." << ((column != 15) ? element : "") <<std::endl;
             
             exit(1);
         }
