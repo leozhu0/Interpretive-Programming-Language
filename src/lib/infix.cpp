@@ -5,12 +5,14 @@
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
 
+  /*
   if (tokens.size() > 6) {
   for (Token token : tokens) {
     std::cout << token.token << std::endl;
   }
   std::cout << "_______________________________________" << std::endl;
   }
+  */
 
   if (tokens.size() == 0) {
     throw std::runtime_error("No tokens");
