@@ -13,7 +13,6 @@ int main() {
     }
 
     catch (const std::exception& e) {
-      infixParser.~InfixParser();
       std::cout << e.what() << std::endl;
     }
   }
