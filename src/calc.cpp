@@ -8,8 +8,6 @@ int main() {
 
   while (std::getline(std::cin, line)) {
     try {
-      std::cout << line << std::endl;
-
       InfixParser infixParser = InfixParser(lexer.lexer(line));
       std::cout << infixParser.toString() << std::endl << infixParser.calculate() << std::endl;
     }
