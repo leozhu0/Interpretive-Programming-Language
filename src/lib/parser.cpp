@@ -383,6 +383,11 @@ std::string OpNode::toString() {
 
 
 double VarNode::getValue(){
+  if(variables.find(value) == variables.end()){
+    std::cout <<"Runtime error: unknown identifier " << value << std::endl;
+    exit(2);
+  }
+
    return variables[value];
 }
 
