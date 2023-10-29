@@ -24,7 +24,7 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
     throw std::runtime_error(error.str());
   }
 
-  if (tokens[0].type == OPERATOR || tokens[0].type == ASSIGNMENT) {
+  if (tokens[0].type == OPERATOR || tokens[0].type == ASSIGNMENT || tokens[0].token == ")") {
     std::ostringstream error;
     error << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
     throw std::runtime_error(error.str());
