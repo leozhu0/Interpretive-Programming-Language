@@ -134,6 +134,12 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
               // default error case
               } else if (tokens[start + 1].type == ASSIGNMENT){
+
+                if(tokens[start + 2].type != VARIABLE){
+                            std::cout <<"Unexpected token at line "<<tokens[start + 2].line<<" column "<<tokens[start + 2].column<<": " <<tokens[start + 2].token<<std::endl;
+                            exit(2);
+                        }
+
                 ++start;
                 // variable to check for parenthesis error
                 int allowedParenthesis = 1;
@@ -198,8 +204,8 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                      
 
                       tempTokens.push_back(tokens[tokens.size() - 1]);
-
-
+                      
+                      
 
                       node->children.push_back(createNode(tempTokens));
                   }
@@ -223,10 +229,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                   /*for (Node* n: node->children){
                       std::cout << n->value << ", ";}*/
                       for(int t = 0; t < (int)(node->children.size() - 1); t++){
-                        if(Token::tokenType(node->children.at(t)->value[0]) != VARIABLE){
-                            std::cout <<"Runtime error: Invalid assignee " <<node->children.at(t)->value<<std::endl;
-                            exit(2);
-                        }
+                        
                           variables[node->children.at(t)->value] = node->children.at(node->children.size() - 1)->getValue();
                         }
 
