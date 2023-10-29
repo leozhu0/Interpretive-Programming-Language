@@ -41,7 +41,7 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
             exit(1);
         }
         if(element.back() == '.'){
-            std::cout << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()-1) <<"." << std::endl;
+            std::cout << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()-2) <<"." << std::endl;
             exit(1);
         }
     }
