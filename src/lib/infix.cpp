@@ -44,7 +44,7 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
 }
 
 InfixParser::~InfixParser() {
-  delete root;
+//  delete root;
 }
 
 Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector<Token> tokens) {
