@@ -223,7 +223,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                   /*for (Node* n: node->children){
                       std::cout << n->value << ", ";}*/
                       for(int t = 0; t < (int)(node->children.size() - 1); t++){
-                        if(Token::tokenType(node->children.at(t)->value[0])){
+                        if(Token::tokenType(node->children.at(t)->value[0]) != VARIABLE){
                             std::cout <<"Runtime error: Invalid assignee " <<node->children.at(t)->value<<std::endl;
                             exit(2);
                         }
