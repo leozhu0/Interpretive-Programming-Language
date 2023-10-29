@@ -5,14 +5,14 @@
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
 
-  
+/*  
   if (tokens[1].token == "=") {
   for (Token token : tokens) {
     std::cout << token.token << std::endl;
   }
   std::cout << "_______________________________________" << std::endl;
   }
-  
+*/
 
   if (tokens.size() == 0) {
     throw std::runtime_error("No tokens");
@@ -185,7 +185,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
     }
 
     else if (tokens[i].token == "(") {
-      if (tokens[i + 1].token == ")") {
+      if (tokens[i + 1].token == ")" || tokens[i + 1].type == OPERATOR || tokens[i + 1].type == ASSIGNMENT) {
         std::ostringstream error;
         error << "Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
         throw std::runtime_error(error.str());
