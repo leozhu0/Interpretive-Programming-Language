@@ -135,26 +135,26 @@ Node* Parser::createNode(std::vector<Token> tokens) {
               // default error case
               } else if (tokens[start + 1].type == ASSIGNMENT){
 
+                //LOOK INTO THIS LATER
+                // int tempErrorParens = 1;
+                // int lastIndexOfSpan;
+                // int lastOpenIndex = 0;
+                // for(lastIndexOfSpan = 1; tempErrorParens != 0; lastIndexOfSpan++){
+                //   if(tokens[start + 1 + lastIndexOfSpan].token == ")"){
+                //     tempErrorParens--;
+                //   }
+                //   if(tokens[start + 1 + lastIndexOfSpan].token == "("){
+                //     tempErrorParens++;
+                //     lastOpenIndex = lastIndexOfSpan;
+                //   }
+                // }
 
-                int tempErrorParens = 1;
-                //=b (+ 4 5) 5)
-                //=b (+ 4 5) (+ 6 7))
-                //^start+1 
-                int lastIndexOfSpan;
-                int lastOpenIndex = 0;
-                for(lastIndexOfSpan = 1; tempErrorParens != 0; lastIndexOfSpan++){
-                  if(tokens[start + 1 + lastIndexOfSpan].token == ")"){
-                    tempErrorParens--;
-                  }
-                  if(tokens[start + 1 + lastIndexOfSpan].token == "("){
-                    tempErrorParens++;
-                    lastOpenIndex = lastIndexOfSpan;
-                  }
-                }
+                // if(lastOpenIndex == 0){
+                //   lastOpenIndex = lastIndexOfSpan-1;
+                // }
 
-                if(lastOpenIndex == 0){
-                  lastOpenIndex = lastIndexOfSpan-1;
-                }
+
+
 
                 //std::cout << lastOpenIndex << std::endl;
               

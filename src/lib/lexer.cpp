@@ -12,7 +12,7 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
         if(element[0]=='.'){
            
             std::cout << "Syntax error on line "<< line <<" column "<< int(column)<<"." <<std::endl;
-            if(rand() % 2){
+            if(rand() % 2 == 0){
                 std::cout <<":::"<<element<<std::endl;
             }
             exit(1);
