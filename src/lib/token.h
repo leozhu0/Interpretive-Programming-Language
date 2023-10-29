@@ -13,7 +13,8 @@ enum TokenType {
 };
 
 class Token {
-  public:   
+  public:  
+    static TokenType tokenType(char token);
     int line;
     int column;
     std::string token;
