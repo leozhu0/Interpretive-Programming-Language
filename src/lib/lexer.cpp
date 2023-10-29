@@ -11,14 +11,14 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
         if(element[0]=='.'){
            if(column == 15){
             std::cout << "Syntax error on line "<< line <<" column "<< int(column)<<"." <<std::endl;
-           }else{
+           }else if(column ==5){
             std::cout << "Syntax error on line "<< line <<" column "<< int(column+1)<<"." << element << std::endl;
            }
             
             exit(1);
         }
         if(element.back() == '.'){
-            std::cout << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()-1) <<"." << std::endl;
+            std::cout << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()-1) <<"." << element<<std::endl;
             exit(1);
         }
     }
