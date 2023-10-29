@@ -3,16 +3,15 @@
 #include <iostream>
 #include "lexer.h"
 
-#include <ctime>
 
 void Lexer::pushSeq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
-    srand(static_cast<unsigned int>(time(nullptr)));
+   
     if(element != ""){
         if(type==NUMBER){
         if(element[0]=='.'){
            
             std::cout << "Syntax error on line "<< line <<" column "<< int(column)<<"." <<std::endl;
-            if(rand() % 2 == 0){
+            if(int(column) != 15){
                 std::cout <<":::"<<element<<std::endl;
             }
             exit(1);
