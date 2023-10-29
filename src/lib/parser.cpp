@@ -137,18 +137,57 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
 
                 int tempErrorParens = 1;
-                for(int t = 1; tempErrorParens != 0; t++){
-                  if(tokens[start + 1 + t].token == ")"){
+                //=b (+ 4 5) 5)
+                //=b (+ 4 5) (+ 6 7))
+                //^start+1 
+                int lastIndexOfSpan;
+                int lastOpenIndex = 0;
+                for(lastIndexOfSpan = 1; tempErrorParens != 0; lastIndexOfSpan++){
+                  if(tokens[start + 1 + lastIndexOfSpan].token == ")"){
+                    tempErrorParens--;
+                  }
+                  if(tokens[start + 1 + lastIndexOfSpan].token == "("){
+                    tempErrorParens++;
+                    lastOpenIndex = lastIndexOfSpan;
+                  }
+                }
+
+                if(lastOpenIndex == 0){
+                  lastOpenIndex = lastIndexOfSpan-1;
+                }
+
+                //std::cout << lastOpenIndex << std::endl;
+              
+                //tempErrorParens = 1;
+                //bool oneNum = 0;
+                for(int t = 1; t < lastOpenIndex; t++){
+                  if(tokens[start + 1 + t].type != VARIABLE){
+                    std::cout <<"Unexpected token at line "<<tokens[start + 1 + t].line<<" column "<<tokens[start + 1 + t].column<<": " <<tokens[start + 1 + t].token<<std::endl;
+                    exit(2);
+                  }
+                  
+                }
+
+                /*
+                for(int t = 1; tempErrorParens!=0; t++){
+                  if((tokens[start + 1 + t].token == "(" || tokens[start + 1 + t].type == NUMBER) && oneNum == 1){
+                              std::cout <<"Unexpected token at line "<<tokens[start + 1 + t].line<<" column "<<tokens[start + 1 + t].column<<": " <<tokens[start + 1 + t].token<<std::endl;
+                              exit(2);
+                  }
+
+                 if(tokens[start + 1 + t].token == ")"){
                     tempErrorParens--;
                   }
                   if(tokens[start + 1 + t].token == "("){
                     tempErrorParens++;
+                    oneNum = 1;
                   }
-                  if(tokens[start + 1 + t].type != VARIABLE){
-                              std::cout <<"Unexpected token at line "<<tokens[start + 1 + t].line<<" column "<<tokens[start + 1 + t].column<<": " <<tokens[start + 2].token<<std::endl;
-                              exit(2);
+                  if(tokens[start + 1 + t].type == NUMBER){
+                    oneNum = 1;
                   }
+                  
                 }
+                */
 
                 ++start;
                 // variable to check for parenthesis error
