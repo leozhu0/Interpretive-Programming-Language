@@ -6,7 +6,7 @@
 #include <ctime>
 
 void Lexer::pushSeq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
-    srand(static_cast<unsigned int>(time(nullptr));
+    srand(static_cast<unsigned int>(time(nullptr)));
     if(element != ""){
         if(type==NUMBER){
         if(element[0]=='.'){
