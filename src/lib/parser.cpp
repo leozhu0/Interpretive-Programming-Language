@@ -319,7 +319,10 @@ Node* Parser::createNode(std::vector<Token> tokens) {
               }
 
               
-      } 
+      } else {
+        std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
+        exit(2);
+      }
       
       
       
