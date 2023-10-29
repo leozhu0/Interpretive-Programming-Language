@@ -39,7 +39,7 @@ std::vector<Token> Lexer::lexer(){
     //bool lastWasSpace = 0;
     //int numLineChars = 0;
     while (std::cin.get(rawInput)) {
-        std::cout <<rawInput<<;
+        std::cout <<rawInput;
         //numLineChars ++;
         if(rawInput == '\n'){
             //numLineChars = 0;
