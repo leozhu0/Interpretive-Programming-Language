@@ -18,6 +18,8 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
   //  throw std::runtime_error("No tokens");
   //}
 
+  try {
+
   if (tokens.size() == 1) {
     std::ostringstream error;
     error << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
@@ -31,20 +33,25 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
   }
 
   // creating the tree
-  root.reset(createTree(nextNode(tokens), 0, tokens));
+  root = createTree(nextNode(tokens), 0, tokens);
 
   if (parenNum != 0) {
     std::ostringstream error;
     error << "Unexpected token at line " << tokens[tokens.size() - 1].line << " column " << tokens[tokens.size() - 1].column << ": " << tokens[tokens.size() - 1].token;
     throw std::runtime_error(error.str());
   }
+  }
 
+  catch (const std::exception& e) {
+    std::cout << e.what() << std::endl;
+    if (root != nullptr) delete root;
+  }
   // resetting the index after parsing through a list of tokens
   index = 0;
 }
 
 InfixParser::~InfixParser() {
-//  delete root;
+  delete root;
 }
 
 Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector<Token> tokens) {
