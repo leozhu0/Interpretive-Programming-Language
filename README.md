@@ -5,7 +5,7 @@ We built this software in a way such that anyone can use it to evaulate math exp
 # How to build the project (the fewer commands the better; a single make command is ideal).
 To compile the project into an executable, just cd into the project directory and run:
 
-g++ parser.cpp -o parser
+g++ src/parser.cpp -o parser
 
 
 # How to use the executables once they're built.
