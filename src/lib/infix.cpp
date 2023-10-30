@@ -62,7 +62,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
   }
   catch (const std::exception& e){
     delete leftHandSide;
-    throw e;
+    throw std::runtime_error(e.what());
   }
 
   while (precedence(nextOp) >= minPrecedence) {
@@ -74,7 +74,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     }
     catch (const std::exception& e) {
       delete leftHandSide;
-      throw e;
+      throw std::runtime_error(e.what());
     }
 
     try {
@@ -83,7 +83,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     catch (const std::exception& e) {
       delete leftHandSide;
       delete rightHandSide;
-      throw e;
+      throw std::runtime_error(e.what());
     }
 
     while ((precedence(nextOp) > precedence(currOp)) || (nextOp == "=" && precedence(nextOp) == precedence(currOp))) {
@@ -95,7 +95,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
       }
       catch (const std::exception& e) {
 	delete leftHandSide;
-	throw e;
+	throw std::runtime_error(e.what());
       }
 
       try {      
@@ -104,7 +104,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
       catch (const std::exception& e) {
         delete leftHandSide;
         delete rightHandSide;
-        throw e;
+        throw std::runtime_error(e.what());
       }
     }
 
