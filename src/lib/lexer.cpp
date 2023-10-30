@@ -37,7 +37,7 @@ std::vector<Token> Lexer::lexer(){
     //bool lastWasSpace = 0;
     //int numLineChars = 0;
     while (std::cin.get(rawInput)) {
-       //std::cout <<rawInput;
+       std::cout <<rawInput;
         //numLineChars ++;
         if(rawInput == '\n'){
             //numLineChars = 0;
@@ -169,7 +169,7 @@ std::vector<Token> Lexer::lexer(){
 
 
 std::vector<Token> Lexer::lexer(std::string raw){
-    std::cout << raw << std::endl;
+    //sstd::cout << raw << std::endl;
     std::vector<Token> sequence;
     int line = 1;
     int i = 1;
@@ -202,7 +202,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
 
         if(type == NULLTYPE || (numDecimal > 0 && rawInput == '.')){
             std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
-            exit(1);
+            exit(2);
         }
 
         if(type != SPACE){
