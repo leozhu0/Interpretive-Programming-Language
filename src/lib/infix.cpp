@@ -93,7 +93,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
       try {
         rightHandSide = createTree(rightHandSide, precedence(currOp) + addedPrecedence, tokens);
       }
-      catch {
+      catch (const std::exception& e) {
 	delete leftHandSide;
 	throw e;
       }
