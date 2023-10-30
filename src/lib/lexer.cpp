@@ -169,7 +169,7 @@ std::vector<Token> Lexer::lexer(){
 
 
 std::vector<Token> Lexer::lexer(std::string raw){
-    
+    std::cout << raw << std::endl;
     std::vector<Token> sequence;
     int line = 1;
     int i = 1;
@@ -280,10 +280,10 @@ std::vector<Token> Lexer::lexer(std::string raw){
         sequence.push_back(Token{line,1,"END", END});
     }*/
 
-    if(element != ""){ 
+    /*if(element != ""){ 
                 //std::cout << "A: " << i + 1 - element.size() << element << ":::";
                 pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
-            }
+            }*/
     
     sequence.push_back(Token{line,(int)raw.length()+1,"END", END});
     

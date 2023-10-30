@@ -418,8 +418,9 @@ double OpNode::getValue() {
     
     for (size_t i = 1; i < children.size(); i++) {
       if (children[i]->getValue() == 0) {
-	std::cout << "Runtime error: division by zero." << std::endl;
-	exit(3);
+        //TRY CATCH
+        std::cout << "Runtime error: division by zero." << std::endl;
+        exit(3);
       }
 
       result /= children[i]->getValue();
