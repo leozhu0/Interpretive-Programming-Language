@@ -55,8 +55,10 @@ InfixParser::~InfixParser() {
 }
 
 Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector<Token> tokens) {
+  std::string nextOp;
+
   try {
-    std::string nextOp = peak(tokens).token;
+    nextOp = peak(tokens).token;
   }
   catch (const std::exception& e){
     delete leftHandSide;
@@ -65,9 +67,10 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
 
   while (precedence(nextOp) >= minPrecedence) {
     std::string currOp = nextOp;
-    
+    Node* rightHandSide;
+
     try {
-      Node* rightHandSide = nextNode(tokens);
+      rightHandSide = nextNode(tokens);
     }
     catch (const std::exception& e) {
       delete leftHandSide;
