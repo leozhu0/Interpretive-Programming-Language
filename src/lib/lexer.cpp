@@ -2,8 +2,7 @@
 #include <sstream>
 #include <iostream>
 #include "lexer.h"
-#include <sstream>
-#include <stdexcept>
+
 
 
 void Lexer::pushSeq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
@@ -59,9 +58,8 @@ std::vector<Token> Lexer::lexer(){
         }
 
         if(type == NULLTYPE){
-            std::ostringstream error;
-            error << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
-            throw std::runtime_error(error.str());
+            std::cout << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
+            exit(1);
         }
 
         if(type != SPACE){
