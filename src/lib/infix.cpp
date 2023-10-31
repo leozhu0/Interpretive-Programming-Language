@@ -40,6 +40,9 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
     throw std::runtime_error(error.str());
   }
 
+  for (const auto& pair : variableBuffer) {
+    variables[pair.first] = variables[pair.second];
+  }
   //catch (const std::exception& e) {
   //  std::cout << e.what() << std::endl;
   //  if (root != nullptr) delete root;
@@ -115,7 +118,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     tempNode->children.push_back(leftHandSide);
     tempNode->children.push_back(rightHandSide);
 
-    if (currOp == "=") variables[leftHandSide->toString()] = rightHandSide->getValue();
+    if (currOp == "=") variableBuffer[leftHandSide->toString()] = rightHandSide->getValue();
 
     leftHandSide = tempNode;
   }

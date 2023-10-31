@@ -8,6 +8,7 @@ class InfixParser {
   Node* root;
   int index = -1;
   size_t parenNum = 0;
+  std::map<std::string, double> variableBuffer;
 
   Node* createTree(Node* leftHandSide, int minPrecedence, std::vector<Token> tokens);
   int precedence(std::string op);
