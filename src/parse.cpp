@@ -8,6 +8,7 @@
 #include <map>
 
 int main() {
+  try{
   Lexer lexer = Lexer();
 
   //run though each line
@@ -52,7 +53,11 @@ for ( const auto &line : multilineTokens )
   /*for (const auto& pair : variables) {
         std::cout << "Key: " << pair.first << ", Value: " << pair.second << std::endl;
     }*/
+  }
 
+  catch (const std::exception& e) {
+    std::cerr << e.what() << std::endl;
+  }
 
 	  
   return 0;
