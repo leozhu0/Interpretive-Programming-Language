@@ -34,6 +34,7 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
   root = createTree(nextNode(tokens), 0, tokens);
 
   if (parenNum != 0) {
+    delete root;
     std::ostringstream error;
     error << "Unexpected token at line " << tokens[tokens.size() - 1].line << " column " << tokens[tokens.size() - 1].column << ": " << tokens[tokens.size() - 1].token;
     throw std::runtime_error(error.str());
