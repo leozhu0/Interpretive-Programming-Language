@@ -392,7 +392,7 @@ double OpNode::getValue() {
     for (size_t i = 1; i < children.size(); i++) {
       if (children[i]->getValue() == 0) {
         std::ostringstream error;
-        error << "Runtime error: division by zero." << std::endl;
+        error << "Runtime error: division by zero.";
         throw std::runtime_error(error.str());
       }
 
@@ -428,7 +428,7 @@ std::string OpNode::toString() {
 double VarNode::getValue(){
   if(variables.find(value) == variables.end()){
     std::ostringstream error;
-    error <<"Runtime error: unknown identifier " << value << std::endl;
+    error <<"Runtime error: unknown identifier " << value;
     throw std::runtime_error(error.str());
   }
 
