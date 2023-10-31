@@ -9,14 +9,12 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
     if(element != ""){
         if(type==NUMBER){
             if(element[0]=='.'){
-                std::ostringstream error;
-                error << "Syntax error on line "<< line <<" column "<< int(column)<<"." <<std::endl;
-                throw std::runtime_error(error.str());
+                std::cout << "Syntax error on line "<< line <<" column "<< int(column)<<"." <<std::endl;
+                exit(1);
             }
             if(element.back() == '.'){
-                std::ostringstream error;
-                error << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()) <<"."<<std::endl;
-                throw std::runtime_error(error.str());
+                std::cout << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()) <<"."<<std::endl;
+                exit(1);
             }
         }
         sequence.push_back(Token{line,column, element, type});
@@ -55,9 +53,8 @@ std::vector<Token> Lexer::lexer(){
 
         //Decimal error (two decimals in the same num)
         if(type == NULLTYPE || (numDecimal > 0 && rawInput == '.')){
-            std::ostringstream error;
-            error << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
-            throw std::runtime_error(error.str());
+            std::cout << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
+            exit(1);
         }
 
         if(type != SPACE){
@@ -69,9 +66,8 @@ std::vector<Token> Lexer::lexer(){
                         element += rawInput;
                     } else if (Token::tokenType(element[0]) == VARIABLE){
                         if(rawInput == '.'){
-                            std::ostringstream error;
-                            error << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
-                            throw std::runtime_error(error.str());
+                            std::cout << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
+                            exit(1);
                         }
 
                         element += rawInput;
@@ -86,9 +82,8 @@ std::vector<Token> Lexer::lexer(){
                     
                 } else if(Token::tokenType(rawInput) == VARIABLE){
                     if(Token::tokenType(element[0]) == NUMBER){
-                        std::ostringstream error;
-                        error << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
-                        throw std::runtime_error(error.str());
+                        std::cout << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
+                        exit(1);
                     } else if (Token::tokenType(element[0]) == VARIABLE || element == ""){
                         element += rawInput;
                     } else {
@@ -155,9 +150,8 @@ std::vector<Token> Lexer::lexer(std::string raw){
         TokenType type = Token::tokenType(rawInput);
 
         if(type == NULLTYPE || (numDecimal > 0 && rawInput == '.')){
-            std::ostringstream error;
-            error << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
-            throw std::runtime_error(error.str());
+            std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+            exit(1);
         }
 
         if(type != SPACE){
@@ -169,9 +163,8 @@ std::vector<Token> Lexer::lexer(std::string raw){
                         element += rawInput;
                     } else if (Token::tokenType(element[0]) == VARIABLE){
                         if(rawInput == '.'){
-                            std::ostringstream error;
-                            error << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
-                            throw std::runtime_error(error.str());
+                            std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+                            exit(1);
                         }
                         element += rawInput;
                     } else {
@@ -184,9 +177,8 @@ std::vector<Token> Lexer::lexer(std::string raw){
                     
                 } else if(Token::tokenType(rawInput)==VARIABLE){
                     if(Token::tokenType(element[0]) == NUMBER){
-                        std::ostringstream error;
-                        error << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
-                        throw std::runtime_error(error.str());
+                        std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+                        exit(1);
                     } else if (Token::tokenType(element[0]) == VARIABLE || element == ""){
                         element += rawInput;
                     } else {
