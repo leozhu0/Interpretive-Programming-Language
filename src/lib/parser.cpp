@@ -12,9 +12,8 @@ Parser::~Parser() {
 
 void Parser::ParserFunc(std::vector<Token> tokens) {
   if (tokens.size() == 0) {
-    std::ostringstream error;
-    error << "No tokens" << std::endl;
-    throw std::runtime_error(error.str());
+    std::cout << "No tokens" << std::endl;
+    exit(2);
   }
 
   root = createNode(tokens);
@@ -40,9 +39,8 @@ Node* Parser::createNode(std::vector<Token> tokens) {
   // If the expression is just a single number
   if (tokens[start].type == NUMBER) {
     if (tokens.size() > 2) {
-      std::ostringstream error;
-      error << "Unexpected token at line " << tokens[1].line << " column " << tokens[1].column << ": " << tokens[1].token << std::endl;
-      throw std::runtime_error(error.str());
+      std::cout << "Unexpected token at line " << tokens[1].line << " column " << tokens[1].column << ": " << tokens[1].token << std::endl;
+      exit(2);
     }
 
     NumNode* node = new NumNode;
@@ -52,14 +50,12 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
   // If the expression has an operator
   } else if (tokens[start].token != "("){
-      std::ostringstream error;
-      error << "Unexpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
-      throw std::runtime_error(error.str());
+      std::cout << "Unexpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
+      exit(2);
   }else if (tokens[start].token == "(") {
       if (tokens[start + 1].type != OPERATOR && tokens[start + 1].type != ASSIGNMENT) {
-        std::ostringstream error;
-        error << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
-        throw std::runtime_error(error.str());
+        std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
+        exit(2);
       }
 
 
@@ -75,16 +71,14 @@ Node* Parser::createNode(std::vector<Token> tokens) {
         // iterates through everything following the operator
         for (size_t i = start + 1; i < tokens.size(); ++i) {
           if (allowedParenthesis == 0 && i != tokens.size() - 1) {
-            std::ostringstream error;
-            error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-            throw std::runtime_error(error.str());
+            std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
+            exit(2);
           }
 
           if (tokens[i].token == ")") {
             if (i == start + 1) {
-              std::ostringstream error;
-              error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-              throw std::runtime_error(error.str());
+              std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
+              exit(2);
             }
             //std::cout << "MUNU";
             --allowedParenthesis;
@@ -120,9 +114,8 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                 else ++i;
 
                 if (i == tokens.size()) {  
-                  std::ostringstream error;
-                  error << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
-                  throw std::runtime_error(error.str());
+                  std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
+                  exit(2);
                 }
               }
 
@@ -131,18 +124,16 @@ Node* Parser::createNode(std::vector<Token> tokens) {
           }
 
           else if (tokens[i].type == OPERATOR) {
-            std::ostringstream error;
-            error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-            throw std::runtime_error(error.str());
+            std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
+            exit(2);
           }
 
         }
         //std::cout << "ALLOW: " << allowedParenthesis << std::endl;
 
         if (!(allowedParenthesis <= 0)) {
-          std::ostringstream error;
-          error << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column + tokens[tokens.size() - 2].token.size() << ": " << tokens[tokens.size() - 1].token << std::endl;
-          throw std::runtime_error(error.str());
+          std::cout << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column + tokens[tokens.size() - 2].token.size() << ": " << tokens[tokens.size() - 1].token << std::endl;
+          exit(2);
         }
 
         return node;
@@ -224,16 +215,14 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                 // iterates through everything following the operator
                 for (size_t i = start + 1; i < tokens.size(); ++i) {
                   if (allowedParenthesis == 0 && i != tokens.size() - 1) {
-                    std::ostringstream error;
-                    error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-                    throw std::runtime_error(error.str());
+                    std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
+                    exit(2);
                   }
 
                   if (tokens[i].token == ")") {
                     if (i == start + 1) {
-                      std::ostringstream error;
-                      error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-                      throw std::runtime_error(error.str());
+                      std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
+                      exit(2);
                     }
 
                     --allowedParenthesis;
@@ -271,10 +260,9 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                         if (parenNum == 0) break;
                         else ++i;
 
-                        if (i == tokens.size()) { 
-                          std::ostringstream error; 
-                          error << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
-                          throw std::runtime_error(error.str());
+                        if (i == tokens.size()) {  
+                          std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
+                          exit(2);
                         }
                       }
 
@@ -288,9 +276,8 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                   }
 
                   else if (tokens[i].type == OPERATOR) {
-                    std::ostringstream error;
-                    error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-                    throw std::runtime_error(error.str());
+                    std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
+                    exit(2);
                   }
 
                 }
@@ -304,25 +291,23 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                 
 
                 if (!(allowedParenthesis <= 0)) {
-                  std::ostringstream error;
-                  error << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column + tokens[tokens.size() - 2].token.size() << ": " << tokens[tokens.size() - 1].token << std::endl;
-                  throw std::runtime_error(error.str());
+                  std::cout << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column + tokens[tokens.size() - 2].token.size() << ": " << tokens[tokens.size() - 1].token << std::endl;
+                  exit(2);
                 }
 
                 return node;
 
               // default error case
               }  else {
-                std::ostringstream error;
-                error << "Unexpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
-                throw std::runtime_error(error.str());
+                
+                std::cout << "Unexpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
+                exit(2);
               }
 
               
       } else {
-        std::ostringstream error;
-        error << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
-        throw std::runtime_error(error.str());
+        std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
+        exit(2);
       }
       
     
