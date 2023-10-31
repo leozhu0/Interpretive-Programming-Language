@@ -225,9 +225,9 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       VarNode* tempNode = new VarNode;
       tempNode->value = tokens[i].token;
 
-      if (tokens[i + 1] != "=") {
+      if (tokens[i + 1].token != "=") {
         try {
-	  tempNode.getValue();
+	  tempNode->getValue();
 	}
 	catch (const std::exception& e) {
 	  delete tempNode;
