@@ -27,7 +27,7 @@ int index = 0;
   for(int i = 0; i < tokens[tokens.size() - 1 - ((tokens[tokens.size()-1].column == 1)?1:0)].line; i++){
     std::vector<Token> tempRow;
     
-    while(index < tokens.size() && tokens[index].line == i+1){
+    while(index < (int)tokens.size() && tokens[index].line == i+1){
       tempRow.push_back(tokens[index]);
       index++; 
     }
