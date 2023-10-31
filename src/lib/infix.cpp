@@ -41,7 +41,7 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
   }
 
   for (const auto& pair : variableBuffer) {
-    variables[pair.first] = variables[pair.second];
+    variables[pair.first] = pair.second;
   }
   //catch (const std::exception& e) {
   //  std::cout << e.what() << std::endl;
