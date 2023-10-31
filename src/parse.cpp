@@ -20,10 +20,10 @@ int main() {
   std::vector<std::vector<Token>> multilineTokens;
  
  
-  
   //int prevLine = 1;
 int index = 0; 
-  for(int i = 0; i < tokens[tokens.size()-2].line; i++){
+//If END is on a new line, then stop at the line before, otherwise do the whole thing
+  for(int i = 0; i < tokens[tokens.size() - 1 - ((tokens[tokens.size()-1].column == 1)?1:0)].line; i++){
     std::vector<Token> tempRow;
     
     while(tokens[index].line == i+1){

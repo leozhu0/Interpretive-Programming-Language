@@ -33,6 +33,8 @@ bool stringOfDouble(std::string attempt){
 Node* Parser::createNode(std::vector<Token> tokens) {
   size_t start = 0;
 
+
+
   // If the expression is just a single number
   if (tokens[start].type == NUMBER) {
     if (tokens.size() > 2) {
@@ -46,7 +48,10 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     return node;
 
   // If the expression has an operator
-  } else if (tokens[start].token == "(") {
+  } else if (tokens[start].token != "("){
+      std::cout << "Unexpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
+      exit(2);
+  }else if (tokens[start].token == "(") {
     if (tokens[start + 1].type != OPERATOR && tokens[start + 1].type != ASSIGNMENT) {
       std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
       exit(2);
@@ -134,6 +139,70 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
               // default error case
               } else if (tokens[start + 1].type == ASSIGNMENT){
+
+                //LOOK INTO THIS LATER
+                // int tempErrorParens = 1;
+                // int lastIndexOfSpan;
+                // int lastOpenIndex = 0;
+                // for(lastIndexOfSpan = 1; tempErrorParens != 0; lastIndexOfSpan++){
+                //   if(tokens[start + 1 + lastIndexOfSpan].token == ")"){
+                //     tempErrorParens--;
+                //   }
+                //   if(tokens[start + 1 + lastIndexOfSpan].token == "("){
+                //     tempErrorParens++;
+                //     lastOpenIndex = lastIndexOfSpan;
+                //   }
+                // }
+
+                // if(lastOpenIndex == 0){
+                //   lastOpenIndex = lastIndexOfSpan-1;
+                // }
+
+
+
+//ignore
+                //std::cout << lastOpenIndex << std::endl;
+              
+                //tempErrorParens = 1;
+                //bool oneNum = 0;
+        //ignore      
+              
+              
+              
+              
+                // for(int t = 1; t < lastOpenIndex; t++){
+                //   if(tokens[start + 1 + t].type != VARIABLE){
+                //     std::cout <<"Unexpected token at line "<<tokens[start + 1 + t].line<<" column "<<tokens[start + 1 + t].column<<": " <<tokens[start + 1 + t].token<<std::endl;
+                //     exit(2);
+                //   }
+                  
+                // }
+
+
+
+
+
+                /*
+                for(int t = 1; tempErrorParens!=0; t++){
+                  if((tokens[start + 1 + t].token == "(" || tokens[start + 1 + t].type == NUMBER) && oneNum == 1){
+                              std::cout <<"Unexpected token at line "<<tokens[start + 1 + t].line<<" column "<<tokens[start + 1 + t].column<<": " <<tokens[start + 1 + t].token<<std::endl;
+                              exit(2);
+                  }
+
+                 if(tokens[start + 1 + t].token == ")"){
+                    tempErrorParens--;
+                  }
+                  if(tokens[start + 1 + t].token == "("){
+                    tempErrorParens++;
+                    oneNum = 1;
+                  }
+                  if(tokens[start + 1 + t].type == NUMBER){
+                    oneNum = 1;
+                  }
+                  
+                }
+                */
+
                 ++start;
                 // variable to check for parenthesis error
                 int allowedParenthesis = 1;
@@ -198,8 +267,8 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                      
 
                       tempTokens.push_back(tokens[tokens.size() - 1]);
-
-
+                      
+                      
 
                       node->children.push_back(createNode(tempTokens));
                   }
@@ -223,6 +292,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                   /*for (Node* n: node->children){
                       std::cout << n->value << ", ";}*/
                       for(int t = 0; t < (int)(node->children.size() - 1); t++){
+                        
                           variables[node->children.at(t)->value] = node->children.at(node->children.size() - 1)->getValue();
                         }
 
@@ -254,7 +324,10 @@ Node* Parser::createNode(std::vector<Token> tokens) {
               }
 
               
-      } 
+      } else {
+        std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
+        exit(2);
+      }
       
       
       
@@ -345,8 +418,9 @@ double OpNode::getValue() {
     
     for (size_t i = 1; i < children.size(); i++) {
       if (children[i]->getValue() == 0) {
-	std::cout << "Runtime error: division by zero." << std::endl;
-	exit(3);
+        //TRY CATCH
+        std::cout << "Runtime error: division by zero." << std::endl;
+        exit(3);
       }
 
       result /= children[i]->getValue();
@@ -383,6 +457,11 @@ std::string OpNode::toString() {
 
 
 double VarNode::getValue(){
+  if(variables.find(value) == variables.end()){
+    std::cout <<"Runtime error: unknown identifier " << value << std::endl;
+    exit(2);
+  }
+
    return variables[value];
 }
 
