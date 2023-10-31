@@ -2,17 +2,15 @@
 #include <sstream>
 #include <iostream>
 #include "lexer.h"
-
+#include <sstream>
+#include <stdexcept>
 
 
 void Lexer::pushSeq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
-   
     if(element != ""){
         if(type==NUMBER){
             if(element[0]=='.'){
                 std::cout << "Syntax error on line "<< line <<" column "<< int(column)<<"." <<std::endl;
-            
-                
                 exit(1);
             }
             if(element.back() == '.'){
@@ -30,30 +28,17 @@ std::vector<Token> Lexer::lexer(){
     int line = 1;
     int i = 1;
     int indents = 0;
+
     //This will later be used to check for more than one decimal in number
     int numDecimal = 0;
     std::string element = "";
-    //TokenType elementType = NULLTYPE;
-    //bool lastWasSpace = 0;
-    //int numLineChars = 0;
     while (std::cin.get(rawInput)) {
        //std::cout <<rawInput;
-        //numLineChars ++;
         if(rawInput == '\n'){
-            //numLineChars = 0;
             indents++;
-           /* if(indents > 1){
-                //std::cout << "EARLY"<<std::endl;
-                sequence.push_back(Token{line,1,"END", END});
-                return sequence;
-                //break;
-            }*/
 
-            //When you start a newline, take what was inside element and add it to sequence. 
-            //This will always be a number
+            //When you start a newline, take what was inside element and add it to sequence, this will always be a number or var
             if(Token::tokenType(element[0]) != NULLTYPE){ 
-              
-                //std::cout << "A: " << i + 1 - element.size() << element << ":::";
                 pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
             }
 
@@ -67,9 +52,16 @@ std::vector<Token> Lexer::lexer(){
 
         TokenType type = Token::tokenType(rawInput);
 
-        if(type == NULLTYPE || (numDecimal > 0 && rawInput == '.')){
+        //Decimal error (two decimals in the same num)
+        if((numDecimal > 0 && rawInput == '.')){
             std::cout << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
             exit(1);
+        }
+
+        if(type == NULLTYPE){
+            std::ostringstream error;
+            error << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
+            throw std::runtime_error(error.str());
         }
 
         if(type != SPACE){
@@ -84,120 +76,84 @@ std::vector<Token> Lexer::lexer(){
                             std::cout << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
                             exit(1);
                         }
+
                         element += rawInput;
                     } else {
-                        //std::cout << "B: " << i - element.size();
+                         //When the number input stops, insert it and then insert what you land on
                         pushSeq(element, NUMBER, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
-                        //std::cout << "C: " << i;
                         pushSeq(rawInputString, type, line, i, sequence);
                         element = "";
                     }
                     
-                } else if(Token::tokenType(rawInput)==VARIABLE){
+                } else if(Token::tokenType(rawInput) == VARIABLE){
                     if(Token::tokenType(element[0]) == NUMBER){
                         std::cout << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
                         exit(1);
                     } else if (Token::tokenType(element[0]) == VARIABLE || element == ""){
                         element += rawInput;
                     } else {
+                        //When the variable input stops, insert it and then insert what you land on
                         pushSeq(element, VARIABLE, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
-                        //std::cout << "D: " << i;
                         pushSeq(rawInputString, type, line, i, sequence);
                         element = "";
                     }
 
                 } else {
-                    //std::cout << "E: " <<i - element.size();
                     pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
                     numDecimal = 0;
                     std::string rawInputString(1, rawInput);
-                    //std::cout << "F: " <<i;
                     pushSeq(rawInputString, type, line, i, sequence);
                     element = "";
-                    //elementType = NULLTYPE;
                 }
                 
-                
-    
         } else {
-            //std::cout << "G: " << i - element.size();
             pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
             element = "";
             numDecimal = 0;
         }
 
-        /*if(type != SPACE || !lastWasSpace){
-            i++;
-        }
-        if(type == SPACE){
-            lastWasSpace=1;
-        } else{
-            lastWasSpace = 0;
-        }*/
         i++;
     }
 
-    /*if(sequence.size() > 0){
-        sequence.push_back(Token{line,sequence.back().column + 1,"END", END});
-    } else {
-        sequence.push_back(Token{line,1,"END", END});
-    }*/
+    //After termination, add whatever was stored in element to the sequence
+    if(element != ""){
+        pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
+    }
 
-        if(element != ""){ 
-                //std::cout << "A: " << i + 1 - element.size() << element << ":::";
-                pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
-            }
-
-
+    //Insert END (either new line or same line)
     if(sequence.size() == 0 || indents >= 1){
         sequence.push_back(Token{line,1,"END", END});
     } else {
         sequence.push_back(Token{line,sequence.back().column+1,"END", END});
-        //
     }
     
-
-
-//std::cout << wholeSeq;
     return sequence;
 }
 
 
-
+//Used for the Infix parser
 std::vector<Token> Lexer::lexer(std::string raw){
-    //sstd::cout << raw << std::endl;
     std::vector<Token> sequence;
     int line = 1;
     int i = 1;
     //This will later be used to check for more than one decimal in number
     int numDecimal = 0;
     std::string element = "";
-    //int numlineChars = 0;
-    //TokenType elementType = NULLTYPE;
-    //bool lastWasSpace = 0;
     char rawInput;
     for(int r = 0; r <= (int)raw.length(); r++) {
-
-         
-
         if(r == (int)raw.length()){
             if(Token::tokenType(element[0]) != NULLTYPE){ 
-                //std::cout << "A: " << i + 1 - element.size() << element << ":::";
                 pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
-
             }
 
-       
             break;
         }
         
-        
         rawInput = raw.at(r);
-        //std::cout << rawInput << std::endl;
         TokenType type = Token::tokenType(rawInput);
 
         if(type == NULLTYPE || (numDecimal > 0 && rawInput == '.')){
@@ -219,11 +175,9 @@ std::vector<Token> Lexer::lexer(std::string raw){
                         }
                         element += rawInput;
                     } else {
-                        //std::cout << "B: " << i - element.size();
                         pushSeq(element, NUMBER, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
-                        //std::cout << "C: " << i;
                         pushSeq(rawInputString, type, line, i, sequence);
                         element = "";
                     }
@@ -238,70 +192,30 @@ std::vector<Token> Lexer::lexer(std::string raw){
                         pushSeq(element, VARIABLE, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
-                        //std::cout << "D: " << i;
                         pushSeq(rawInputString, type, line, i, sequence);
                         element = "";
                     }
 
                 } else {
-                    //std::cout << "E: " <<i - element.size();
                     pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
                     numDecimal = 0;
                     std::string rawInputString(1, rawInput);
-                    //std::cout << "F: " <<i;
                     pushSeq(rawInputString, type, line, i, sequence);
                     element = "";
-                    //elementType = NULLTYPE;
                 }
                 
                 
     
         } else {
-            //std::cout << "G: " << i - element.size();
             pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
             element = "";
             numDecimal = 0;
         }
 
-        /*if(type != SPACE || !lastWasSpace){
-            i++;
-        }
-        if(type == SPACE){
-            lastWasSpace=1;
-        } else{
-            lastWasSpace = 0;
-        }*/
         i++;
     }
 
-    /*if(sequence.size() > 0){
-        sequence.push_back(Token{line,sequence.back().column + 1,"END", END});
-    } else {
-        sequence.push_back(Token{line,1,"END", END});
-    }*/
-
-    /*if(element != ""){ 
-                //std::cout << "A: " << i + 1 - element.size() << element << ":::";
-                pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
-            }*/
-    
     sequence.push_back(Token{line,(int)raw.length()+1,"END", END});
     
-    
-
-
     return sequence;
 }
-
-
-
-
-
- 
-/*
-x 7.899-f(temp)    
-_67*)_+B =
-  lot49/50
-(())
-_v4rl4b13=42
-*/

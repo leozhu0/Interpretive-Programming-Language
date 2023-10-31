@@ -1,6 +1,8 @@
 #include "parser.h"
 #include <iostream>
 #include <map>
+#include <sstream>
+#include <stdexcept>
 
 std::map<std::string, double> variables;
 
@@ -17,7 +19,6 @@ void Parser::ParserFunc(std::vector<Token> tokens) {
   root = createNode(tokens);
 }
 
-//PUT IN SOME CLASS
 bool stringOfDouble(std::string attempt){
     try {
         double number = std::stod(attempt);
@@ -52,93 +53,98 @@ Node* Parser::createNode(std::vector<Token> tokens) {
       std::cout << "Unexpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
       exit(2);
   }else if (tokens[start].token == "(") {
-    if (tokens[start + 1].type != OPERATOR && tokens[start + 1].type != ASSIGNMENT) {
-      std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
-      exit(2);
-    }
+      if (tokens[start + 1].type != OPERATOR && tokens[start + 1].type != ASSIGNMENT) {
+        std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
+        exit(2);
+      }
 
 
       if(tokens[start + 1].type == OPERATOR){
-                  ++start;
-                // variable to check for parenthesis error
-                int allowedParenthesis = 1;
-                OpNode* node = new OpNode;
-                
-                
-                node->value = tokens[start].token;
+        ++start;
+        // variable to check for parenthesis error
+        int allowedParenthesis = 1;
+        OpNode* node = new OpNode;
+        
+        
+        node->value = tokens[start].token;
 
-                // iterates through everything following the operator
-                for (size_t i = start + 1; i < tokens.size(); ++i) {
-                  if (allowedParenthesis == 0 && i != tokens.size() - 1) {
-                    std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-                    exit(2);
-                  }
+        // iterates through everything following the operator
+        for (size_t i = start + 1; i < tokens.size(); ++i) {
+          if (allowedParenthesis == 0 && i != tokens.size() - 1) {
+            std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
+            exit(2);
+          }
 
-                  if (tokens[i].token == ")") {
-                    if (i == start + 1) {
-                      std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-                      exit(2);
-                    }
-                    //std::cout << "MUNU";
-                    --allowedParenthesis;
-                  }
-                  
-                  // adding a number to the child pointers
-                  else if (tokens[i].type == NUMBER) {
-                    NumNode* tempNode = new NumNode;
-                    tempNode->value = tokens[i].token;
-                    node->children.push_back(tempNode);
-                  } else if (tokens[i].type == VARIABLE) {
-                    VarNode* tempNode = new VarNode;
-                    tempNode->value = tokens[i].token;
-                    node->children.push_back(tempNode);
-                  }
-                
+          if (tokens[i].token == ")") {
+            if (i == start + 1) {
+              std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
+              exit(2);
+            }
+            //std::cout << "MUNU";
+            --allowedParenthesis;
+          }
+          
+          // adding a number to the child pointers
+          else if (tokens[i].type == NUMBER) {
+            NumNode* tempNode = new NumNode;
+            tempNode->value = tokens[i].token;
+            node->children.push_back(tempNode);
+          } else if (tokens[i].type == VARIABLE) {
+            VarNode* tempNode = new VarNode;
+            tempNode->value = tokens[i].token;
+            node->children.push_back(tempNode);
+          }
+        
 
-                  // adding an operator to the child pointers
-                  else if (tokens[i].token == "(") {
-                      size_t parenNum = 1;
-                      std::vector<Token> tempTokens;
-                      tempTokens.push_back(tokens[i]);
-                      ++i;
+          // adding an operator to the child pointers
+          else if (tokens[i].token == "(") {
+              size_t parenNum = 1;
+              std::vector<Token> tempTokens;
+              tempTokens.push_back(tokens[i]);
+              ++i;
 
-                      // creating a new vector to be called recursively
-                      while (true) {
-                        if (tokens[i].token == "(") ++parenNum;
-                        else if (tokens[i].token == ")") --parenNum;
+              // creating a new vector to be called recursively
+              while (true) {
+                if (tokens[i].token == "(") ++parenNum;
+                else if (tokens[i].token == ")") --parenNum;
 
-                        tempTokens.push_back(tokens[i]);
+                tempTokens.push_back(tokens[i]);
 
-                        if (parenNum == 0) break;
-                        else ++i;
+                if (parenNum == 0) break;
+                else ++i;
 
-                        if (i == tokens.size()) {  
-                          std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
-                          exit(2);
-                        }
-                      }
-
-                      tempTokens.push_back(tokens[tokens.size() - 1]);
-                      node->children.push_back(createNode(tempTokens));
-                  }
-
-                  else if (tokens[i].type == OPERATOR) {
-                    std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-                    exit(2);
-                  }
-
-                }
-                //std::cout << "ALLOW: " << allowedParenthesis << std::endl;
-
-                if (!(allowedParenthesis <= 0)) {
-                  std::cout << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column + tokens[tokens.size() - 2].token.size() << ": " << tokens[tokens.size() - 1].token << std::endl;
+                if (i == tokens.size()) {  
+                  std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
                   exit(2);
                 }
+              }
 
-                return node;
+              tempTokens.push_back(tokens[tokens.size() - 1]);
+              node->children.push_back(createNode(tempTokens));
+          }
 
-              // default error case
-              } else if (tokens[start + 1].type == ASSIGNMENT){
+          else if (tokens[i].type == OPERATOR) {
+            std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
+            exit(2);
+          }
+
+        }
+        //std::cout << "ALLOW: " << allowedParenthesis << std::endl;
+
+        if (!(allowedParenthesis <= 0)) {
+          std::cout << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column + tokens[tokens.size() - 2].token.size() << ": " << tokens[tokens.size() - 1].token << std::endl;
+          exit(2);
+        }
+
+        return node;
+        } 
+        
+        
+        else if (tokens[start + 1].type == ASSIGNMENT){
+          if(tokens[start + 2].type != VARIABLE){
+            std::cout << "Unexpected token at line " << tokens[start + 2].line << " column " << tokens[start + 2].column << ": " << tokens[start + 2].token << std::endl;
+            exit(2);
+          }
 
                 //LOOK INTO THIS LATER
                 // int tempErrorParens = 1;
@@ -281,38 +287,17 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                 }
 
 
-                /*if(stringOfDouble(tokens[tokens.size() - 1].token)){
-                        variables[tokens[i].token] = std::stod(tokens[tokens.size() - 1].token);
-                        std::cout << ":::: "<< variables[tokens[i].token];
-                  } else {
-                        variables[tokens[i].token] = variables[tokens[tokens.size() - 1].token]; 
-                        std::cout << ":::" << variables[tokens[i].token];
-                  }*/
-
-                  /*for (Node* n: node->children){
-                      std::cout << n->value << ", ";}*/
                       for(int t = 0; t < (int)(node->children.size() - 1); t++){
                         
                           variables[node->children.at(t)->value] = node->children.at(node->children.size() - 1)->getValue();
                         }
 
-                    /* if(stringOfDouble(node->children.at(node->children.size() - 1)->value)){
-                        for(int t = 0; t < (int)(node->children.size() - 1); t++){
-                          variables[node->children.at(t)->value] = std::stod(node->children.at(node->children.size() - 1)->value);
-                        }
-                      } else {
-                         for(int t = 0; t < (int)(node->children.size() - 1); t++){
-                          variables[node->children.at(t)->value] = variables[node->children.at(node->children.size() - 1)->value];
-                        }
-                      }*/
+                
 
                 if (!(allowedParenthesis <= 0)) {
                   std::cout << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column + tokens[tokens.size() - 2].token.size() << ": " << tokens[tokens.size() - 1].token << std::endl;
                   exit(2);
                 }
-
-
-                 
 
                 return node;
 
@@ -328,11 +313,6 @@ Node* Parser::createNode(std::vector<Token> tokens) {
         std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
         exit(2);
       }
-      
-      
-      
-      
-      
       
     
   exit(1);
@@ -370,9 +350,6 @@ std::string NumNode::toString() {
       	    
   return result; 
 }
-
-
-
 
 
 
@@ -418,9 +395,9 @@ double OpNode::getValue() {
     
     for (size_t i = 1; i < children.size(); i++) {
       if (children[i]->getValue() == 0) {
-        //TRY CATCH
-        std::cout << "Runtime error: division by zero." << std::endl;
-        exit(3);
+        std::ostringstream error;
+        error << "Runtime error: division by zero.";
+        throw std::runtime_error(error.str());
       }
 
       result /= children[i]->getValue();
@@ -452,14 +429,11 @@ std::string OpNode::toString() {
 }
 
 
-
-
-
-
 double VarNode::getValue(){
   if(variables.find(value) == variables.end()){
-    std::cout <<"Runtime error: unknown identifier " << value << std::endl;
-    exit(2);
+    std::ostringstream error;
+    error <<"Runtime error: unknown identifier " << value;
+    throw std::runtime_error(error.str());
   }
 
    return variables[value];
@@ -469,18 +443,6 @@ std::string VarNode::toString(){
    return value;
 }
 
-/*double AssignNode::getValue() {
-    for (Node* child : children) {
-      //If it's a double
-      if(stringOfDouble(child->value)){ 
-        return std::stod(child->value);
-      } else {
-        return child->getValue();
-      }
-    }
-
-  return 0.0;
-}*/
 
 double AssignNode::getValue() {
     return children.at(0)->getValue();

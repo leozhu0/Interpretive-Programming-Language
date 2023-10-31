@@ -8,6 +8,7 @@
 #include <map>
 
 int main() {
+  try{
   Lexer lexer = Lexer();
 
   //run though each line
@@ -26,14 +27,13 @@ int index = 0;
   for(int i = 0; i < tokens[tokens.size() - 1 - ((tokens[tokens.size()-1].column == 1)?1:0)].line; i++){
     std::vector<Token> tempRow;
     
-    while(tokens[index].line == i+1){
+    while(index < (int)tokens.size() && tokens[index].line == i+1){
       tempRow.push_back(tokens[index]);
       index++; 
     }
 
     multilineTokens.push_back(tempRow);
   }
-
 
 
 
@@ -52,7 +52,11 @@ for ( const auto &line : multilineTokens )
   /*for (const auto& pair : variables) {
         std::cout << "Key: " << pair.first << ", Value: " << pair.second << std::endl;
     }*/
+  }
 
+  catch (const std::exception& e) {
+    std::cerr << e.what() << std::endl;
+  }
 
 	  
   return 0;
