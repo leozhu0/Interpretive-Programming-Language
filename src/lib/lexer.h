@@ -1,7 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include "token.cpp"
+#include "token.h"
 
 class Lexer {
     private:
