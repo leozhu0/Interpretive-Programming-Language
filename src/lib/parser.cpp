@@ -141,6 +141,10 @@ Node* Parser::createNode(std::vector<Token> tokens) {
         
         
         else if (tokens[start + 1].type == ASSIGNMENT){
+          if(tokens[start + 2].type != VARIABLE){
+            std::cout << "Unexpected token at line " << tokens[start + 2].line << " column " << tokens[start + 2].column << ": " << tokens[start + 2].token << std::endl;
+            exit(2);
+          }
 
                 //LOOK INTO THIS LATER
                 // int tempErrorParens = 1;
