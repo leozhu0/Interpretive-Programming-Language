@@ -47,11 +47,11 @@ int main() {
       }
     }
 
-    if(tempParensCount != 0){
+    
+    if(tokens[index + 1].token == ")"){
       std::cout << "Unexpected token at line " << tokens[index].line << " column " << tokens[index].column << ": " << tokens[index].token << std::endl;
       exit(2);
     }
-
 
     //while(index < (int)tokens.size() && tokens[index].line == i+1/* && tokens[index].type != END*/){ 
     
@@ -60,6 +60,7 @@ int main() {
 
     //PUT END AT THE END OF EACH LINE
     tempRow.push_back(Token{tempRow.back().line, tempRow.back().column+1,"END", END});
+
 
     multilineTokens.push_back(tempRow);
   }
