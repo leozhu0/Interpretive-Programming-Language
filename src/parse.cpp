@@ -11,7 +11,7 @@ int main() {
   
   Lexer lexer = Lexer();
 
-  //run though each line
+  // Run though each line
   std::vector<Token> tokens = lexer.lexer();
 
   std::vector<std::vector<Token>> multilineTokens;
@@ -34,7 +34,6 @@ int main() {
         tempParensCount++;
       }
 
-      //std::cout << tokens[index].token << " ";
       tempRow.push_back(tokens[index]);
       index++;
 

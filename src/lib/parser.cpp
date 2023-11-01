@@ -36,7 +36,6 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
   // If the expression has an operator
   } else if (tokens[start].token != "("){
-    //if(tokens[start].column == 3){std::cout << "1"; }
       std::cout << "Unexpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
       exit(2);
 
