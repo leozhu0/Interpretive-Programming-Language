@@ -75,7 +75,7 @@ int main() {
         return 3;
       }
       if(((std::string)(e.what())).substr(0,33).compare("Runtime error: unknown identifier") == 0) {
-        return 2;
+        return 3;
       }
       
       return 1;
