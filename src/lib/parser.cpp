@@ -19,22 +19,20 @@ void Parser::ParserFunc(std::vector<Token> tokens) {
   root = createNode(tokens);
 }
 
-bool stringOfDouble(std::string attempt){
-    try {
-        double number = std::stod(attempt);
-        return number;
-    } catch (const std::invalid_argument& e) {
-        return 0;
-    } catch (const std::out_of_range& e) {
-        return 0;
-    }
-    return 0;
-}
+// bool stringOfDouble(std::string attempt){
+//     try {
+//         double number = std::stod(attempt);
+//         return number;
+//     } catch (const std::invalid_argument& e) {
+//         return 0;
+//     } catch (const std::out_of_range& e) {
+//         return 0;
+//     }
+//     return 0;
+// }
 
 Node* Parser::createNode(std::vector<Token> tokens) {
   size_t start = 0;
-
-
 
   // If the expression is just a single number
   if (tokens[start].type == NUMBER) {
@@ -53,21 +51,20 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     if(tokens[start].column == 3){std::cout << "1"; }
       std::cout << "Unexpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
       exit(2);
-  }else if (tokens[start].token == "(") {
-      if (tokens[start + 1].type != OPERATOR && tokens[start + 1].type != ASSIGNMENT) {
-        if(tokens[start+1].column == 3){std::cout << "2";}
-        std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
-        exit(2);
-      }
 
+  }else if (tokens[start].token == "(") {
+    if (tokens[start + 1].type != OPERATOR && tokens[start + 1].type != ASSIGNMENT) {
+      if(tokens[start+1].column == 3){std::cout << "2";}
+      std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
+      exit(2);
+    }
 
   if(tokens[start + 1].type == OPERATOR){
     ++start;
     // variable to check for parenthesis error
     int allowedParenthesis = 1;
+    
     OpNode* node = new OpNode;
-    
-    
     node->value = tokens[start].token;
 
     // iterates through everything following the operator
