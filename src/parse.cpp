@@ -48,7 +48,7 @@ int main() {
     }
 
     
-    if(index <= (int)(tokens.size() - 1) && tokens[index + 1].token == ")"){
+    if(index <= (int)(tokens.size() - 1) && tokens[index].token == ")"){
       std::cout << "Unexpected token at line " << tokens[index].line << " column " << tokens[index].column << ": " << tokens[index].token << std::endl;
       exit(2);
     }
