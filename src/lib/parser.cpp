@@ -129,11 +129,11 @@ Node* Parser::createNode(std::vector<Token> tokens) {
       }
 
     }
-    //std::cout << "ALLOW: " << allowedParenthesis << std::endl;
+   
 
-    if (!(allowedParenthesis <= 0)) {
-      std::cout << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column + tokens[tokens.size() - 2].token.size() << ": " << tokens[tokens.size() - 1].token << std::endl;
-      exit(3);
+    if (allowedParenthesis != 0) {
+      std::cout << "Unexpected token at line " << tokens[tokens.size()-1].line << " column " << tokens[tokens.size() - 1].column << ": " << tokens[tokens.size() - 1].token << std::endl;
+      exit(2);
     }
 
     return node;
@@ -334,7 +334,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
             
 
       if (!(allowedParenthesis == 0)) {
-        std::cout << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column + tokens[tokens.size() - 2].token.size() << ": " << tokens[tokens.size() - 1].token << std::endl;
+        std::cout << "Unexpected token at line " << tokens[tokens.size() - 1].line << " column " << tokens[tokens.size() - 1].column << ": " << tokens[tokens.size() - 1].token << std::endl;
         exit(2);
       }
 
