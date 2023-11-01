@@ -19,6 +19,7 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
 
   // creating the tree starts here
   // nextNode is called to get the first token
+  // uses precedence of 0 as a base condition
   root = createTree(nextNode(tokens), 0, tokens);
 
   if (parenNum != 0) {
@@ -42,6 +43,8 @@ InfixParser::~InfixParser() {
   delete root;
 }
 
+// creates the actual tree from the given vector of tokens
+// look at the precedence helper function to see the precedence of each operator
 // several try-catch to prevent memory leaks
 // read within the try statements for the core lines
 // operator precedence parsing: https://en.wikipedia.org/wiki/Operator-precedence_parser#Pseudocode
