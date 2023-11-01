@@ -123,7 +123,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
           node->children.push_back(createNode(tempTokens));
       }
 
-      else if (tokens[i].type == OPERATOR) {
+      else if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT) {
         std::cout << "7Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
         exit(2);
       }
@@ -241,12 +241,12 @@ Node* Parser::createNode(std::vector<Token> tokens) {
         // iterates through everything following the operator
         for (size_t i = start + 1; i < tokens.size(); ++i) {
           if(!allowNum ){
-            if(tokens[i].token != ")" || i == tokens.size()-1){
-              std::cout << "9Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
-              exit(2);
-            }else{
+            if(tokens[i].token == ")" && i == tokens.size()-1){
               allowedParenthesis--;
               break;
+            }else{
+              std::cout << "9Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
+              exit(2);
             }
           }
 
@@ -313,7 +313,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
               node->children.push_back(createNode(tempTokens));
           }
 
-          else if (tokens[i].type == OPERATOR) {
+          else if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT) {
             std::cout << "13Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
             exit(2);
           }
