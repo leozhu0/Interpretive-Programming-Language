@@ -313,7 +313,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                       node->children.push_back(createNode(tempTokens));
                   }
 
-                  else if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT) {
+                  else if (tokens[i].type == OPERATOR) {
                     std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
                     exit(2);
                   }
