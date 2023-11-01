@@ -242,7 +242,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
         for (size_t i = start + 1; i < tokens.size(); ++i) {
           if(!allowNum){
             if(tokens[i].token == ")" && i == tokens.size()-2){
-              allowedParenthesis = 0;
+              allowedParenthesis--;
               break;
             }else{
               std::cout << "9Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
