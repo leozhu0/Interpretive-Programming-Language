@@ -2,6 +2,8 @@
 #include <sstream>
 #include <iostream>
 #include "lexer.h"
+#include <sstream>
+#include <stdexcept>
 
 //std::string thing = "";
 
@@ -162,13 +164,13 @@ std::vector<Token> Lexer::lexer(std::string raw){
         TokenType type = Token::tokenType(rawInput);
 
         if(numDecimal > 0 && rawInput == '.'){
-            std::cout << "1Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+            std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
             exit(1);
         }
 
         if(type == NULLTYPE){
             std::ostringstream error;
-            error << "2Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+            error << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
             throw std::runtime_error(error.str());
         }
 
@@ -181,7 +183,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
                         element += rawInput;
                     } else if (Token::tokenType(element[0]) == VARIABLE){
                         if(rawInput == '.'){
-                            std::cout << "3Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+                            std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
                             exit(1);
                         }
                         element += rawInput;
@@ -195,7 +197,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
                     
                 } else if(Token::tokenType(rawInput)==VARIABLE){
                     if(Token::tokenType(element[0]) == NUMBER){
-                        std::cout << "4Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+                        std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
                         exit(1);
                     } else if (Token::tokenType(element[0]) == VARIABLE || element == ""){
                         element += rawInput;
