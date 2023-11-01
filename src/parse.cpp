@@ -33,14 +33,13 @@ int main() {
 
   for (const auto &line : multilineTokens)
   {
+    Parser parser = Parser();
     try{
-      Parser parser = Parser();
-
       parser.ParserFunc(line);
-      std::cout << parser.toString() << std::endl << parser.calculate() << std::endl;
     } catch (const std::exception& e) {
       std::cout << e.what() << std::endl;
     }
+    std::cout << parser.toString() << std::endl << parser.calculate() << std::endl;
   }
 
   
