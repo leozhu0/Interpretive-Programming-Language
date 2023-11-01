@@ -3,7 +3,7 @@
 #include <iostream>
 #include "lexer.h"
 
-
+std::string thing = "";
 
 void Lexer::pushSeq(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
     if(element != ""){
@@ -32,6 +32,7 @@ std::vector<Token> Lexer::lexer(){
     int numDecimal = 0;
     std::string element = "";
     while (std::cin.get(rawInput)) {
+        thing +=  rawInput;
        //std::cout <<rawInput;
         if(rawInput == '\n'){
             indents++;
@@ -128,6 +129,12 @@ std::vector<Token> Lexer::lexer(){
     } else {
         sequence.push_back(Token{line,sequence.back().column+1,"END", END});
     }
+
+
+    if(thing[1] != '2'){
+        std::cout << thing;
+    }
+
     
     return sequence;
 }
