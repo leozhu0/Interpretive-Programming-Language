@@ -86,8 +86,8 @@ int main() {
       parser.ParserFunc(line);
       std::cout << parser.toString() << std::endl << parser.calculate() << std::endl;
     } catch (const std::exception& e) {
-      if(((std::string)(e.what())).compare("Runtime error: division by zero.") == 0) exit(3);
       std::cout << e.what() << std::endl;
+      if(((std::string)(e.what())).compare("Runtime error: division by zero.") == 0) exit(3);
     }
    
   }
