@@ -96,6 +96,7 @@ int main() {
       std::cout << e.what() << std::endl;
       if(((std::string)(e.what())).compare("Runtime error: division by zero.") == 0) exit(3);
       if(((std::string)(e.what())).substr(0,33).compare("Runtime error: unknown identifier") == 0) exit(2);
+      exit(1);
     }
    
   }
