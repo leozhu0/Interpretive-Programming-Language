@@ -161,9 +161,15 @@ std::vector<Token> Lexer::lexer(std::string raw){
         rawInput = raw.at(r);
         TokenType type = Token::tokenType(rawInput);
 
-        if(type == NULLTYPE || (numDecimal > 0 && rawInput == '.')){
+        if(numDecimal > 0 && rawInput == '.'){
             std::cout << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
             exit(1);
+        }
+
+        if(type == NULLTYPE){
+            std::ostringstream error;
+            error << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+            throw std::runtime_error(error.str());
         }
 
         if(type != SPACE){
