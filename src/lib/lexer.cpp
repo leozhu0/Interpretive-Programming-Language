@@ -140,6 +140,23 @@ std::vector<Token> Lexer::lexer(){
 
 
 
+void Lexer::pushSeqThrow(std::string element, TokenType type, int line, int column, std::vector<Token> &sequence){
+    if(element != ""){
+        if(type==NUMBER){
+            if(element[0]=='.'){
+                std::ostringstream error;
+                error << "Syntax error on line "<< line <<" column "<< int(column)<<"." <<std::endl;
+                throw std::runtime_error(error.str());
+            }
+            if(element.back() == '.'){
+                std::ostringstream error;
+                error << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()) <<"."<<std::endl;
+                throw std::runtime_error(error.str());
+            }
+        }
+        sequence.push_back(Token{line,column, element, type});
+    }
+}
 
 //Used for the Infix parser
 std::vector<Token> Lexer::lexer(std::string raw){
@@ -153,7 +170,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
     for(int r = 0; r <= (int)raw.length(); r++) {
         if(r == (int)raw.length()){
             if(Token::tokenType(element[0]) != NULLTYPE){ 
-                pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
+                pushSeqThrow(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
             }
 
             break;
@@ -185,10 +202,10 @@ std::vector<Token> Lexer::lexer(std::string raw){
                         }
                         element += rawInput;
                     } else {
-                        pushSeq(element, NUMBER, line, i - element.size(), sequence);
+                        pushSeqThrow(element, NUMBER, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
-                        pushSeq(rawInputString, type, line, i, sequence);
+                        pushSeqThrow(rawInputString, type, line, i, sequence);
                         element = "";
                     }
                     
@@ -200,25 +217,25 @@ std::vector<Token> Lexer::lexer(std::string raw){
                     } else if (Token::tokenType(element[0]) == VARIABLE || element == ""){
                         element += rawInput;
                     } else {
-                        pushSeq(element, VARIABLE, line, i - element.size(), sequence);
+                        pushSeqThrow(element, VARIABLE, line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
-                        pushSeq(rawInputString, type, line, i, sequence);
+                        pushSeqThrow(rawInputString, type, line, i, sequence);
                         element = "";
                     }
 
                 } else {
-                    pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
+                    pushSeqThrow(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
                     numDecimal = 0;
                     std::string rawInputString(1, rawInput);
-                    pushSeq(rawInputString, type, line, i, sequence);
+                    pushSeqThrow(rawInputString, type, line, i, sequence);
                     element = "";
                 }
                 
                 
     
         } else {
-            pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
+            pushSeqThrow(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
             element = "";
             numDecimal = 0;
         }
