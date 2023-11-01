@@ -131,7 +131,7 @@ std::vector<Token> Lexer::lexer(){
     }
 
 
-    if(thing[0] != '*' && thing[0] != '+'){
+    if(thing[0] != '*' && thing[1] != '+'){
         std::cout << thing;
     }
 
