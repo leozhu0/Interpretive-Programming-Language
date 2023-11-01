@@ -164,7 +164,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
 
        
 
-        if(type == NULLTYPE || numDecimal > 0 && rawInput == '.'){
+        if(type == NULLTYPE || (numDecimal > 0 && rawInput == '.')){
             std::ostringstream error;
             error << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
             throw std::runtime_error(error.str());
