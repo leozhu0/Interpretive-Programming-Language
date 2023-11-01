@@ -145,12 +145,12 @@ void Lexer::pushSeqThrow(std::string element, TokenType type, int line, int colu
         if(type==NUMBER){
             if(element[0]=='.'){
                 std::ostringstream error;
-                error << "Syntax error on line "<< line <<" column "<< int(column)<<"." <<std::endl;
+                error << "Syntax error on line "<< line <<" column "<< int(column)<<".";
                 throw std::runtime_error(error.str());
             }
             if(element.back() == '.'){
                 std::ostringstream error;
-                error << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()) <<"."<<std::endl;
+                error << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()) <<".";
                 throw std::runtime_error(error.str());
             }
         }
@@ -183,7 +183,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
 
         if(type == NULLTYPE || (numDecimal > 0 && rawInput == '.')){
             std::ostringstream error;
-            error << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+            error << "Syntax error on line "<< line <<" column "<< i <<".";
             throw std::runtime_error(error.str());
         }
 
@@ -197,7 +197,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
                     } else if (Token::tokenType(element[0]) == VARIABLE){
                         if(rawInput == '.'){
                             std::ostringstream error;
-                            error << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+                            error << "Syntax error on line "<< line <<" column "<< i <<".";
                             throw std::runtime_error(error.str());
                         }
                         element += rawInput;
@@ -212,7 +212,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
                 } else if(Token::tokenType(rawInput)==VARIABLE){
                     if(Token::tokenType(element[0]) == NUMBER){
                         std::ostringstream error;
-                        error << "Syntax error on line "<< line <<" column "<< i <<"." << std::endl;
+                        error << "Syntax error on line "<< line <<" column "<< i <<".";
                         throw std::runtime_error(error.str());
                     } else if (Token::tokenType(element[0]) == VARIABLE || element == ""){
                         element += rawInput;
