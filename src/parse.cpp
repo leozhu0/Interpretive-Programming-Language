@@ -8,22 +8,17 @@
 #include <map>
 
 int main() {
-  try{
+  
   Lexer lexer = Lexer();
 
   //run though each line
   std::vector<Token> tokens = lexer.lexer();
 
-  /*for(int i = 0; i < (int)(tokens.size()); i++){
-        std::cout << std::right << std::setw(4) << tokens.at(i).line << std::right << std::setw(5) << tokens.at(i).column << "  " << tokens.at(i).token << std::endl;
-    }*/
-
   std::vector<std::vector<Token>> multilineTokens;
  
  
-  //int prevLine = 1;
-int index = 0; 
-//If END is on a new line, then stop at the line before, otherwise do the whole thing
+  int index = 0; 
+  //If END is on a new line, then stop at the line before, otherwise do the whole thing
   for(int i = 0; i < tokens[tokens.size() - 1 - ((tokens[tokens.size()-1].column == 1)?1:0)].line; i++){
     std::vector<Token> tempRow;
     
@@ -36,27 +31,21 @@ int index = 0;
   }
 
 
+  for (const auto &line : multilineTokens)
+  {
+    try{
+      Parser parser = Parser();
 
-
-for ( const auto &line : multilineTokens )
-{
-  Parser parser = Parser();
-
-  parser.ParserFunc(line);
-  std::cout << parser.toString() << std::endl << parser.calculate() << std::endl;
-
-  //delete parser;
-}
-
-
-  /*for (const auto& pair : variables) {
-        std::cout << "Key: " << pair.first << ", Value: " << pair.second << std::endl;
-    }*/
+      parser.ParserFunc(line);
+      std::cout << parser.toString() << std::endl << parser.calculate() << std::endl;
+    } catch (const std::exception& e) {
+      std::cout << e.what() << std::endl;
+    }
   }
 
-  catch (const std::exception& e) {
-    std::cout << e.what() << std::endl;
-  }
+  
+
+  
 
 	  
   return 0;
