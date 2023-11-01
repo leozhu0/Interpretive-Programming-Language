@@ -55,7 +55,7 @@ for ( const auto &line : multilineTokens )
   }
 
   catch (const std::exception& e) {
-    std::cerr << e.what() << std::endl;
+    std::cout << e.what() << std::endl;
   }
 
 	  
