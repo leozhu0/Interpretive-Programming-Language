@@ -84,6 +84,13 @@ int main() {
     Parser parser = Parser();
     try{
       parser.ParserFunc(line);
+    } catch (const std::exception& e) {
+      std::cout << e.what() << std::endl;
+      parser.~Parser();
+      exit(1);
+    }
+
+    try {
       std::cout << parser.toString() << std::endl << parser.calculate() << std::endl;
     } catch (const std::exception& e) {
       std::cout << e.what() << std::endl;
@@ -92,7 +99,6 @@ int main() {
       if(((std::string)(e.what())).substr(0,33).compare("Runtime error: unknown identifier") == 0) exit(2);
       exit(1);
     }
-
    
   }
 
