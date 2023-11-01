@@ -5,19 +5,6 @@
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
 
-/*  
-  if (tokens[1].token == "=") {
-  for (Token token : tokens) {
-    std::cout << token.token << std::endl;
-  }
-  std::cout << "_______________________________________" << std::endl;
-  }
-*/
-
-  //if (tokens.size() == 0) {
-  //  throw std::runtime_error("No tokens");
-  //}
-
   if (tokens.size() == 1) {
     std::ostringstream error;
     error << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
@@ -30,7 +17,8 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
     throw std::runtime_error(error.str());
   }
 
-  // creating the tree
+  // creating the tree starts here
+  // nextNode is called to get the first token
   root = createTree(nextNode(tokens), 0, tokens);
 
   if (parenNum != 0) {
@@ -40,24 +28,27 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
     throw std::runtime_error(error.str());
   }
 
-  for (const auto& pair : variableBuffer) {
-    variables[pair.first] = pair.second->getValue();
+  if (updateVariables) {
+    for (const auto& pair : variableBuffer) {
+      variables[pair.first] = pair.second->getValue();
+    }
   }
-  //catch (const std::exception& e) {
-  //  std::cout << e.what() << std::endl;
-  //  if (root != nullptr) delete root;
-  //}
-  // resetting the index after parsing through a list of tokens
+  
   index = 0;
+  updateVariables = true;
 }
 
 InfixParser::~InfixParser() {
   delete root;
 }
 
+// several try-catch to prevent memory leaks
+// read within the try statements for the core lines
+// operator precedence parsing: https://en.wikipedia.org/wiki/Operator-precedence_parser#Pseudocode
 Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector<Token> tokens) {
   std::string nextOp;
 
+  // gets the first operator
   try {
     nextOp = peak(tokens).token;
   }
@@ -66,6 +57,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     throw std::runtime_error(e.what());
   }
 
+  // goes through the vector until an operator of lower precedence is reached
   while (precedence(nextOp) >= minPrecedence) {
     std::string currOp = nextOp;
     Node* rightHandSide;
@@ -87,6 +79,8 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
       throw std::runtime_error(e.what());
     }
 
+    // this while loop deals with higher precedence operators to the right through recursion
+    // second part of the or statement and the addedPrecedence variable are to parse assignment which is righ associative
     while ((precedence(nextOp) > precedence(currOp)) || (nextOp == "=" && precedence(nextOp) == precedence(currOp))) {
       int addedPrecedence = 1;
       if (nextOp == "=") --addedPrecedence;
@@ -109,6 +103,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
       }
     }
 
+    // below connects the parts of tree
     OpNode* tempNode;
 
     if (currOp == "=") tempNode = new AssignNode;
@@ -126,6 +121,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
   return leftHandSide;
 }
 
+// helper function to retrieve precedence
 int InfixParser::precedence(std::string op) {
   if (op == "=") return 0;
 
@@ -140,6 +136,9 @@ int InfixParser::precedence(std::string op) {
   }
 }
 
+// returns the next operator given the stored index member variable
+// considers closing parenthesis and END as operators
+// deals with errors
 Token& InfixParser::peak(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
     if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT) {
@@ -173,15 +172,18 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
       }
 
       --parenNum;
-      //std::cout << "PN: " << parenNum << std::endl;
       return tokens[i];
     }
 
   }
 
+  // returns END token
   return tokens.back();
 }
 
+// returns the next number or variable given the stored index member variable
+// calls createTree with base parameters when it hits an open parenthesis
+// deals with errors
 Node* InfixParser::nextNode(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
     if (tokens[i].type == NUMBER) {
@@ -225,13 +227,13 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       VarNode* tempNode = new VarNode;
       tempNode->value = tokens[i].token;
 
+      // do not update stored variables when there is an error
       if (tokens[i + 1].token != "=") {
         try {
 	  tempNode->getValue();
 	}
 	catch (const std::exception& e) {
-	  delete tempNode;
-	  throw;
+	  updateVariables = false;
 	}
       }
 
@@ -247,24 +249,11 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       
       index = i;
       ++parenNum;
-      //std::cout << "PN: " << parenNum << std::endl;
 
+      // creates a tree for parenthesis case
       Node* tempNode = createTree(nextNode(tokens), 0, tokens);
 
       ++index;
-      /*
-      if (tokens[index + 1].token != ")") {
-        std::ostringstream error;
-        error << "Unexpected token at line " << tokens[index + 1].line << " column " << tokens[index + 1].column << ": " << tokens[index + 1].token;
-        throw std::runtime_error(error.str());
-      }
-
-      if (tokens[index + 2].token == "(") {
-        std::ostringstream error;
-        error << "Unexpected token at line " << tokens[index + 2].line << " column " << tokens[index + 2].column << ": " << tokens[index + 2].token;
-        throw std::runtime_error(error.str());
-      }
-      */
 
       return tempNode;
     }
