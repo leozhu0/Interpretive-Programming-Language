@@ -87,6 +87,7 @@ int main() {
     } catch (const std::exception& e) {
       std::cout << e.what() << std::endl;
       parser.~Parser();
+      delete e.what();
       exit(1);
     }
 
@@ -95,8 +96,15 @@ int main() {
     } catch (const std::exception& e) {
       std::cout << e.what() << std::endl;
       parser.~Parser();
-      if(((std::string)(e.what())).compare("Runtime error: division by zero.") == 0) exit(3);
-      if(((std::string)(e.what())).substr(0,33).compare("Runtime error: unknown identifier") == 0) exit(2);
+      if(((std::string)(e.what())).compare("Runtime error: division by zero.") == 0) {
+        delete e.what();
+        exit(3);
+      }
+      if(((std::string)(e.what())).substr(0,33).compare("Runtime error: unknown identifier") == 0) {
+        delete e.what();
+        exit(2);
+      }
+      delete e.what();
       exit(1);
     }
    
