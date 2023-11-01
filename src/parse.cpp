@@ -47,6 +47,11 @@ int main() {
       }
     }
 
+    if(tempParensCount != 0){
+      std::cout << "Unexpected token at line " << tokens[index].line << " column " << tokens[index].column << ": " << tokens[index].token << std::endl;
+      exit(2);
+    }
+
 
     //while(index < (int)tokens.size() && tokens[index].line == i+1/* && tokens[index].type != END*/){ 
     
