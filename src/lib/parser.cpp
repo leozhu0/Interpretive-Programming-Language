@@ -245,6 +245,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
         bool allowNum = 1;
         // iterates through everything following the operator
         for (size_t i = start + 1; i < tokens.size(); ++i) {
+          std::cout << "i: " << i << "Token: " << tokens[i].token<<std::endl;
           if(!allowNum){
             if(tokens[i].token == ")" && i == tokens.size()-2){
               allowedParenthesis--;
@@ -333,7 +334,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
             
 
-      if (!(allowedParenthesis == 0)) {
+      if (allowedParenthesis != 0) {
         std::cout << "15Unexpected token at line " << tokens[tokens.size() - 1].line << " column " << tokens[tokens.size() - 1].column << ": " << tokens[tokens.size() - 1].token << std::endl;
         exit(2);
       }
