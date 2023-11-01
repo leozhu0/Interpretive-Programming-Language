@@ -22,12 +22,12 @@ int main() {
   for(int i = 0; i < tokens[tokens.size() - 1 - ((tokens[tokens.size()-1].column == 1)?1:0)].line; i++){
     std::vector<Token> tempRow;
     
-    while(index < (int)tokens.size() && tokens[index].line == i+1 /*&& tokens[index].type != END*/){
+    while(index < (int)tokens.size() && tokens[index].line == i+1 && tokens[index].type != END){
       tempRow.push_back(tokens[index]);
       index++; 
     }
     //PUT END AT THE END OF EACH LINE
-    //tempRow.push_back(Token{tempRow.back().line, tempRow.back().column+1,"END", END});
+    tempRow.push_back(Token{tempRow.back().line, tempRow.back().column+1,"END", END});
 
     multilineTokens.push_back(tempRow);
   }

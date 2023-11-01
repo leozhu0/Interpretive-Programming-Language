@@ -246,7 +246,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
         // iterates through everything following the operator
         for (size_t i = start + 1; i < tokens.size(); ++i) {
           if(!allowNum){
-            if(tokens[i].token == ")" && i == tokens.size()-1){
+            if(tokens[i].token == ")" && i == tokens.size()-2){
               allowedParenthesis--;
               break;
             }else{
