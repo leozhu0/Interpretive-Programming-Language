@@ -16,11 +16,7 @@ int main() {
 
   std::vector<std::vector<Token>> multilineTokens;
 
-
-            
-
- 
-  //int index = 0; 
+          
   //If END is on a new line, then stop at the line before, otherwise do the whole thing
   int lastIndex = tokens.size() - 2 - ((tokens[tokens.size()-1].column == 1)?1:0);
   int index = 0;
@@ -53,30 +49,12 @@ int main() {
       exit(2);
     }
 
-    //while(index < (int)tokens.size() && tokens[index].line == i+1/* && tokens[index].type != END*/){ 
-    
-    //} 
-
-
     //PUT END AT THE END OF EACH LINE
     tempRow.push_back(Token{tempRow.back().line, tempRow.back().column+1,"END", END});
 
 
     multilineTokens.push_back(tempRow);
   }
-
-
-
-
-/*for (int i = 0; i <  multilineTokens.size(); i++){
-  for(int j = 0; j < multilineTokens.at(i).size(); j++){
-    std::cout <<multilineTokens.at(i).at(j).token << " ";
-  }
-  std::cout << std::endl;
-}*/
-
-
-
 
 
   for (const auto &line : multilineTokens)
