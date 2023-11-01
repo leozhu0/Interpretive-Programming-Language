@@ -251,12 +251,14 @@ Node* Parser::createNode(std::vector<Token> tokens) {
         }
 
 
-      for(int t = 0; t < (int)(node->children.size() - 1); t++){
-        
+      for(int t = 0; t < (int)(node->children.size() - 1); t++){  
           variables[node->children.at(t)->value] = node->children.at(node->children.size() - 1)->getValue();
-        }
+      }
 
-            
+      if(node->children.size() < 2){
+        std::cout << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column << ": " << tokens[tokens.size() - 2].token << std::endl;
+        exit(2);
+      }
 
       if (allowedParenthesis != 0) {
         //if(tokens[tokens.size()-1].column == 3){std::cout << "14"; }
