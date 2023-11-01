@@ -64,23 +64,21 @@ int main() {
       parser.ParserFunc(line);
     } catch (const std::exception& e) {
       std::cout << e.what() << std::endl;
-      parser.~Parser();
-      exit(1);
+      return 1;
     }
 
     try {
       std::cout << parser.toString() << std::endl << parser.calculate() << std::endl;
     } catch (const std::exception& e) {
       std::cout << e.what() << std::endl;
-      parser.~Parser();
       if(((std::string)(e.what())).compare("Runtime error: division by zero.") == 0) {
-        exit(3);
+        return 3;
       }
       if(((std::string)(e.what())).substr(0,33).compare("Runtime error: unknown identifier") == 0) {
-        exit(2);
+        return 2;
       }
       
-      exit(1);
+      return 1;
     }
    
   }
