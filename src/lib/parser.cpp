@@ -50,10 +50,12 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
   // If the expression has an operator
   } else if (tokens[start].token != "("){
+    if(tokens[start].column == 3){std::cout << "1"; }
       std::cout << "Unexpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
       exit(2);
   }else if (tokens[start].token == "(") {
       if (tokens[start + 1].type != OPERATOR && tokens[start + 1].type != ASSIGNMENT) {
+        if(tokens[start+1].column == 3){std::cout << "2";}
         std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
         exit(2);
       }
@@ -71,12 +73,14 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     // iterates through everything following the operator
     for (size_t i = start + 1; i < tokens.size(); ++i) {
       if (allowedParenthesis == 0 && i != tokens.size() - 1) {
+        if(tokens[start].column == 3){std::cout << "3"; }
         std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
         exit(2);
       }
 
       if (tokens[i].token == ")") {
         if (i == start + 1) {
+          if(tokens[i].column == 3){std::cout << "4"; }
           std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
           exit(2);
         }
@@ -114,6 +118,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
             else ++i;
 
             if (i == tokens.size()) {  
+              if(tokens[i-1].column == 3){std::cout << "5"; }
               std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
               exit(2);
             }
@@ -124,6 +129,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
       }
 
       else if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT) {
+        if(tokens[i].column == 3){std::cout << "6"; }
         std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
         exit(2);
       }
@@ -132,6 +138,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
    
 
     if (allowedParenthesis != 0) {
+      if(tokens[tokens.size()-1].column == 3){std::cout << "7"; }
       std::cout << "Unexpected token at line " << tokens[tokens.size()-1].line << " column " << tokens[tokens.size() - 1].column << ": " << tokens[tokens.size() - 1].token << std::endl;
       exit(2);
     }
@@ -143,6 +150,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
     else if (tokens[start + 1].type == ASSIGNMENT){
 
       if(tokens[start+2].type != VARIABLE){
+        if(tokens[start+2].column == 3){std::cout << "8"; }
         std::cout << "Unexpected token at line " << tokens[start+2].line << " column " << tokens[start+2].column << ": " << tokens[start+2].token << std::endl;
         exit(2);
       }
@@ -251,19 +259,21 @@ Node* Parser::createNode(std::vector<Token> tokens) {
               break;
             }else{
               //std::cout << "i: " << i << "Token: " << tokens[i].token<<std::endl;
-
+              if(tokens[i].column == 3){std::cout << "9";}
               std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
               exit(2);
             }
           }
 
           if (allowedParenthesis == 0 && i != tokens.size() - 1) {
+            if(tokens[i].column == 3){std::cout << "10"; }
             std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
             exit(2);
           }
 
           if (tokens[i].token == ")") {
             if (i == start + 1) {
+              if(tokens[i].column == 3){std::cout << "11"; }
               std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
               exit(2);
             }
@@ -306,6 +316,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
                 else ++i;
 
                 if (i == tokens.size()) {  
+                  if(tokens[i-1].column == 3){std::cout << "12"; }
                   std::cout << "Unexpected token at line " << tokens[i - 1].line << " column " << tokens[i - 1].column << ": " << tokens[i - 1].token << std::endl;
                   exit(2);
                 }
@@ -321,6 +332,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
           }
 
           else if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT) {
+            if(tokens[i].column == 3){std::cout << "13"; }
             std::cout << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token << std::endl;
             exit(2);
           }
@@ -336,6 +348,7 @@ Node* Parser::createNode(std::vector<Token> tokens) {
             
 
       if (allowedParenthesis != 0) {
+        if(tokens[tokens.size()-1].column == 3){std::cout << "14"; }
         std::cout << "Unexpected token at line " << tokens[tokens.size() - 1].line << " column " << tokens[tokens.size() - 1].column << ": " << tokens[tokens.size() - 1].token << std::endl;
         exit(2);
       }
@@ -344,12 +357,14 @@ Node* Parser::createNode(std::vector<Token> tokens) {
 
     // default error case
     }  else {
+      if(tokens[start].column == 3){std::cout << "15"; }
       std::cout << "Unexpected token at line " << tokens[start].line << " column " << tokens[start].column << ": " << tokens[start].token << std::endl;
       exit(2);
     }
 
           
   } else {
+    if(tokens[start].column == 3){std::cout << "16"; }
     std::cout << "Unexpected token at line " << tokens[start + 1].line << " column " << tokens[start + 1].column << ": " << tokens[start + 1].token << std::endl;
     exit(2);
   }
