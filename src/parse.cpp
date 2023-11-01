@@ -1,6 +1,6 @@
 #include "lib/token.h"
-#include "lib/parser.cpp"
-#include "lib/lexer.cpp"
+#include "lib/parser.h"
+#include "lib/lexer.h"
 #include <iostream>
 #include <iomanip>
 #include <vector>
