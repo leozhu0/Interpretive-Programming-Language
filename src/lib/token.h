@@ -9,7 +9,12 @@ enum TokenType {
   NULLTYPE,
   SPACE,
   VARIABLE,
-  ASSIGNMENT
+  ASSIGNMENT,
+  LOGIC,
+  COMPARE,
+  COMMAND,
+  BLOCK,
+  BOOL
 };
 
 class Token {

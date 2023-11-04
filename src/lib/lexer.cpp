@@ -18,9 +18,20 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
                 exit(1);
             }
         }
-        sequence.push_back(Token{line,column, element, type});
+
+        if(element == "while" || element == "if" || element == "print" || element == "else" || element == "else if"){
+            sequence.push_back(Token{line,column, element, COMMAND});
+        } else {
+            sequence.push_back(Token{line,column, element, type});
+        }
+
+        if(element == "true" || element == "false"){
+            sequence.push_back(Token{line,column, element, BOOL});
+        }
+
     }
 }
+
 
 std::vector<Token> Lexer::lexer(){
     std::vector<Token> sequence;
@@ -98,11 +109,45 @@ std::vector<Token> Lexer::lexer(){
                     }
 
                 } else {
-                    pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
-                    numDecimal = 0;
-                    std::string rawInputString(1, rawInput);
-                    pushSeq(rawInputString, type, line, i, sequence);
-                    element = "";
+                    //////////////////////////////////EDITS ALL HERE/////////////
+                    if(Token::tokenType(element[0])!=LOGIC && Token::tokenType(element[0])!=COMPARE && element[0] != '='){
+                        //std::cout << "A";
+                        pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
+                        numDecimal = 0;
+                        element="";
+                    }
+
+                    if(element == "=" && rawInput != '='){
+                        //std::cout << "B";
+                        pushSeq("=", ASSIGNMENT, line, i, sequence);
+                        element = rawInput;
+                    }
+
+                    else if((element == "<" || element == "=" || element == ">") && rawInput == '='){
+                        //std::cout << "C";
+                        pushSeq(element+rawInput, ASSIGNMENT, line, i, sequence);
+                        element = "";
+                    }
+
+                    else if((element == "<" || element == ">") && rawInput != '='){
+                        //std::cout << "D";
+                        pushSeq(element, ASSIGNMENT, line, i, sequence);
+                        element = rawInput;
+                    } 
+
+                    else if(Token::tokenType(rawInput==COMPARE)){
+                        //std::cout << "F";
+                        pushSeq(element, Token::tokenType(element[0]), line, i, sequence);
+                        element = rawInput;
+                    }
+                    
+                    else {
+                       // std::cout << "E";
+                        std::string rawInputString(1, rawInput);
+                        pushSeq(rawInputString, type, line, i, sequence);
+                        element = "";
+                    }
+                    //////////////////////EDITS END
                 }
                 
         } else {

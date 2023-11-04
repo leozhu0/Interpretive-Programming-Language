@@ -11,8 +11,20 @@ TokenType Token::tokenType(char token){
         return PARENTHESIS;
     }
 
-    if(token == '+' || token == '-' || token == '*' || token == '/') {
+    if(token == '}' || token == '{') {
+        return BLOCK;
+    }
+
+    if(token == '+' || token == '-' || token == '*' || token == '/' || token == '%') {
         return OPERATOR;
+    }
+
+    if(token == '&' || token == '^' || token == '|') {
+        return LOGIC;
+    }
+
+    if(token == '>' || token == '<'){
+        return COMPARE;
     }
 
     if(token== '='){
