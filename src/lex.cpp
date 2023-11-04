@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <vector>
 #include <fstream>
-#include "lib/lexer.h"
+#include "lib/lexer.cpp"
 
 int main() {
     try{
