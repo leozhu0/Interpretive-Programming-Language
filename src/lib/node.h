@@ -3,6 +3,8 @@
 #include "token.h"
 #include <map>
 
+extern std::map<std::string, double> variables;
+
 struct Node {
   std::string value;
   const TokenType returnType;
