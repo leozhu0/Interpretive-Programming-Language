@@ -2,7 +2,7 @@
 #include <vector>
 #include <memory>
 #include "token.h"
-#include "node.h"
+// #include "node.h"
 
 class InfixParser {
   Node* root;
@@ -24,3 +24,57 @@ public:
   double calculate();
 };
 
+//_____________________________________________________________________________
+
+struct Node {
+  std::string value;
+  const TokenType returnType;
+
+  Node(TokenType type = NUMBER) : returnType(type) {}
+  virtual ~Node() {};
+  virtual double getValue() = 0;
+  virtual std::string toString() = 0;
+};
+
+struct NumNode : public Node {
+  double getValue();
+  std::string toString();
+};
+
+struct VarNode : public Node {
+  double getValue();
+  std::string toString();
+};
+
+struct BoolNode : public Node {
+  BoolNode() : Node(BOOL) {}
+
+  double getValue();
+  std::string toString();
+};
+
+struct OpNode : public Node {
+  Node* lhs;
+  Node* rhs;
+
+  OpNode(TokenType type = NUMBER) : Node(type) {}
+  ~OpNode();
+  virtual double getValue();
+  std::string toString();
+};
+
+struct AssignNode : public OpNode {
+  double getValue();
+};
+
+struct CompareNode : public OpNode {
+  CompareNode() : OpNode(BOOL) {}
+
+  double getValue();
+};
+
+struct LogicNode : public OpNode {
+  LogicNode() : OpNode(BOOL) {}
+
+  double getValue();
+};
