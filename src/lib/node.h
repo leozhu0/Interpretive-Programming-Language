@@ -1,3 +1,4 @@
+/*
 #include <string>
 #include <vector>
 #include "token.h"
@@ -57,3 +58,4 @@ struct LogicNode : public OpNode {
 };
 
 extern std::map<std::string, double> variables;
+*/
