@@ -1,7 +1,7 @@
 #include "lib/token.h"
 //#include "lib/parser.cpp"
-#include "lib/lexer.h"
-#include "lib/infix.h"
+#include "lib/lexer.cpp"
+#include "lib/infix.cpp"
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -113,21 +113,25 @@ void ParseBlock(std::vector<Token>& tokens, int& i) {
             int conditionStart = start + 1;
             int conditionEnd = i;
 
+
+
+            int blockStart = i + 1;
+            int blockParen = 1;
+            while (blockParen > 0) {
+                i++;
+                if (tokens[i].token == "{") {
+                    blockParen++;
+                }
+                else if (tokens[i].token == "}") {
+                    blockParen--;
+                }
+            }
+            int blockEnd = i;
+
             
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
             while (EvaluateExpression(conditionExpr) != 0) {
-                int blockStart = i + 1;
-                int blockParen = 1;
-                while (blockParen > 0) {
-                    i++;
-                    if (tokens[i].token == "{") {
-                        blockParen++;
-                    }
-                    else if (tokens[i].token == "}") {
-                        blockParen--;
-                    }
-                }
-                int blockEnd = i;
+                
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
                 int j = 0;
                 ParseBlock(block, j);
