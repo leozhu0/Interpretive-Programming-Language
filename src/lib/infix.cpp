@@ -5,7 +5,7 @@
 #include <map>
 #include <cmath>
 
-extern std::map<std::string, double> variables;
+std::map<std::string, double> variables;
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
   for (Token token : tokens) {
