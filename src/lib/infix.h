@@ -23,3 +23,5 @@ public:
   std::string toString();
   double calculate();
 };
+
+extern std::map<std::string, double> variables;
