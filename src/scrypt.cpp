@@ -10,7 +10,7 @@
 
 
 void PrintV(std::vector<Token> tokens){
-    if(tokens.size() > 0){
+    if((int)tokens.size() > 0){
         for(int i = 0; i < (int)(tokens.size()); i++){
             std::cout << tokens.at(i).token <<" ";
         }
@@ -20,18 +20,22 @@ void PrintV(std::vector<Token> tokens){
 
 double EvaluateExpression(std::vector<Token> tokens){
     //print for error checking:
-    
-
+    //std::cout << "B";
+    //PrintV(tokens);
+    if((int)tokens.size() == 0 || tokens.at(0).type == END){
+        return 0;
+    }
 
     std::vector<Token> tempRow = tokens;
     if(tempRow.back().type != END){
         tempRow.push_back(Token{tempRow.back().line, tempRow.back().column+1,"END", END});
     }
 
-    std::cout <<std::endl<< "EVAL " << tempRow.size() << " :";
-    PrintV(tempRow);
+    //std::cout <<std::endl<< "EVAL " << tempRow.size() << " :";
+    //PrintV(tempRow);
 
     InfixParser parser = InfixParser(tempRow);
+    //std::cout <<"THERE";
     //InfixParser infixParser = InfixParser(tokens));
     //parser.ParserFunc(tokens);
     return parser.calculate();
@@ -39,12 +43,12 @@ double EvaluateExpression(std::vector<Token> tokens){
 
 
 void EvaluateExpressionChunk(std::vector<Token> tokens){
-    
+    //std::cout << "A";
     std::vector<std::vector<Token>> multilineTokens;
     
     int index = 0; 
     //If END is on a new line, then stop at the line before, otherwise do the whole thing
-    for(int i = 0; i < tokens[tokens.size() - 1 - ((tokens[tokens.size()-1].column == 1)?1:0)].line; i++){
+    for(int i = 0; i < tokens[(int)tokens.size() - 1 - ((tokens[(int)tokens.size()-1].column == 1)?1:0)].line; i++){
         std::vector<Token> tempRow;
         
         while(tokens[index].line == i+1){
@@ -64,21 +68,22 @@ void EvaluateExpressionChunk(std::vector<Token> tokens){
 
 void ParseBlock(std::vector<Token>& tokens, int& i) {
     
-    if(tokens.size() == 0) {
+    if((int)tokens.size() == 0) {
         return;
     }
-    std::cout << "NEXT: ";
-    PrintV(tokens);
+    //std::cout << "NEXT: ";
+    //PrintV(tokens);
 
-    std::cout << "[" << i << "(" << tokens[i].token << ")" << "]"<< " ";
-    while (i < tokens.size()) {
+    
+    while (i < (int)tokens.size()) {
+        //std::cout << "[" << i << "(" << tokens[i].token << ")" << "]"<< " " << std::endl;
 
 
         if (tokens[i].token == "print") {
             //std::cout << "PRINTBLOCK" << std::endl;
             i++;
             std::vector<Token> printExpr;
-            while (i < tokens.size()) {
+            while (i < (int)tokens.size()) {
                 printExpr.push_back(tokens[i]);
                 if(tokens[i].line != tokens[i+1].line){
                     
@@ -89,12 +94,13 @@ void ParseBlock(std::vector<Token>& tokens, int& i) {
             //std::cout << "printExpr: ";
             //PrintV(printExpr);
             std::cout << "Print: " << EvaluateExpression(printExpr)<< std::endl;
-        std::cout << "PRINT: " << i << tokens[i].token;
+            //std::cout << "PRINT: " << i << tokens[i].token;
 
             //std::vector<Token> block(tokens.begin() + i, tokens.begin() + tokens.size());
             //PrintV(block);
             //int j = 0;
             //ParseBlock(block, j);
+            i++;
         }
 
 
@@ -107,21 +113,25 @@ void ParseBlock(std::vector<Token>& tokens, int& i) {
             int conditionStart = start + 1;
             int conditionEnd = i;
 
+
+
+            int blockStart = i + 1;
+            int blockParen = 1;
+            while (blockParen > 0) {
+                i++;
+                if (tokens[i].token == "{") {
+                    blockParen++;
+                }
+                else if (tokens[i].token == "}") {
+                    blockParen--;
+                }
+            }
+            int blockEnd = i;
+
             
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
-            while (EvaluateExpression(conditionExpr) > 0) {
-                int blockStart = i + 1;
-                int blockParen = 1;
-                while (blockParen > 0) {
-                    i++;
-                    if (tokens[i].token == "{") {
-                        blockParen++;
-                    }
-                    else if (tokens[i].token == "}") {
-                        blockParen--;
-                    }
-                }
-                int blockEnd = i;
+            while (EvaluateExpression(conditionExpr) != 0) {
+                
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
                 int j = 0;
                 ParseBlock(block, j);
@@ -145,24 +155,20 @@ void ParseBlock(std::vector<Token>& tokens, int& i) {
 
 
 
-
             int blockStart = i + 1;
             int blockParen = 1;
             while (blockParen > 0) {
                 i++;
-                if (tokens[i].token == "{") {
-                    blockParen++;
-                } else if (tokens[i].token == "}") {
-                    blockParen--;
-                }
+                if (tokens[i].token == "{") blockParen++;
+                else if (tokens[i].token == "}") blockParen--;
             }
             
             //std::cout << "BLOCKSTART:"<<blockStart << "BLOCKEND:"<<blockEnd<<std::endl;
             
 
             
-            if (EvaluateExpression(conditionExpr) > 0) {
-                std::cout << "TRUEIF" <<std::endl;
+            if (EvaluateExpression(conditionExpr) != 0) {
+                //std::cout << "TRUEIF" <<std::endl;
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
                 //std::cout << "Block: ";
                 //PrintV(block);
@@ -176,7 +182,7 @@ void ParseBlock(std::vector<Token>& tokens, int& i) {
                 ParseBlock(block, j);
             }*/
             i++;
-            std::cout << "IF: " << i << tokens[i].token;
+            //std::cout << "IF: " << i << tokens[i].token;
         } 
         
         
@@ -207,7 +213,7 @@ void ParseBlock(std::vector<Token>& tokens, int& i) {
                 ParseBlock(block, j);
             } else {
                 blockStart = blockEnd +1;
-                blockEnd = tokens.size();
+                blockEnd = (int)tokens.size();
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
                 int j = 0;
                 ParseBlock(block, j);
@@ -242,9 +248,9 @@ void ParseBlock(std::vector<Token>& tokens, int& i) {
         else {
             
             //std::cout << "A";
-            int blockStart = i + 1;
+            int blockStart = i;
             
-            while(i < tokens.size() && tokens[i].type != COMMAND && tokens[i].token != "}"){
+            while(i < (int)tokens.size() && tokens[i].type != COMMAND && tokens[i].token != "}"){
                 i++;
             }
             int blockEnd = i;
@@ -252,13 +258,15 @@ void ParseBlock(std::vector<Token>& tokens, int& i) {
 //std::cout << "B";
             std::vector<Token> block (tokens.begin() + blockStart, tokens.begin() + blockEnd);
             
-//std::cout << "C";
-std::cout << "CHUNK: ";
-PrintV(block);
+            //std::cout << "C";
+            //std::cout << "CHUNK: ";
+            //PrintV(block);
 
-            if(block.size() > 0 && block.at(0).type != END){
+            if((int)block.size() > 0 && block.at(0).type != END){
+                //std::cout << "HERE";
                 EvaluateExpressionChunk(block);
             }
+            //i++;
           
         }
 
