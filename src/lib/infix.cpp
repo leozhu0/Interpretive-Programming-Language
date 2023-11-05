@@ -4,6 +4,9 @@
 #include <stdexcept>
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
+  for (Token token : tokens) {
+    std::cout << token.token << " " << token.type << std::endl;
+  }
 
   if (tokens.size() == 1) {
     std::ostringstream error;
