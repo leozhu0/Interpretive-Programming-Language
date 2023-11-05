@@ -5,8 +5,6 @@
 #include <stdexcept>
 #include <cmath>
 
-std::map<std::string, double> variables;
-
 double NumNode::getValue() {
   return std::stod(value);
 }
