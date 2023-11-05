@@ -56,4 +56,4 @@ struct LogicNode : public OpNode {
   double getValue();
 };
 
-
+extern std::map<std::string, double> variables;
