@@ -23,7 +23,7 @@ TokenType Token::tokenType(char token){
         return LOGIC;
     }
 
-    if(token == '>' || token == '<' || "!"){
+    if(token == '>' || token == '<' || token == '!'){
         return COMPARE;
     }
 
