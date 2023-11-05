@@ -1,7 +1,7 @@
 #include "lib/token.h"
 //#include "lib/parser.cpp"
-#include "lib/lexer.h"
-#include "lib/infix.h"
+#include "lib/lexer.cpp"
+#include "lib/infix.cpp"
 #include <iostream>
 #include <iomanip>
 #include <vector>
