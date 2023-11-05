@@ -23,8 +23,9 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
             sequence.push_back(Token{line,column, element, COMMAND});
         } else if(element == "true" || element == "false"){
             sequence.push_back(Token{line,column, element, BOOL});
-        }
-        else {
+        } else if(element == "<=" || element == ">=" || element == "==" || element == ">" || element == "<"){
+            sequence.push_back(Token{line,column, element, COMPARE});
+        } else {
             sequence.push_back(Token{line,column, element, type});
         }
 
@@ -141,13 +142,13 @@ std::vector<Token> Lexer::lexer(){
 
                     else if((element == "<" || element == "=" || element == ">") && rawInput == '='){
                         //std::cout << "C";
-                        pushSeq(element+rawInput, ASSIGNMENT, line, i, sequence);
+                        pushSeq(element+rawInput, COMPARE, line, i, sequence);
                         element = "";
                     }
 
                     else if((element == "<" || element == ">") && rawInput != '='){
                         //std::cout << "D";
-                        pushSeq(element, ASSIGNMENT, line, i, sequence);
+                        pushSeq(element, COMPARE, line, i, sequence);
                         element = rawInput;
                     } 
 
@@ -215,6 +216,8 @@ void Lexer::pushSeqThrow(std::string element, TokenType type, int line, int colu
             sequence.push_back(Token{line,column, element, COMMAND});
         } else if(element == "true" || element == "false"){
             sequence.push_back(Token{line,column, element, BOOL});
+        }else if(element == "<=" || element == ">=" || element == "==" || element == ">" || element == "<"){
+            sequence.push_back(Token{line,column, element, COMPARE});
         }
         else {
             sequence.push_back(Token{line,column, element, type});
@@ -319,13 +322,13 @@ std::vector<Token> Lexer::lexer(std::string raw){
 
                     else if((element == "<" || element == "=" || element == ">") && rawInput == '='){
                         //std::cout << "C";
-                        pushSeq(element+rawInput, ASSIGNMENT, line, i, sequence);
+                        pushSeq(element+rawInput, COMPARE, line, i, sequence);
                         element = "";
                     }
 
                     else if((element == "<" || element == ">") && rawInput != '='){
                         //std::cout << "D";
-                        pushSeq(element, ASSIGNMENT, line, i, sequence);
+                        pushSeq(element, COMPARE, line, i, sequence);
                         element = rawInput;
                     } 
 
