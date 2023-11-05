@@ -21,13 +21,14 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
 
         if(element == "while" || element == "if" || element == "print" || element == "else" || element == "else if"){
             sequence.push_back(Token{line,column, element, COMMAND});
-        } else {
+        } else if(element == "true" || element == "false"){
+            sequence.push_back(Token{line,column, element, BOOL});
+        }
+        else {
             sequence.push_back(Token{line,column, element, type});
         }
 
-        if(element == "true" || element == "false"){
-            sequence.push_back(Token{line,column, element, BOOL});
-        }
+        
 
     }
 }
@@ -101,11 +102,26 @@ std::vector<Token> Lexer::lexer(){
                         element += rawInput;
                     } else {
                         //When the variable input stops, insert it and then insert what you land on
-                        pushSeq(element, VARIABLE, line, i - element.size(), sequence);
-                        numDecimal = 0;
-                        std::string rawInputString(1, rawInput);
-                        pushSeq(rawInputString, type, line, i, sequence);
-                        element = "";
+                        if(element == "else " && rawInput == 'i'){
+                            element = "else i";
+                        }
+
+                        else if (element == "else f" && rawInput == 'f'){
+                            pushSeq("else if", VARIABLE, line, i - element.size(), sequence);
+                            numDecimal = 0;
+                            element = "";
+                        }
+
+                        else {
+                            pushSeq(element, VARIABLE, line, i - element.size(), sequence);
+                            numDecimal = 0;
+                            std::string rawInputString(1, rawInput);
+                            pushSeq(rawInputString, type, line, i, sequence);
+                            element = "";
+                        } 
+                        
+
+
                     }
 
                 } else {
@@ -142,7 +158,7 @@ std::vector<Token> Lexer::lexer(){
                     }
                     
                     else {
-                       // std::cout << "E";
+                        std::cout << "E";
                         std::string rawInputString(1, rawInput);
                         pushSeq(rawInputString, type, line, i, sequence);
                         element = "";
@@ -151,9 +167,14 @@ std::vector<Token> Lexer::lexer(){
                 }
                 
         } else {
-            pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
-            element = "";
-            numDecimal = 0;
+             if(element == "else if" || element.substr(0, 4) != "else"){
+                //std::cout << "H";
+                pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
+                element = "";
+                numDecimal = 0;
+             } else {
+                element += " ";
+             }
         }
 
         i++;

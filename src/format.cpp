@@ -10,15 +10,18 @@
 
 
 void PrintV(std::vector<Token> tokens){
-    for(int i = 0; i < (int)(tokens.size()); i++){
-        std::cout << tokens.at(i).token <<" ";
+    if(tokens.size() > 0){
+        for(int i = 0; i < (int)(tokens.size()); i++){
+            std::cout << tokens.at(i).token <<" ";
+        }
     }
     std::cout << std::endl;
 }
 
 double EvaluateExpression(std::vector<Token> tokens){
     //print for error checking:
-    
+    std::cout <<std::endl<< "EVAL " << tokens.size() << " :";
+    PrintV(tokens);
 
 
     std::vector<Token> tempRow = tokens;
@@ -58,25 +61,37 @@ void EvaluateExpressionChunk(std::vector<Token> tokens){
 
 void ParseBlock(std::vector<Token>& tokens, int& i) {
     
+    if(tokens.size() == 0) {
+        return;
+    }
+    std::cout << "NEXT: ";
+    PrintV(tokens);
+
     std::cout << "[" << i << "(" << tokens[i].token << ")" << "]"<< " ";
     while (i < tokens.size()) {
 
 
         if (tokens[i].token == "print") {
-            std::cout << "PRINTBLOCK" << std::endl;
+            //std::cout << "PRINTBLOCK" << std::endl;
             i++;
             std::vector<Token> printExpr;
             while (i < tokens.size()) {
                 printExpr.push_back(tokens[i]);
                 if(tokens[i].line != tokens[i+1].line){
-                    i++;
+                    
                     break;
                 }
                 i++;
             }
-            std::cout << "printExpr: ";
-            PrintV(printExpr);
+            //std::cout << "printExpr: ";
+            //PrintV(printExpr);
             std::cout << "Print: " << EvaluateExpression(printExpr)<< std::endl;
+        std::cout << "PRINT: " << i << tokens[i].token;
+
+            //std::vector<Token> block(tokens.begin() + i, tokens.begin() + tokens.size());
+            //PrintV(block);
+            //int j = 0;
+            //ParseBlock(block, j);
         }
 
 
@@ -122,45 +137,43 @@ void ParseBlock(std::vector<Token>& tokens, int& i) {
             int conditionEnd = i;
 
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
-            std::cout << "COND: ";
-            PrintV(conditionExpr);
+            //std::cout << "COND: ";
+            //PrintV(conditionExpr);
 
 
 
 
             int blockStart = i + 1;
-            int blockEnd = i;
             int blockParen = 1;
             while (blockParen > 0) {
-                blockEnd++;
-                if (tokens[blockEnd].token == "{") {
+                i++;
+                if (tokens[i].token == "{") {
                     blockParen++;
-                } else if (tokens[blockEnd].token == "}") {
+                } else if (tokens[i].token == "}") {
                     blockParen--;
                 }
             }
             
             //std::cout << "BLOCKSTART:"<<blockStart << "BLOCKEND:"<<blockEnd<<std::endl;
-
+            
 
             
             if (EvaluateExpression(conditionExpr) > 0) {
-                std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
+                std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
                 //std::cout << "Block: ";
                 //PrintV(block);
                 int j = 0;
                 ParseBlock(block, j);
-            } else {
-                blockStart = blockEnd +1;
-                blockEnd = tokens.size();
-                std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
+            } /*else { //IF the condition was false
+                std::vector<Token> block(tokens.begin() + i, tokens.begin() + tokens.size());
                 //std::cout << "Block2: ";
                 //PrintV(block);
                 int j = 0;
                 ParseBlock(block, j);
-            }
+            }*/
+            i++;
+            std::cout << "IF: " << i << tokens[i].token;
         } 
-        
         
         
         else if (tokens[i].token == "else if") {
@@ -236,17 +249,20 @@ void ParseBlock(std::vector<Token>& tokens, int& i) {
             std::vector<Token> block (tokens.begin() + blockStart, tokens.begin() + blockEnd);
             
 //std::cout << "C";
-//std::cout << "CHUNK: ";
-//PrintV(block);
-            if(block.size() > 0){
+std::cout << "CHUNK: ";
+PrintV(block);
+
+            if(block.size() > 0 && block.at(0).type != END){
                 EvaluateExpressionChunk(block);
             }
           
         }
 
         
-        i++; 
+       
     }
+
+    return;
 }
 
 int main() {
