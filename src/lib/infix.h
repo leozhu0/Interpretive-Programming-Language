@@ -24,4 +24,3 @@ public:
   double calculate();
 };
 
-extern std::map<std::string, double> variables;
