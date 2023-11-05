@@ -211,7 +211,14 @@ void Lexer::pushSeqThrow(std::string element, TokenType type, int line, int colu
                 throw std::runtime_error(error.str());
             }
         }
-        sequence.push_back(Token{line,column, element, type});
+        if(element == "while" || element == "if" || element == "print" || element == "else" || element == "else if"){
+            sequence.push_back(Token{line,column, element, COMMAND});
+        } else if(element == "true" || element == "false"){
+            sequence.push_back(Token{line,column, element, BOOL});
+        }
+        else {
+            sequence.push_back(Token{line,column, element, type});
+        }
     }
 }
 
@@ -274,26 +281,80 @@ std::vector<Token> Lexer::lexer(std::string raw){
                     } else if (Token::tokenType(element[0]) == VARIABLE || element == ""){
                         element += rawInput;
                     } else {
-                        pushSeqThrow(element, VARIABLE, line, i - element.size(), sequence);
-                        numDecimal = 0;
-                        std::string rawInputString(1, rawInput);
-                        pushSeqThrow(rawInputString, type, line, i, sequence);
-                        element = "";
+                          //When the variable input stops, insert it and then insert what you land on
+                        if(element == "else " && rawInput == 'i'){
+                            element = "else i";
+                        }
+
+                        else if (element == "else f" && rawInput == 'f'){
+                            pushSeq("else if", VARIABLE, line, i - element.size(), sequence);
+                            numDecimal = 0;
+                            element = "";
+                        }
+
+                        else {
+                            pushSeq(element, VARIABLE, line, i - element.size(), sequence);
+                            numDecimal = 0;
+                            std::string rawInputString(1, rawInput);
+                            pushSeq(rawInputString, type, line, i, sequence);
+                            element = "";
+                        } 
+                        
                     }
 
                 } else {
-                    pushSeqThrow(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
-                    numDecimal = 0;
-                    std::string rawInputString(1, rawInput);
-                    pushSeqThrow(rawInputString, type, line, i, sequence);
-                    element = "";
+                    //////////////////////////////////EDITS ALL HERE/////////////
+                    if(Token::tokenType(element[0])!=LOGIC && Token::tokenType(element[0])!=COMPARE && element[0] != '='){
+                        //std::cout << "A";
+                        pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
+                        numDecimal = 0;
+                        element="";
+                    }
+
+                    if(element == "=" && rawInput != '='){
+                        //std::cout << "B";
+                        pushSeq("=", ASSIGNMENT, line, i, sequence);
+                        element = rawInput;
+                    }
+
+                    else if((element == "<" || element == "=" || element == ">") && rawInput == '='){
+                        //std::cout << "C";
+                        pushSeq(element+rawInput, ASSIGNMENT, line, i, sequence);
+                        element = "";
+                    }
+
+                    else if((element == "<" || element == ">") && rawInput != '='){
+                        //std::cout << "D";
+                        pushSeq(element, ASSIGNMENT, line, i, sequence);
+                        element = rawInput;
+                    } 
+
+                    else if(Token::tokenType(rawInput==COMPARE)){
+                        //std::cout << "F";
+                        pushSeq(element, Token::tokenType(element[0]), line, i, sequence);
+                        element = rawInput;
+                    }
+                    
+                    else {
+                        std::cout << "E";
+                        std::string rawInputString(1, rawInput);
+                        pushSeq(rawInputString, type, line, i, sequence);
+                        element = "";
+                    }
+                    //////////////////////EDITS END
                 }
                 
                 
     
         } else {
-            pushSeqThrow(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
-            element = "";
+            if(element == "else if" || element.substr(0, 4) != "else"){
+                //std::cout << "H";
+                pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
+                element = "";
+                numDecimal = 0;
+             } else {
+                element += " ";
+             }
             numDecimal = 0;
         }
 
