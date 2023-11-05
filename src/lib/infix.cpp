@@ -295,7 +295,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 std::string InfixParser::toString() {
   return root->toString();
 }
-
+/*
 std::string InfixParser::calculate() {
   if (root->returnType == BOOL) {
     return (root->getValue() ? "true" : "false");
@@ -303,12 +303,12 @@ std::string InfixParser::calculate() {
 
   return std::to_string(root->getValue());
 }
+*/
 
-/*
 double InfixParser::calculate() {
   return root->getValue();
 }
-*/
+
 
 //________________________________________________________________________
 

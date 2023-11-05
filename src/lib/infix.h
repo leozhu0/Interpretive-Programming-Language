@@ -75,5 +75,5 @@ public:
   ~InfixParser();
 
   std::string toString();
-  std::string calculate();
+  double calculate();
 };
