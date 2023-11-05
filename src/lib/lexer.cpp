@@ -211,7 +211,14 @@ void Lexer::pushSeqThrow(std::string element, TokenType type, int line, int colu
                 throw std::runtime_error(error.str());
             }
         }
-        sequence.push_back(Token{line,column, element, type});
+        if(element == "while" || element == "if" || element == "print" || element == "else" || element == "else if"){
+            sequence.push_back(Token{line,column, element, COMMAND});
+        } else if(element == "true" || element == "false"){
+            sequence.push_back(Token{line,column, element, BOOL});
+        }
+        else {
+            sequence.push_back(Token{line,column, element, type});
+        }
     }
 }
 
@@ -266,14 +273,15 @@ std::vector<Token> Lexer::lexer(std::string raw){
                         element = "";
                     }
                     
-                } else if(Token::tokenType(rawInput) == VARIABLE){
+                } else if(Token::tokenType(rawInput)==VARIABLE){
                     if(Token::tokenType(element[0]) == NUMBER){
-                        std::cout << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
-                        exit(1);
+                        std::ostringstream error;
+                        error << "Syntax error on line "<< line <<" column "<< i <<".";
+                        throw std::runtime_error(error.str());
                     } else if (Token::tokenType(element[0]) == VARIABLE || element == ""){
                         element += rawInput;
                     } else {
-                        //When the variable input stops, insert it and then insert what you land on
+                          //When the variable input stops, insert it and then insert what you land on
                         if(element == "else " && rawInput == 'i'){
                             element = "else i";
                         }
@@ -292,8 +300,6 @@ std::vector<Token> Lexer::lexer(std::string raw){
                             element = "";
                         } 
                         
-
-
                     }
 
                 } else {
@@ -349,6 +355,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
              } else {
                 element += " ";
              }
+            numDecimal = 0;
         }
 
         i++;
