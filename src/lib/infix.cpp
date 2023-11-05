@@ -110,11 +110,13 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     OpNode* tempNode;
 
     if (currOp == "=") tempNode = new AssignNode;
+    else if (currOp == "==" || currOp == "!=" || currOp == ">" || currOp == "<" || currOp == ">=" || currOp == "<=") tempNode = new CompareNode;
+    else if (currOp == "|" || currOp == "^" || currOp == "&") tempNode = new LogicNode;
     else tempNode = new OpNode;
 
     tempNode->value = currOp;
-    tempNode->children.push_back(leftHandSide);
-    tempNode->children.push_back(rightHandSide);
+    tempNode->lhs = leftHandSide;
+    tempNode->rhs = rightHandSide;
 
     if (currOp == "=") variableBuffer.push_back({leftHandSide->toString(), rightHandSide});
 
@@ -128,9 +130,19 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
 int InfixParser::precedence(std::string op) {
   if (op == "=") return 0;
 
-  else if (op == "+" || op == "-") return 1;
+  else if (op == "|") return 1;
 
-  else if (op == "*" || op == "/") return 2;
+  else if (op == "^") return 2;
+
+  else if (op == "&") return 3;
+
+  else if (op == "==" || op == "!=") return 4;
+
+  else if (op == "<" || op == ">" || op == "<=" || op == ">=") return 5;
+
+  else if (op == "+" || op == "-") return 6;
+
+  else if (op == "*" || op == "/" || op == "%") return 7;
 
   else if (op == "END" || op == ")") return -1;
 
@@ -144,7 +156,7 @@ int InfixParser::precedence(std::string op) {
 // deals with errors
 Token& InfixParser::peak(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
-    if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT) {
+    if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT || tokens[i].type == COMPARE || tokens[i].type == LOGIC) {
 
       if ((tokens[i - 1].token == "(") || (tokens[i].type == ASSIGNMENT && tokens[i - 1].type != VARIABLE)) {
         std::ostringstream error;
@@ -152,7 +164,7 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
 	throw std::runtime_error(error.str());
       }
 
-      else if (tokens[i + 1].type == OPERATOR || tokens[i + 1].type == ASSIGNMENT || tokens[i + 1].token == ")" || tokens[i + 1].type == END) {
+      else if (tokens[i + 1].type == OPERATOR || tokens[i + 1].type == ASSIGNMENT || tokens[i + 1].type == COMPARE || tokens[i + 1].type == LOGIC || tokens[i + 1].token == ")" || tokens[i + 1].type == END) {
         std::ostringstream error;
         error << "Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
 	throw std::runtime_error(error.str());
@@ -189,9 +201,9 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
 // deals with errors
 Node* InfixParser::nextNode(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
-    if (tokens[i].type == NUMBER) {
+    if (tokens[i].type == NUMBER || tokens[i].type == BOOL) {
 
-      if (tokens[i + 1].type == NUMBER || tokens[i + 1].type == VARIABLE || tokens[i + 1].token == "(") {
+      if (tokens[i + 1].type == NUMBER || tokens[i + 1].type == VARIABLE || tokens[i + 1].type == BOOL || tokens[i + 1].token == "(") {
         std::ostringstream error;
         error << "Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
 	throw std::runtime_error(error.str());
@@ -205,7 +217,11 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 
       index = i;
 
-      NumNode* tempNode = new NumNode;
+      Node* tempNode;
+
+      if (tokens[i].type == NUMBER) tempNode = new NumNode;
+      else tempNode = new BoolNode;
+
       tempNode->value = tokens[i].token;
 
       return tempNode;
@@ -213,7 +229,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 
     else if (tokens[i].type == VARIABLE) {
       
-      if (tokens[i + 1].type == NUMBER || tokens[i + 1].type == VARIABLE || tokens[i + 1].token == "(") {
+      if (tokens[i + 1].type == NUMBER || tokens[i + 1].type == VARIABLE || tokens[i + 1].type == BOOL || tokens[i + 1].token == "(") {
         std::ostringstream error;
         error << "Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
 	throw std::runtime_error(error.str());
