@@ -10,11 +10,11 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
     if(element != ""){
         if(type==NUMBER){
             if(element[0]=='.'){
-                std::cout << "1Syntax error on line "<< line <<" column "<< int(column)<<"." <<std::endl;
+                std::cout << "Syntax error on line "<< line <<" column "<< int(column)<<"." <<std::endl;
                 exit(1);
             }
             if(element.back() == '.'){
-                std::cout << "2Syntax error on line "<< line <<" column "<< (int)(column + element.size()) <<"."<<std::endl;
+                std::cout << "Syntax error on line "<< line <<" column "<< (int)(column + element.size()) <<"."<<std::endl;
                 exit(1);
             }
         }
@@ -70,7 +70,7 @@ std::vector<Token> Lexer::lexer(){
 
         //Decimal error (two decimals in the same num)
         if((numDecimal > 0 && rawInput == '.') || type == NULLTYPE){
-            std::cout << "3Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
+            std::cout << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
             exit(1);
         }
 
@@ -85,7 +85,7 @@ std::vector<Token> Lexer::lexer(){
                         element += rawInput;
                     } else if (Token::tokenType(element[0]) == VARIABLE){
                         if(rawInput == '.'){
-                            std::cout << "4Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
+                            std::cout << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
                             exit(1);
                         }
 
@@ -146,7 +146,7 @@ std::vector<Token> Lexer::lexer(){
 
                     else if((element == "<" || element == "=" || element == ">" || element == "!") && rawInput == '='){
                         //std::cout << "C";
-                        pushSeq(element+rawInput, COMPARE, line, i, sequence);
+                        pushSeq(element+rawInput, COMPARE, line-1, i, sequence);
                         element = "";
                     }
 
@@ -333,7 +333,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
 
                     else if((element == "<" || element == "=" || element == ">" || element == "!") && rawInput == '='){
                         //std::cout << "C";
-                        pushSeq(element+rawInput, COMPARE, line, i, sequence);
+                        pushSeq(element+rawInput, COMPARE, line-1, i, sequence);
                         element = "";
                     }
 
