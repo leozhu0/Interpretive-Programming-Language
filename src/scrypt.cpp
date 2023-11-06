@@ -1,4 +1,4 @@
-#include "lib/token.h"
+//#include "lib/token.h"
 //#include "lib/parser.cpp"
 #include "lib/lexer.h"
 #include "lib/infix.h"
@@ -19,7 +19,7 @@ void PrintV(std::vector<Token> tokens){
 }
 
 
-double condToDouble(std::string raw){
+/*double condToDouble(std::string raw){
     if(raw == "true"){
         return 1;
     }
@@ -29,16 +29,16 @@ double condToDouble(std::string raw){
     }
 
     return stod(raw);
-}
+}*/
 
-std::string EvaluateExpression(std::vector<Token> tokens){
+double EvaluateExpression(std::vector<Token> tokens){
     //print for error checking:
     //std::cout << "B";
     
     if((int)tokens.size() == 0 || tokens.at(0).type == END){
         return 0;
     }
-    //std::cout << "EXEC " << tokens.size() << ": ";
+   // std::cout << "EXEC " << tokens.size() << ": ";
     //PrintV(tokens);
 
     std::vector<Token> tempRow = tokens;
@@ -82,6 +82,11 @@ void EvaluateExpressionChunk(std::vector<Token> tokens){
 }
 
 void ParseBlock(std::vector<Token>& tokens) {
+    if(tokens.back().type != END){
+        tokens.push_back(Token{tokens.back().line, tokens.back().column+1,"END", END});
+    }
+    //std::cout << "TOKENS:";
+    //PrintV(tokens);
     bool prevCond = true;
     int i = 0;
     if((int)tokens.size() == 0) {
@@ -149,7 +154,7 @@ void ParseBlock(std::vector<Token>& tokens) {
             //std::cout << "E";
             
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
-            while (condToDouble(EvaluateExpression(conditionExpr)) != 0) {
+            while (EvaluateExpression(conditionExpr) != 0) {
                 //std::cout << "F";
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
                 
@@ -186,7 +191,7 @@ void ParseBlock(std::vector<Token>& tokens) {
             
 
             
-            if (condToDouble(EvaluateExpression(conditionExpr)) != 0) {
+            if (EvaluateExpression(conditionExpr) != 0) {
                 //std::cout << "TRUEIF" <<std::endl;
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
                 //std::cout << "Block: ";
