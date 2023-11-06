@@ -2,7 +2,6 @@
 #include <iostream>
 #include <fstream>
 #include "token.h"
-
 class Lexer {
     private:
         TokenType tokenType(char token);

@@ -1,4 +1,4 @@
-#include "lib/token.h"
+/*//#include "lib/token.h"
 //#include "lib/parser.cpp"
 #include "lib/lexer.h"
 #include "lib/infix.h"
@@ -18,6 +18,19 @@ void PrintV(std::vector<Token> tokens){
     std::cout << std::endl;
 }
 
+
+// double condToDouble(std::string raw){
+//     if(raw == "true"){
+//         return 1;
+//     }
+
+//     if(raw=="false"){
+//         return 0;
+//     }
+
+//     return stod(raw);
+// }
+
 double EvaluateExpression(std::vector<Token> tokens){
     //print for error checking:
     //std::cout << "B";
@@ -25,7 +38,7 @@ double EvaluateExpression(std::vector<Token> tokens){
     if((int)tokens.size() == 0 || tokens.at(0).type == END){
         return 0;
     }
-    //std::cout << "EXEC " << tokens.size() << ": ";
+   // std::cout << "EXEC " << tokens.size() << ": ";
     //PrintV(tokens);
 
     std::vector<Token> tempRow = tokens;
@@ -69,6 +82,11 @@ void EvaluateExpressionChunk(std::vector<Token> tokens){
 }
 
 void ParseBlock(std::vector<Token>& tokens) {
+    if(tokens.back().type != END){
+        tokens.push_back(Token{tokens.back().line, tokens.back().column+1,"END", END});
+    }
+    //std::cout << "TOKENS:";
+    //PrintV(tokens);
     bool prevCond = true;
     int i = 0;
     if((int)tokens.size() == 0) {
@@ -183,13 +201,7 @@ void ParseBlock(std::vector<Token>& tokens) {
                 prevCond = true;
             }else{
                 prevCond=false;
-            } /*else { //IF the condition was false
-                std::vector<Token> block(tokens.begin() + i, tokens.begin() + tokens.size());
-                //std::cout << "Block2: ";
-                //PrintV(block);
-                int j = 0;
-                ParseBlock(block, j);
-            }*/
+            } 
             i++;
             //std::cout << "IF: " << i << tokens[i].token;
         } 
@@ -268,12 +280,10 @@ int main() {
     std::vector<Token> tokens = lexer.lexer();
 
 
-    /*for(int i = 0; i < (int)(tokens.size()); i++){
-            std::cout << std::right << std::setw(4) << tokens.at(i).line << std::right << std::setw(5) << tokens.at(i).column << "  " << tokens.at(i).token <<std::endl;
-    }*/
+    
 
     
     ParseBlock(tokens);
 
     return 0;
-}
+}*/
