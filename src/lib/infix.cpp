@@ -309,7 +309,24 @@ std::string InfixParser::calculate() {
     return (root->getValue() ? "true" : "false");
   }
 
-  return std::to_string(root->getValue());
+  std::string result = std::to_string(root->getValue());
+  bool hasDecimal = false;
+
+  // removing trailing 0s after the decimal
+  for (char digit : result) {
+    if (digit == '.') {
+      hasDecimal = true;
+      break;
+    }
+  }
+
+  while (hasDecimal == true && result.back() == '0') {
+    result.pop_back();
+  }
+
+  if (result.back() == '.') result.pop_back();
+
+  return result;
 }
 
 /*
