@@ -7,7 +7,7 @@
 
 struct Node {
   std::string value;
-  const TokenType returnType;
+  TokenType returnType;
 
   Node(TokenType type = NUMBER) : returnType(type) {}
   virtual ~Node() {};

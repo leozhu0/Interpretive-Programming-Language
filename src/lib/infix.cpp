@@ -127,7 +127,11 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     tempNode->lhs = leftHandSide;
     tempNode->rhs = rightHandSide;
 
-    if (currOp == "=") variableBuffer.push_back({leftHandSide->toString(), rightHandSide});
+    if (currOp == "=") {
+      variableBuffer.push_back({leftHandSide->toString(), rightHandSide});
+      tempNode->returnType = rightHandSide->returnType;
+      leftHandSide->returnType = rightHandSide->returnType;
+    }
 
     leftHandSide = tempNode;
   }
