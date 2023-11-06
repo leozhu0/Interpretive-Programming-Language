@@ -159,7 +159,7 @@ std::vector<Token> Lexer::lexer(){
 
                     else if(Token::tokenType(rawInput)==COMPARE || rawInput == '='){
                         //std::cout << "F";
-                        pushSeq(element, Token::tokenType(element[0]), line, i, sequence);
+                        pushSeq(element, Token::tokenType(element[0]), line, i-element.size(), sequence);
                         element = rawInput;
                     }
                     
@@ -346,7 +346,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
 
                     else if(Token::tokenType(rawInput)==COMPARE || rawInput == '='){
                         //std::cout << "F";
-                        pushSeq(element, Token::tokenType(element[0]), line, i, sequence);
+                        pushSeq(element, Token::tokenType(element[0]), line, i-element.size(), sequence);
                         element = rawInput;
                     }
                     
