@@ -1,8 +1,8 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include "lib/infix.cpp"
-#include "lib/lexer.cpp"
+#include "lib/infix.h"
+#include "lib/lexer.h"
 
 void format(std::vector<Token>& tokens, std::string indent) {
   size_t ifCounter = 0;

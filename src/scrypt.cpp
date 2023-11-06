@@ -1,4 +1,4 @@
-//#include "lib/token.h"
+/*//#include "lib/token.h"
 //#include "lib/parser.cpp"
 #include "lib/lexer.h"
 #include "lib/infix.h"
@@ -286,4 +286,4 @@ int main() {
     ParseBlock(tokens);
 
     return 0;
-}
+}*/
