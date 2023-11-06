@@ -19,6 +19,10 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
             }
         }
 
+        if(element == "else "){
+            element = "else";
+        }
+
         if(element == "while" || element == "if" || element == "print" || element == "else" || element == "else if"){
             sequence.push_back(Token{line,column, element, COMMAND});
         } else if(element == "true" || element == "false"){
@@ -127,7 +131,7 @@ std::vector<Token> Lexer::lexer(){
 
                 } else {
                     //////////////////////////////////EDITS ALL HERE/////////////
-                    if(Token::tokenType(element[0])!=LOGIC && Token::tokenType(element[0])!=COMPARE && element[0] != '='){
+                    if(Token::tokenType(element[0])!=LOGIC && Token::tokenType(element[0])!=COMPARE && element[0] != '=' && rawInput != '='){
                         //std::cout << "A";
                         pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
                         numDecimal = 0;
@@ -152,7 +156,7 @@ std::vector<Token> Lexer::lexer(){
                         element = rawInput;
                     } 
 
-                    else if(Token::tokenType(rawInput)==COMPARE){
+                    else if(Token::tokenType(rawInput)==COMPARE || rawInput == '='){
                         //std::cout << "F";
                         pushSeq(element, Token::tokenType(element[0]), line, i, sequence);
                         element = rawInput;
@@ -212,6 +216,13 @@ void Lexer::pushSeqThrow(std::string element, TokenType type, int line, int colu
                 throw std::runtime_error(error.str());
             }
         }
+
+
+        if(element == "else "){
+            element = "else";
+        }
+
+
         if(element == "while" || element == "if" || element == "print" || element == "else" || element == "else if"){
             sequence.push_back(Token{line,column, element, COMMAND});
         } else if(element == "true" || element == "false"){
@@ -307,7 +318,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
 
                 } else {
                     //////////////////////////////////EDITS ALL HERE/////////////
-                    if(Token::tokenType(element[0])!=LOGIC && Token::tokenType(element[0])!=COMPARE && element[0] != '='){
+                    if(Token::tokenType(element[0])!=LOGIC && Token::tokenType(element[0])!=COMPARE && element[0] != '=' && rawInput != '='){
                         //std::cout << "A";
                         pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
                         numDecimal = 0;
@@ -332,7 +343,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
                         element = rawInput;
                     } 
 
-                    else if(Token::tokenType(rawInput)==COMPARE){
+                    else if(Token::tokenType(rawInput)==COMPARE || rawInput == '='){
                         //std::cout << "F";
                         pushSeq(element, Token::tokenType(element[0]), line, i, sequence);
                         element = rawInput;
