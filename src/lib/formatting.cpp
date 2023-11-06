@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include "lib/infix.h"
-#include "lib/lexer.h"
 
 void format(std::vector<Token>& tokens, std::string indent) {
   size_t ifCounter = 0;
@@ -15,14 +14,14 @@ void format(std::vector<Token>& tokens, std::string indent) {
     if (tokens[i].type != COMMAND || tokens[i].token == "print") {
       if (tokens[i].token == "print") {
         std::cout << "print ";
-	++i;
+        ++i;
       }
 
       size_t line = tokens[i].line;
       std::vector<Token> tempTokens = {tokens[i]};
 
       while (tokens[i + 1].line == line && tokens[i + 1].type != END) {
-	tempTokens.push_back(tokens[i + 1]);
+        tempTokens.push_back(tokens[i + 1]);
         ++i;
       }
       tempTokens.push_back(Token{0, 0, "END", END});
@@ -39,12 +38,12 @@ void format(std::vector<Token>& tokens, std::string indent) {
     else if (tokens[i].token != "else") {
       if (tokens[i].token == "if") {
         if (ifCounter != 0) {
-	  //TODO
-	}
-	
+          //TODO
+        }
+
         std::cout << "if ";
         ++ifCounter;
-      }	
+      }
 
       else std::cout << "while ";
 
@@ -53,7 +52,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
 
       while (tokens[i].token != "{") {
         condition.push_back(tokens[i]);
-	++i;
+        ++i;
       }
       condition.push_back(Token{0, 0, "END", END});
 
@@ -71,12 +70,12 @@ void format(std::vector<Token>& tokens, std::string indent) {
       std::vector<Token> body;
 
       while (true) {
-	if (tokens[i].token == "{") ++numCurly;
-	else if (tokens[i].token == "}") --numCurly;
+        if (tokens[i].token == "{") ++numCurly;
+        else if (tokens[i].token == "}") --numCurly;
 
-        if (numCurly == 0) break;
+	if (numCurly == 0) break;
         body.push_back(tokens[i]);
-	++i;
+        ++i;
       }
 
       format(body, indent + "    ");
@@ -99,9 +98,9 @@ void format(std::vector<Token>& tokens, std::string indent) {
 
       if (tokens[i].token == "if") {
         body.push_back(tokens[i]);
-	body.push_back(tokens[i + 1]);
-	++i;
-	endingCurly = true;
+        body.push_back(tokens[i + 1]);
+        ++i;
+        endingCurly = true;
       }
 
       ++i;
@@ -126,17 +125,4 @@ void format(std::vector<Token>& tokens, std::string indent) {
       exit(1);
     }
   }
-}
-
-int main() {
-    Lexer lexer = Lexer();
-
-    std::vector<Token> tokens = lexer.lexer();
-/*    for (Token token : tokens) {
-      std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
-    }
-*/
-    format(tokens, "");
-
-    return 0;
 }
