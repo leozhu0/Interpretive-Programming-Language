@@ -1,7 +1,7 @@
-/*//#include "lib/token.h"
+//#include "lib/token.cpp"
 //#include "lib/parser.cpp"
-#include "lib/lexer.h"
-#include "lib/infix.h"
+#include "lib/lexer.h" // cpp
+#include "lib/infix.h" //cpp
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -19,19 +19,19 @@ void PrintV(std::vector<Token> tokens){
 }
 
 
-// double condToDouble(std::string raw){
-//     if(raw == "true"){
-//         return 1;
-//     }
+double condToDouble(std::string raw){
+    if(raw == "true"){
+        return 1;
+    }
 
-//     if(raw=="false"){
-//         return 0;
-//     }
+    if(raw=="false"){
+        return 0;
+    }
 
-//     return stod(raw);
-// }
+    return stod(raw);
+}
 
-double EvaluateExpression(std::vector<Token> tokens){
+std::string EvaluateExpression(std::vector<Token> tokens){
     //print for error checking:
     //std::cout << "B";
     
@@ -154,7 +154,7 @@ void ParseBlock(std::vector<Token>& tokens) {
             //std::cout << "E";
             
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
-            while (EvaluateExpression(conditionExpr) != 0) {
+            while (condToDouble(EvaluateExpression(conditionExpr)) != 0) {
                 //std::cout << "F";
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
                 
@@ -191,7 +191,7 @@ void ParseBlock(std::vector<Token>& tokens) {
             
 
             
-            if (EvaluateExpression(conditionExpr) != 0) {
+            if (condToDouble(EvaluateExpression(conditionExpr)) != 0) {
                 //std::cout << "TRUEIF" <<std::endl;
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
                 //std::cout << "Block: ";
@@ -263,12 +263,8 @@ void ParseBlock(std::vector<Token>& tokens) {
                 //std::cout << "HERE";
                 EvaluateExpressionChunk(block);
             }
-            //i++;
-          
+            //i++; 
         }
-
-        //std::cout << "I";
-       
     }
 
     return;
@@ -280,10 +276,7 @@ int main() {
     std::vector<Token> tokens = lexer.lexer();
 
 
-    
-
-    
     ParseBlock(tokens);
 
     return 0;
-}*/
+}
