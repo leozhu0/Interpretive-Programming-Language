@@ -321,7 +321,7 @@ double InfixParser::calculate() {
 
 
 //________________________________________________________________________
-
+/*
 double NumNode::getValue() {
   return std::stod(value);
 }
@@ -465,3 +465,4 @@ double LogicNode::getValue() {
     exit(1);
   }
 }
+*/
