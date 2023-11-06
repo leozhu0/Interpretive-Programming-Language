@@ -4,7 +4,6 @@
 #include <vector>
 #include "token.h"
 #include <map>
-#include <pair>
 
 struct Node {
   std::string value;
