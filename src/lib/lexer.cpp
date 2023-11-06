@@ -152,7 +152,7 @@ std::vector<Token> Lexer::lexer(){
 
                     else if((element == "<" || element == ">" || element == "!") && rawInput != '='){
                         //std::cout << "D";
-                        pushSeq(element, COMPARE, line, i, sequence);
+                        pushSeq(element, COMPARE, line, i-1, sequence);
                         element = rawInput;
                     } 
 
@@ -339,7 +339,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
 
                     else if((element == "<" || element == ">" || element == "!") && rawInput != '='){
                         //std::cout << "D";
-                        pushSeq(element, COMPARE, line, i, sequence);
+                        pushSeq(element, COMPARE, line, i-1, sequence);
                         element = rawInput;
                     } 
 
