@@ -4,6 +4,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <cmath>
+#include "infix.h"
 
 double NumNode::getValue() {
   return std::stod(value);

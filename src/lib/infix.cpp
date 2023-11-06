@@ -1,10 +1,11 @@
 #include "infix.h"
-#include "node.h"
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <map>
 #include <cmath>
+
+extern std::map<std::string, double> variables;
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
 /*
