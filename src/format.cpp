@@ -1,8 +1,8 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include "lib/infix.cpp"
-#include "lib/lexer.cpp"
+#include "lib/infix.h"
+#include "lib/lexer.h"
 
 void format(std::vector<Token>& tokens, std::string indent) {
   size_t ifCounter = 0;
@@ -132,10 +132,10 @@ int main() {
     Lexer lexer = Lexer();
 
     std::vector<Token> tokens = lexer.lexer();
-    for (Token token : tokens) {
+/*    for (Token token : tokens) {
       std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
     }
-
+*/
     format(tokens, "");
 
     return 0;
