@@ -50,7 +50,7 @@ std::vector<Token> Lexer::lexer(){
     int numDecimal = 0;
     std::string element = "";
     while (std::cin.get(rawInput)) {
-        std::cout <<rawInput;
+        //std::cout <<rawInput;
         if(rawInput == '\n'){
             indents++;
 
