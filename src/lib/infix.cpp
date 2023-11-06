@@ -1,4 +1,5 @@
 #include "infix.h"
+#include "node.h"
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
