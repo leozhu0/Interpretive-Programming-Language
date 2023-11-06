@@ -1,4 +1,4 @@
-//#include "lib/token.h"
+/*//#include "lib/token.h"
 //#include "lib/parser.cpp"
 #include "lib/lexer.h"
 #include "lib/infix.h"
@@ -19,17 +19,17 @@ void PrintV(std::vector<Token> tokens){
 }
 
 
-/*double condToDouble(std::string raw){
-    if(raw == "true"){
-        return 1;
-    }
+// double condToDouble(std::string raw){
+//     if(raw == "true"){
+//         return 1;
+//     }
 
-    if(raw=="false"){
-        return 0;
-    }
+//     if(raw=="false"){
+//         return 0;
+//     }
 
-    return stod(raw);
-}*/
+//     return stod(raw);
+// }
 
 double EvaluateExpression(std::vector<Token> tokens){
     //print for error checking:
@@ -201,13 +201,7 @@ void ParseBlock(std::vector<Token>& tokens) {
                 prevCond = true;
             }else{
                 prevCond=false;
-            } /*else { //IF the condition was false
-                std::vector<Token> block(tokens.begin() + i, tokens.begin() + tokens.size());
-                //std::cout << "Block2: ";
-                //PrintV(block);
-                int j = 0;
-                ParseBlock(block, j);
-            }*/
+            } 
             i++;
             //std::cout << "IF: " << i << tokens[i].token;
         } 
@@ -286,12 +280,11 @@ int main() {
     std::vector<Token> tokens = lexer.lexer();
 
 
-    /*for(int i = 0; i < (int)(tokens.size()); i++){
-            std::cout << std::right << std::setw(4) << tokens.at(i).line << std::right << std::setw(5) << tokens.at(i).column << "  " << tokens.at(i).token <<std::endl;
-    }*/
+    
 
     
     ParseBlock(tokens);
 
     return 0;
 }
+*/
