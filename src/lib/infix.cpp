@@ -5,8 +5,6 @@
 #include <map>
 #include <cmath>
 
-std::map<std::string, double> variables;
-
 InfixParser::InfixParser(std::vector<Token> tokens) {
 /*
 	std::cout << "_____________________" << std::endl;
