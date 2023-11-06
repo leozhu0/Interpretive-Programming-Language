@@ -8,9 +8,11 @@
 std::map<std::string, double> variables;
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
-  //for (Token token : tokens) {
-  //  std::cout << token.token << " " << token.type << std::endl;
-  //}
+	std::cout << "_____________________" << std::endl;
+  for (Token token : tokens) {
+    std::cout << token.token << " " << token.type << std::endl;
+  }
+  std::cout << "_______________________" << std::endl;
 
   if (tokens.size() == 1) {
     std::ostringstream error;
@@ -295,15 +297,6 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 std::string InfixParser::toString() {
   return root->toString();
 }
-/*
-std::string InfixParser::calculate() {
-  if (root->returnType == BOOL) {
-    return (root->getValue() ? "true" : "false");
-  }
-
-  return std::to_string(root->getValue());
-}
-*/
 
 /*
 std::string InfixParser::calculate() {
