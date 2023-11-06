@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include <string>
@@ -59,4 +60,4 @@ struct LogicNode : public OpNode {
 };
 
 //extern std::map<std::string, double> variables;
-
+*/

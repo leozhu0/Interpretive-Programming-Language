@@ -4,7 +4,7 @@
 #include "token.h"
 #include "node.h"
 
-/*
+
 struct Node {
   std::string value;
   const TokenType returnType;
@@ -57,7 +57,7 @@ struct LogicNode : public OpNode {
 
   double getValue();
 };
-*/
+
 //______________________________________________________________________________
 
 class InfixParser {

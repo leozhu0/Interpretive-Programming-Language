@@ -5,7 +5,7 @@
 #include <map>
 #include <cmath>
 
-extern std::map<std::string, double> variables;
+std::map<std::string, double> variables;
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
 /*
@@ -336,7 +336,7 @@ double InfixParser::calculate() {
 */
 
 //________________________________________________________________________
-/*
+
 double NumNode::getValue() {
   return std::stod(value);
 }
@@ -480,4 +480,4 @@ double LogicNode::getValue() {
     exit(1);
   }
 }
-*/
+
