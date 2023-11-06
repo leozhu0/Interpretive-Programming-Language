@@ -1,4 +1,5 @@
-/*
+#pragma once
+
 #include <string>
 #include <vector>
 #include "token.h"
@@ -6,7 +7,7 @@
 
 struct Node {
   std::string value;
-  const TokenType returnType;
+  TokenType returnType;
 
   Node(TokenType type = NUMBER) : returnType(type) {}
   virtual ~Node() {};
@@ -58,4 +59,4 @@ struct LogicNode : public OpNode {
 };
 
 extern std::map<std::string, double> variables;
-*/
+
