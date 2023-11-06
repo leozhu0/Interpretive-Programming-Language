@@ -305,7 +305,7 @@ std::string InfixParser::calculate() {
 }
 */
 
-
+/*
 std::string InfixParser::calculate() {
   if (root->returnType == BOOL) {
     return (root->getValue() ? "true" : "false");
@@ -313,10 +313,11 @@ std::string InfixParser::calculate() {
 
   return std::to_string(root->getValue());
 }
+*/
 
-//double InfixParser::calculate() {
-//  return root->getValue();
-//}
+double InfixParser::calculate() {
+  return root->getValue();
+}
 
 
 //________________________________________________________________________
