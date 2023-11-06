@@ -8,10 +8,13 @@
 std::map<std::string, double> variables;
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
-  //for (Token token : tokens) {
-  //  std::cout << token.token << " " << token.type << std::endl;
-  //}
-
+/*
+	std::cout << "_____________________" << std::endl;
+  for (Token token : tokens) {
+    std::cout << token.token << " " << token.type << std::endl;
+  }
+  std::cout << "_______________________" << std::endl;
+*/
   if (tokens.size() == 1) {
     std::ostringstream error;
     error << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
@@ -125,7 +128,11 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     tempNode->lhs = leftHandSide;
     tempNode->rhs = rightHandSide;
 
-    if (currOp == "=") variableBuffer.push_back({leftHandSide->toString(), rightHandSide});
+    if (currOp == "=") {
+      variableBuffer.push_back({leftHandSide->toString(), rightHandSide});
+      tempNode->returnType = rightHandSide->returnType;
+      leftHandSide->returnType = rightHandSide->returnType;
+    }
 
     leftHandSide = tempNode;
   }
@@ -295,7 +302,8 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 std::string InfixParser::toString() {
   return root->toString();
 }
-/*
+
+
 std::string InfixParser::calculate() {
   if (root->returnType == BOOL) {
     return (root->getValue() ? "true" : "false");
@@ -303,25 +311,15 @@ std::string InfixParser::calculate() {
 
   return std::to_string(root->getValue());
 }
-*/
 
 /*
-std::string InfixParser::calculate() {
-  if (root->returnType == BOOL) {
-    return (root->getValue() ? "true" : "false");
-  }
-
-  return std::to_string(root->getValue());
-}
-*/
-
 double InfixParser::calculate() {
   return root->getValue();
 }
-
+*/
 
 //________________________________________________________________________
-
+/*
 double NumNode::getValue() {
   return std::stod(value);
 }
@@ -465,3 +463,4 @@ double LogicNode::getValue() {
     exit(1);
   }
 }
+*/

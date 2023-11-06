@@ -1,4 +1,3 @@
-/*
 #include "node.h"
 #include <iostream>
 #include <map>
@@ -149,4 +148,4 @@ double LogicNode::getValue() {
     exit(1);
   }
 }
-*/
+
