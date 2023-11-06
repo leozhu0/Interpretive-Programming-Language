@@ -8,12 +8,13 @@
 std::map<std::string, double> variables;
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
+/*
 	std::cout << "_____________________" << std::endl;
   for (Token token : tokens) {
     std::cout << token.token << " " << token.type << std::endl;
   }
   std::cout << "_______________________" << std::endl;
-
+*/
   if (tokens.size() == 1) {
     std::ostringstream error;
     error << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
