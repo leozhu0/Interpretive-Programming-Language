@@ -483,7 +483,7 @@ double CompareNode::getValue() {
 }
 
 double LogicNode::getValue() {
-  if (lhs->getReturnType() != BOOL && lhs->getReturnType() != BOOL) {
+  if (lhs->getReturnType() != BOOL || rhs->getReturnType() != BOOL) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
