@@ -16,7 +16,7 @@ void PrintV(std::vector<Token> tokens){
     std::cout << "_______" << std::endl;
     if((int)tokens.size() > 0){
         for(int i = 0; i < (int)(tokens.size()); i++){
-            std::cout << tokens.at(i).token << " " << tokens[i].type << " " << tokens[i].line << " " << tokens[i].column << std::endl;
+            std::cout << tokens.at(si).token << " ";
         }
     }
     std::cout << "_______" << std::endl;
@@ -346,6 +346,7 @@ int main() {
     /*if(tokens.at(0).token != "some_var"){
         PrintV(tokens);
     }*/
+     PrintV(tokens);
     try {
         ParseBlock(tokens);
     } catch (const std::exception& e) {
