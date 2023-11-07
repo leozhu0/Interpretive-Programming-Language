@@ -22,7 +22,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
       std::vector<Token> tempTokens = {tokens[i]};
 
       std::cout << "here 1" << std::endl;
-      if (tokens[1].token == 333) exit(0);
+      if (tokens[1].token == "333") exit(0);
 
       while (true /*i + 1 != tokens.size() && tokens[i + 1].line == line*/) {
         if (i + 1 == tokens.size()) break;
