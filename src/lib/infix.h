@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "token.h"//cpp
+#include "token.hss"//cpp
 #include "node.h"//cpp
 
 /*
