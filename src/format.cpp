@@ -19,7 +19,8 @@ void format(std::vector<Token>& tokens, std::string indent) {
       }
 
       int line = tokens[i].line;
-      std::vector<Token> tempTokens = {tokens[i]};
+      std::vector<Token> tempTokens;
+      tempTokens.push_back(tokens[i]);
 
       std::cout << "HERE " << tokens.size() << " " << i << std::endl;
       //if (tokens[1].token == "333") exit(0);
