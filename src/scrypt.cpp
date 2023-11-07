@@ -40,7 +40,7 @@ std::string EvaluateExpression(std::vector<Token> tokens){
         return "";
     }
    // std::cout << "EXEC " << tokens.size() << ": ";
-    PrintV(tokens);
+    //PrintV(tokens);
 
     std::vector<Token> tempRow = tokens;
     if(tempRow.back().type != END){
