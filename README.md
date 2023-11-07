@@ -5,13 +5,13 @@ We built this software in a way such that anyone can use it to evaulate math exp
 # How to build the project (the fewer commands the better; a single make command is ideal).
 To compile the project into an executable, just cd into the project directory and run:
 
-g++ src/parser.cpp -o parser
+g++ src/scrypt.cpp -o scrypt
 
 
 # How to use the executables once they're built.
 Stay in the project directory and run
 
-./parser 
+./scrypt
 
 This will begin the multiline input.
 Provide your input, hit (^Z) to terminate input.
@@ -20,7 +20,7 @@ You will then see the output.
 # An overview of how the code is organized.
 All the code is stored inside the src/ folder.
 
-Within src, the files containing the main functions are the files outside of /lib (lex.cpp, parse.cpp, calc.cpp)
+Within src, the files containing the main functions are the files outside of /lib (lex.cpp, calc.cpp)
 
 src/lib. contains the source code, each class has its own header file and .cpp file for implemetation.
 
@@ -28,8 +28,10 @@ infix.h and infix.cpp holds the OOP implemetation for the infix parser
 
 lexer.h and lexer.cpp holds the OOP implemetation for the lexer
 
-parser.h and lexer.cpp holds the OOP implemetation for the parser
-
 token.h and lexer.cpp holds the OOP implemetation for the lexer
 
+node.h and node.cpp implements the node classes which are used throughout the rest of the program.
+
 All the files use token.h; infix and parser use lexer.h; infix uses parser.h
+
+There are also new main functions in scrypt.cpp and format.cpp. Scrypt is for the main executable while format just prints outs a restructured verson of the input.
