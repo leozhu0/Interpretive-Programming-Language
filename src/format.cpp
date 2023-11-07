@@ -38,6 +38,10 @@ void format(std::vector<Token>& tokens, std::string indent) {
 	tempTokens.push_back(tokens[i + 1]);
         ++i;
       }
+
+      std::cout << "after " << std::endl;
+      if (tokens.back().token == "333") exit(0);
+
       tempTokens.push_back(Token{0, 0, "END", END});
 
       //std::cout << "__________top" << std::endl;
