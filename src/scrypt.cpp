@@ -338,15 +338,23 @@ void ParseBlock(std::vector<Token>& tokens) {
 }
 
 int main() {
-    Lexer lexer = Lexer();
-
-
-    std::vector<Token> tokens = lexer.lexer();
+    
     /*if(tokens.at(0).token != "some_var"){
         PrintV(tokens);
     }*/
      //PrintV(tokens);
+    std::vector<Token> tokens;
     try {
+        Lexer lexer = Lexer();
+        tokens = lexer.lexer();
+    }
+    catch (const std::exception& e) {
+      std::cout << e.what() << std::endl;
+      exit(1);
+    }
+
+    try {
+        
         ParseBlock(tokens);
     } catch (const std::exception& e) {
       std::cout << e.what() << std::endl;
