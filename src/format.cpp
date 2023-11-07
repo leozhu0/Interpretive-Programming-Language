@@ -98,11 +98,12 @@ void format(std::vector<Token>& tokens, std::string indent) {
 
       if (tokens[i].token == "else if") {
         body.push_back(Token{0, 0, "if", COMMAND});
-	body.push_back(tokens[i + 1]);
 	endingCurly = true;
+	--numCurly;
       }
+      else ++i;
 
-      i += 2;
+      ++i;
 
       while (true) {
         if (tokens[i].token == "{") ++numCurly;
