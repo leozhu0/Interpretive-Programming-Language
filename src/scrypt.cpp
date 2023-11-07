@@ -63,27 +63,30 @@ std::string EvaluateExpression(std::vector<Token> tokens){
 
 
 void EvaluateExpressionChunk(std::vector<Token> tokens){
-    //std::cout << "A";
-    //PrintV(tokens);
-    std::vector<std::vector<Token>> multilineTokens;
-    
-    int index = 0; 
-    //If END is on a new line, then stop at the line before, otherwise do the whole thing
-    for(int i = 0; i < tokens[(int)tokens.size() - 1 - ((tokens[(int)tokens.size()-1].column == 1)?1:0)].line; i++){
-        std::vector<Token> tempRow;
+    if(tokens.size() == 0){
+        return;
+    }
+        //std::cout << "A";
+        //PrintV(tokens);
+        std::vector<std::vector<Token>> multilineTokens;
         
-        while(tokens[index].line == i+1){
-            tempRow.push_back(tokens[index]);
-            index++; 
+        int index = 0; 
+        //If END is on a new line, then stop at the line before, otherwise do the whole thing
+        for(int i = 0; i < tokens[(int)tokens.size() - 1 - ((tokens[(int)tokens.size()-1].column == 1)?1:0)].line; i++){
+            std::vector<Token> tempRow;
+            
+            while(tokens[index].line == i+1){
+                tempRow.push_back(tokens[index]);
+                index++; 
+            }
+            multilineTokens.push_back(tempRow);
         }
-        multilineTokens.push_back(tempRow);
-    }
 
-    for (const auto &line : multilineTokens)
-    {
-        EvaluateExpression(line);
-    }
-
+        for (const auto &line : multilineTokens)
+        {
+            EvaluateExpression(line);
+        }
+    
     //std::cout << "CHUNK";
 }
 
@@ -331,9 +334,9 @@ int main() {
 
 
     std::vector<Token> tokens = lexer.lexer();
-    if(tokens.at(0).token != "some_var"){
+    /*if(tokens.at(0).token != "some_var"){
         PrintV(tokens);
-    }
+    }*/
     ParseBlock(tokens);
 
     return 0;
