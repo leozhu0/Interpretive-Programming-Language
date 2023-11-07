@@ -33,9 +33,10 @@ double condToDouble(std::string raw){
     }
 
     else {
-        std::ostringstream error;
-        error << "Runtime error: condition is not a bool.";
-        throw std::runtime_error(error.str());
+        //std::ostringstream error;
+       std::cout << "Runtime error: condition is not a bool.";
+       exit(3);
+        //throw std::runtime_error(error.str());
         
     }
 
@@ -349,6 +350,7 @@ int main() {
         ParseBlock(tokens);
     } catch (const std::exception& e) {
       std::cout << e.what() << std::endl;
+      exit(2);
     }
 
     return 0;
