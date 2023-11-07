@@ -377,11 +377,13 @@ double VarNode::getValue(){
     throw std::runtime_error(error.str());
   }
 
-   return variables[value];
+  returnType = (isBool[value] ? BOOL : NUMBER);
+  
+  return variables[value];
 }
 
 std::string VarNode::toString() {
-   return value;
+  return value;
 }
 
 TokenType VarNode::getReturnType() {
@@ -441,6 +443,7 @@ std::string OpNode::toString() {
 }
 
 double AssignNode::getValue() {
+  returnType = rhs->getReturnType();
   return lhs->getValue();
 }
 
