@@ -203,6 +203,7 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
       }
 
       --parenNum;
+      std::cout << tokens[i].token << " " << tokens[i].type << " " << tokens[i].line << " " << tokens[i].column << std::endl;
       std::cout << parenNum << std::endl;
       return tokens[i];
     }
