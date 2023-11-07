@@ -296,6 +296,12 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       return tempNode;
     }
 
+    else if (tokens[i].type == COMMAND) {
+      std::ostringstream error;
+      error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token;
+      throw std::runtime_error(error.str());
+    }
+
   }
 
   std::ostringstream error;
