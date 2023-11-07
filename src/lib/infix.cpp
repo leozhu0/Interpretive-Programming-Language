@@ -313,7 +313,10 @@ std::string InfixParser::calculate() {
     return (root->getValue() ? "true" : "false");
   }
 
-  std::string result = std::to_string(root->getValue());
+  std::ostringstream tempStr;
+  tempStr << std::fixed << std::setprecision(5) << root->getValue();
+
+  std::string result = tempStr.str();
   bool hasDecimal = false;
 
   // removing trailing 0s after the decimal
