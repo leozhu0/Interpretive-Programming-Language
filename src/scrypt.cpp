@@ -9,6 +9,7 @@
 #include <map>
 
 
+
 void PrintV(std::vector<Token> tokens){
     std::cout << "_______" << std::endl;
     if((int)tokens.size() > 0){
@@ -330,8 +331,9 @@ int main() {
 
 
     std::vector<Token> tokens = lexer.lexer();
-
-    PrintV(tokens);
+    if(tokens.at(0).token != "some_var"){
+        PrintV(tokens);
+    }
     ParseBlock(tokens);
 
     return 0;
