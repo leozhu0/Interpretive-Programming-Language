@@ -136,6 +136,8 @@ void format(std::vector<Token>& tokens, std::string indent) {
 	body.push_back(tokens[i]);
       }
 
+      ++i;
+
       while (true) {
         if (tokens[i].token == "{") ++numCurly;
         else if (tokens[i].token == "}") --numCurly;
