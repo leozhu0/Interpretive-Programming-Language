@@ -22,6 +22,9 @@ void format(std::vector<Token>& tokens, std::string indent) {
       std::vector<Token> tempTokens = {tokens[i]};
 
       while (true /*i + 1 != tokens.size() && tokens[i + 1].line == line*/) {
+        if (i + 1 == tokens.size()) break;
+	if (tokens[i + 1].line != line) break;
+
 	tempTokens.push_back(tokens[i + 1]);
         ++i;
       }
