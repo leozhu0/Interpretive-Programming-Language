@@ -179,7 +179,7 @@ int main() {
 
     try {
       Lexer lexer = Lexer();
-      std::vector<Token> tokens = lexer.lexer();
+      tokens = lexer.lexer();
     }
     catch (const std::exception& e) {
       std::cout << e.what() << std::endl;
