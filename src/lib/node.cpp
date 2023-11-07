@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <cmath>
 
+/*
 double NumNode::getValue() {
   return std::stod(value);
 }
@@ -148,4 +149,4 @@ double LogicNode::getValue() {
     exit(1);
   }
 }
-
+*/

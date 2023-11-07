@@ -4,15 +4,15 @@
 #include "token.h"//cpp
 #include "node.h"//cpp
 
-/*
 struct Node {
   std::string value;
-  const TokenType returnType;
+  TokenType returnType;
 
   Node(TokenType type = NUMBER) : returnType(type) {}
   virtual ~Node() {};
   virtual double getValue() = 0;
   virtual std::string toString() = 0;
+  virtual TokenType getReturnType();
 };
 
 struct NumNode : public Node {
@@ -23,6 +23,7 @@ struct NumNode : public Node {
 struct VarNode : public Node {
   double getValue();
   std::string toString();
+  TokenType getReturnType();
 };
 
 struct BoolNode : public Node {
@@ -44,6 +45,7 @@ struct OpNode : public Node {
 
 struct AssignNode : public OpNode {
   double getValue();
+  TokenType getReturnType();
 };
 
 struct CompareNode : public OpNode {
@@ -57,7 +59,7 @@ struct LogicNode : public OpNode {
 
   double getValue();
 };
-*/
+
 //______________________________________________________________________________
 
 class InfixParser {
