@@ -175,17 +175,23 @@ void format(std::vector<Token>& tokens, std::string indent) {
 }
 
 int main() {
-    Lexer lexer = Lexer();
+    std::vector<Token> tokens;
 
-    std::vector<Token> tokens = lexer.lexer();
-    
-    //std::cout << "__________top" << std::endl;
-    //for (Token token : tokens) {
-    //  std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
-    //}
-    //std::cout << "__________bottom" << std::endl;
+    try {
+      Lexer lexer = Lexer();
+      std::vector<Token> tokens = lexer.lexer();
+    }
+    catch (const std::exception& e) {
+      std::cout << e.what() << std::endl;
+      exit(1);
+    }
 
-    format(tokens, "");
+    try {
+      format(tokens, "");
+    }
+    catch (const std::exception& e) {
+      std::cout << e.what() << std::endl;
+    }
 
     return 0;
 }
