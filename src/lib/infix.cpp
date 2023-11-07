@@ -203,6 +203,7 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
       }
 
       --parenNum;
+      std::cout << parenNum << std::endl;
       return tokens[i];
     }
 
@@ -284,6 +285,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       
       index = i;
       ++parenNum;
+      std::cout << parenNum << std::endl;
 
       // creates a tree for parenthesis case
       Node* tempNode = createTree(nextNode(tokens), 0, tokens);
