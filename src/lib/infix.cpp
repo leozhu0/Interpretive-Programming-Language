@@ -6,6 +6,7 @@
 #include <cmath>
 
 std::map<std::string, double> variables;
+std::map<std::string, bool> isBool;
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
 /*
@@ -42,6 +43,7 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
   if (updateVariables) {
     for (const auto& pair : variableBuffer) {
       variables[pair.first] = pair.second->getValue();
+      isBool[pair.first] = (pair.second->returnType == BOOL ? true : false);
     }
   }
   
@@ -336,6 +338,9 @@ double InfixParser::calculate() {
 */
 
 //________________________________________________________________________
+TokenType Node::getReturnType() {
+  return returnType;
+}
 
 double NumNode::getValue() {
   return std::stod(value);
@@ -376,6 +381,11 @@ std::string VarNode::toString() {
    return value;
 }
 
+TokenType VarNode::getReturnType() {
+  if (isBool[value]) return BOOL;
+  else return NUMBER;
+}
+
 double BoolNode::getValue() {
   if (value == "true") return 1;
   return 0;
@@ -391,7 +401,7 @@ OpNode::~OpNode() {
 }
 
 double OpNode::getValue() {
-  if (lhs->returnType != NUMBER && lhs->returnType != NUMBER) {
+  if (lhs->getReturnType() != NUMBER && lhs->getReturnType() != NUMBER) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
@@ -431,8 +441,12 @@ double AssignNode::getValue() {
   return lhs->getValue();
 }
 
+TokenType AssignNode::getReturnType() {
+  return lhs->getReturnType();
+}
+
 double CompareNode::getValue() {
-  if (lhs->returnType != rhs->returnType) {
+  if (lhs->getReturnType() != rhs->getReturnType()) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
@@ -442,7 +456,7 @@ double CompareNode::getValue() {
 
   else if (value == "!=") return std::not_equal_to<double>()(lhs->getValue(),rhs->getValue());
 
-  if (lhs->returnType == BOOL) {
+  if (lhs->getReturnType() == BOOL) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
@@ -463,7 +477,7 @@ double CompareNode::getValue() {
 }
 
 double LogicNode::getValue() {
-  if (lhs->returnType != BOOL && lhs->returnType != BOOL) {
+  if (lhs->getReturnType() != BOOL && lhs->getReturnType() != BOOL) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
