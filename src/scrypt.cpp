@@ -10,12 +10,13 @@
 
 
 void PrintV(std::vector<Token> tokens){
+    std::cout << "_______" << std::endl;
     if((int)tokens.size() > 0){
         for(int i = 0; i < (int)(tokens.size()); i++){
-            std::cout << tokens.at(i).token <<" ";
+            std::cout << tokens.at(i).token << " " << tokens[i].type << " " << tokens[i].line << " " << tokens[i].column << std::endl;
         }
     }
-    std::cout << std::endl;
+    std::cout << "_______" << std::endl;
 }
 
 
@@ -49,16 +50,20 @@ std::string EvaluateExpression(std::vector<Token> tokens){
     //std::cout <<std::endl<< "EVAL " << tempRow.size() << " :";
     //PrintV(tempRow);
 
+    //std::cout << 
+    PrintV(tempRow);
     InfixParser parser = InfixParser(tempRow);
     //std::cout <<"THERE";
     //InfixParser infixParser = InfixParser(tokens));
     //parser.ParserFunc(tokens);
+    std::cout << "EXPR";
     return parser.calculate();
 }
 
 
 void EvaluateExpressionChunk(std::vector<Token> tokens){
     //std::cout << "A";
+    PrintV(tokens);
     std::vector<std::vector<Token>> multilineTokens;
     
     int index = 0; 
@@ -78,7 +83,7 @@ void EvaluateExpressionChunk(std::vector<Token> tokens){
         EvaluateExpression(line);
     }
 
-    
+    std::cout << "CHUNK";
 }
 
 void ParseBlock(std::vector<Token>& tokens) {
@@ -127,13 +132,14 @@ void ParseBlock(std::vector<Token>& tokens) {
 
 
         else if (tokens[i].token == "while") {
+            i++;
             //std::cout << "A";
-            int start = i;
+            int conditionStart = i;
             while (tokens[i].token != "{") {
                 //std::cout << "B";
                 i++;
             }
-            int conditionStart = start + 1;
+            
             int conditionEnd = i;
 
 
@@ -154,11 +160,14 @@ void ParseBlock(std::vector<Token>& tokens) {
             //std::cout << "E";
             
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
+            std::cout << condToDouble(EvaluateExpression(conditionExpr)) << std::endl;
             while (condToDouble(EvaluateExpression(conditionExpr)) != 0) {
                 //std::cout << "F";
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
-                
+                std::cout << "A" << std::endl;
+                //PrintV(block);
                 ParseBlock(block);
+                std::cout << "B" << std::endl;
             }
            // std::cout << "G";
         } 
@@ -205,6 +214,52 @@ void ParseBlock(std::vector<Token>& tokens) {
             i++;
             //std::cout << "IF: " << i << tokens[i].token;
         } 
+
+
+
+        else if (tokens[i].token == "else if") {
+
+
+            int conditionStart = i + 1;
+            while (tokens[i].token != "{") {
+                i++;
+            }
+            
+            int conditionEnd = i;
+
+            std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
+        
+    
+            //std::cout << "A";
+            int blockStart = i + 1;
+            
+            int blockParen = 1;
+
+            while (blockParen > 0) {
+                i++;
+                if (tokens[i].token == "{") {
+                    blockParen++;
+                }
+                else if (tokens[i].token == "}") {
+                    blockParen--;
+                }
+            }
+
+
+            //std::cout << "B";
+            if(prevCond == false && condToDouble(EvaluateExpression(conditionExpr)) != 0){
+                std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
+                //std::cout << "C";
+                
+                ParseBlock(block);
+                prevCond = true;
+            } else {
+                prevCond = false;
+            }
+            
+            i++;
+            
+        }
         
 
         else if (tokens[i].token == "else") {
