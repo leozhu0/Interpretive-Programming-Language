@@ -34,9 +34,6 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
         } else {
             sequence.push_back(Token{line,column, element, type});
         }
-
-        
-
     }
 }
 
@@ -52,13 +49,11 @@ std::vector<Token> Lexer::lexer(){
     int numDecimal = 0;
     std::string element = "";
     while (std::cin.get(rawInput)) {
-        //std::cout <<rawInput;
         if(rawInput == '\n'){
             indents++;
 
             //When you start a newline, take what was inside element and add it to sequence, this will always be a number or var
             if(Token::tokenType(element[0]) != NULLTYPE){ 
-                //std::cout <<"THING:"<<element<<i - element.size()<<std::endl;
                 pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
             }
 
@@ -137,50 +132,42 @@ std::vector<Token> Lexer::lexer(){
                     }
 
                 } else {
-                    //////////////////////////////////EDITS ALL HERE/////////////
+                    //Check for 2 char conditionsals
                     if(Token::tokenType(element[0])!=LOGIC && Token::tokenType(element[0])!=COMPARE && element[0] != '=' && rawInput != '='){
-                        //if(element == "=") std::cout << "A";
                         pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
                         numDecimal = 0;
                         element="";
                     }
 
                     if(element == "=" && rawInput != '='){
-                        //if(element == "=") std::cout << "B";
                         pushSeq("=", ASSIGNMENT, line, i-1, sequence);
                         element = rawInput;
                     }
 
                     else if((element == "<" || element == "=" || element == ">" || element == "!") && rawInput == '='){
-                       //if(element == "=") std::cout << "C";
                         pushSeq(element+rawInput, COMPARE, line, i-1, sequence);
                         element = "";
                     }
 
                     else if((element == "<" || element == ">" || element == "!") && rawInput != '='){
-                        //if(element == "=") std::cout << "D";
                         pushSeq(element, COMPARE, line, i-1, sequence);
                         element = rawInput;
                     } 
 
                     else if(Token::tokenType(rawInput)==COMPARE || rawInput == '='){
-                        //if(element == "=") std::cout << "E";
                         pushSeq(element, Token::tokenType(element[0]), line, i-element.size(), sequence);
                         element = rawInput;
                     }
                     
                     else {
                         std::string rawInputString(1, rawInput);
-                        //if(rawInputString == "=") std::cout << "F";
                         pushSeq(rawInputString, type, line, i, sequence);
                         element = "";
                     }
-                    //////////////////////EDITS END
                 }
                 
         } else {
              if(element == "else if" || element.substr(0, 4) != "else"){
-                //if(element == "=") std::cout << "G";
                 pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
                 element = "";
                 numDecimal = 0;
@@ -194,7 +181,6 @@ std::vector<Token> Lexer::lexer(){
 
     //After termination, add whatever was stored in element to the sequence
     if(element != ""){
-        //if(element == "=") std::cout << "H";
         pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
     }
 
@@ -325,52 +311,43 @@ std::vector<Token> Lexer::lexer(std::string raw){
                     }
 
                 } else {
-                    //////////////////////////////////EDITS ALL HERE/////////////
                     if(Token::tokenType(element[0])!=LOGIC && Token::tokenType(element[0])!=COMPARE && element[0] != '=' && rawInput != '='){
-                        //std::cout << "A";
                         pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
                         numDecimal = 0;
                         element="";
                     }
 
                     if(element == "=" && rawInput != '='){
-                        //std::cout << "B";
                         pushSeq("=", ASSIGNMENT, line, i-1, sequence);
                         element = rawInput;
                     }
 
                     else if((element == "<" || element == "=" || element == ">" || element == "!") && rawInput == '='){
-                        //std::cout << "C";
                         pushSeq(element+rawInput, COMPARE, line, i-1, sequence);
                         element = "";
                     }
 
                     else if((element == "<" || element == ">" || element == "!") && rawInput != '='){
-                        //std::cout << "D";
                         pushSeq(element, COMPARE, line, i-1, sequence);
                         element = rawInput;
                     } 
 
                     else if(Token::tokenType(rawInput)==COMPARE || rawInput == '='){
-                        //std::cout << "F";
                         pushSeq(element, Token::tokenType(element[0]), line, i-element.size(), sequence);
                         element = rawInput;
                     }
                     
                     else {
-                        //std::cout << "E";
                         std::string rawInputString(1, rawInput);
                         pushSeq(rawInputString, type, line, i, sequence);
                         element = "";
                     }
-                    //////////////////////EDITS END
                 }
                 
                 
     
         } else {
             if(element == "else if" || element.substr(0, 4) != "else"){
-                //std::cout << "H";
                 pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
                 element = "";
                 numDecimal = 0;
