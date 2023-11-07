@@ -406,7 +406,7 @@ OpNode::~OpNode() {
 }
 
 double OpNode::getValue() {
-  if (lhs->getReturnType() != NUMBER || lhs->getReturnType() != NUMBER) {
+  if (lhs->getReturnType() != NUMBER || rhs->getReturnType() != NUMBER) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
