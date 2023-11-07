@@ -63,7 +63,7 @@ std::string EvaluateExpression(std::vector<Token> tokens){
 
 void EvaluateExpressionChunk(std::vector<Token> tokens){
     //std::cout << "A";
-    PrintV(tokens);
+    //PrintV(tokens);
     std::vector<std::vector<Token>> multilineTokens;
     
     int index = 0; 
@@ -83,7 +83,7 @@ void EvaluateExpressionChunk(std::vector<Token> tokens){
         EvaluateExpression(line);
     }
 
-    std::cout << "CHUNK";
+    //std::cout << "CHUNK";
 }
 
 void ParseBlock(std::vector<Token>& tokens) {
