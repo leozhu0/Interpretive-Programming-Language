@@ -125,6 +125,13 @@ void format(std::vector<Token>& tokens, std::string indent) {
 
       if (isElseIf) body.push_back(tokens[i]);
 
+      std::cout << "__________top" << std::endl;
+      for (Token token : body) {
+	std::cout << token.token << " " << token.type << std::endl;
+      }
+      std::cout << "__________top" << std::endl;
+      exit(0)
+
       format(body, indent + "    ");
       std::cout << indent << "}" << std::endl;
     }
