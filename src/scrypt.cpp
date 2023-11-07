@@ -40,7 +40,7 @@ std::string EvaluateExpression(std::vector<Token> tokens){
         return "";
     }
    // std::cout << "EXEC " << tokens.size() << ": ";
-    //PrintV(tokens);
+    PrintV(tokens);
 
     std::vector<Token> tempRow = tokens;
     if(tempRow.back().type != END){
@@ -160,7 +160,7 @@ void ParseBlock(std::vector<Token>& tokens) {
             //std::cout << "E";
             
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
-            std::cout << condToDouble(EvaluateExpression(conditionExpr)) << std::endl;
+            //std::cout << condToDouble(EvaluateExpression(conditionExpr)) << std::endl;
             while (condToDouble(EvaluateExpression(conditionExpr)) != 0) {
                 //std::cout << "F";
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
