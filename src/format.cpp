@@ -130,6 +130,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
 
 	while (tokens[i].token != "{") {
 	  body.push_back(tokens[i]);
+	  ++i;
 	}
 
 	body.push_back(tokens[i]);
