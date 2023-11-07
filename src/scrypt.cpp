@@ -346,7 +346,7 @@ int main() {
     /*if(tokens.at(0).token != "some_var"){
         PrintV(tokens);
     }*/
-     PrintV(tokens);
+     //PrintV(tokens);
     try {
         ParseBlock(tokens);
     } catch (const std::exception& e) {
