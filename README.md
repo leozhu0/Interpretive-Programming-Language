@@ -1,6 +1,6 @@
 # What the project does, and why.
-Our project inputs mathematics equations through the terminal, runs it through a lexer, condtructs an AST, parses it, and outputs the result to standard output.
-We built this software in a way such that anyone can use it to evaulate math expressions quickly. 
+Our project inputs basic code through the terminal, runs it through a lexer, condtructs an AST, parses it, and outputs the result to standard output.
+We built this software in a way such that anyone can use it to run an interpreted programming language that contain math expressions.
 
 # How to build the project (the fewer commands the better; a single make command is ideal).
 To compile the project into an executable, just cd into the project directory and run:
