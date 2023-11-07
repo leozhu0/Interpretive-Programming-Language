@@ -1,8 +1,8 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "token.h"//cpp
-#include "node.h"//cpp
+#include "token.cpp"//cpp
+#include "node.cpp"//cpp
 
 struct Node {
   std::string value;

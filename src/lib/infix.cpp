@@ -316,7 +316,7 @@ std::string InfixParser::toString() {
 
 
 std::string InfixParser::calculate() {
-  if (root->returnType == BOOL) {
+  if (root->getReturnType() == BOOL) {
     return (root->getValue() ? "true" : "false");
   }
 
