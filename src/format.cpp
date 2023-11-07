@@ -26,11 +26,14 @@ void format(std::vector<Token>& tokens, std::string indent) {
 
       //i + 1 != tokens.size() && tokens[i + 1].line == line
       while (true) {
+        std::cout << "Inside " << std::endl;
+        if (tokens.back().token == "333") exit(0);
+
         if (i + 1 == tokens.size()) break;
 	if (tokens[i + 1].line != line) break;
 
         std::cout << "In between " << std::endl;
-        if (tempTokens.back().token == "333") exit(0);
+        if (tokens.back().token == "333") exit(0);
 
 	tempTokens.push_back(tokens[i + 1]);
         ++i;
