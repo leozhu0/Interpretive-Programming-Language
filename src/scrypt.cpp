@@ -266,8 +266,6 @@ void ParseBlock(std::vector<Token>& tokens) {
                 
                 ParseBlock(block);
                 prevCond = true;
-            } else {
-                prevCond = false;
             }
             
             i++;
