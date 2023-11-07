@@ -37,7 +37,7 @@ std::string EvaluateExpression(std::vector<Token> tokens){
     //std::cout << "B";
     
     if((int)tokens.size() == 0 || tokens.at(0).type == END){
-        return 0;
+        return "";
     }
    // std::cout << "EXEC " << tokens.size() << ": ";
     //PrintV(tokens);
@@ -51,12 +51,12 @@ std::string EvaluateExpression(std::vector<Token> tokens){
     //PrintV(tempRow);
 
     //std::cout << 
-    PrintV(tempRow);
+   // PrintV(tempRow);
     InfixParser parser = InfixParser(tempRow);
     //std::cout <<"THERE";
     //InfixParser infixParser = InfixParser(tokens));
     //parser.ParserFunc(tokens);
-    std::cout << "EXPR";
+    //std::cout << "EXPR";
     return parser.calculate();
 }
 
