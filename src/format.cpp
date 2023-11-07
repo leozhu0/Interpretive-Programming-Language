@@ -92,13 +92,14 @@ void format(std::vector<Token>& tokens, std::string indent) {
       --ifCounter;
       std::cout << "else {" << std::endl;
 
+      bool isElseIf = (tokens[i].token == "else if" ? true : false);
       size_t numCurly = 1;
       std::vector<Token> body;
-      bool endingCurly = false;
+      //bool endingCurly = false;
 
-      if (tokens[i].token == "else if") {
+      if (isElseIf) {
         body.push_back(Token{0, 0, "if", COMMAND});
-	endingCurly = true;
+	//endingCurly = true;
 	--numCurly;
       }
       else ++i;
@@ -109,12 +110,20 @@ void format(std::vector<Token>& tokens, std::string indent) {
         if (tokens[i].token == "{") ++numCurly;
         else if (tokens[i].token == "}") --numCurly;
 
-        if (numCurly == 0) break;
+        if (numCurly == 0) {
+	  if (!isElseIf || (tokens[i + 1].token != "else" && tokens[i + 1].token != "else if")) break;
+
+	  while (tokens[i + 1].token != "{") {
+            body.push_back(tokens[i]);
+	    ++i;
+	  }
+	}
+
         body.push_back(tokens[i]);
         ++i;
       }
 
-      if (endingCurly) body.push_back(tokens[i]);
+      if (isElseIf) body.push_back(tokens[i]);
 
       format(body, indent + "    ");
       std::cout << indent << "}" << std::endl;
