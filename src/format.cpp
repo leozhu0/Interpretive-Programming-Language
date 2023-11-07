@@ -131,12 +131,11 @@ int main() {
 
     std::vector<Token> tokens = lexer.lexer();
     
-    std::cout << "__________top" << std::endl;
-    for (Token token : tokens) {
-      std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
-    }
-    std::cout << "__________bottom" << std::endl;
-
+    //std::cout << "__________top" << std::endl;
+    //for (Token token : tokens) {
+    //  std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
+    //}
+    //std::cout << "__________bottom" << std::endl;
 
     format(tokens, "");
 
