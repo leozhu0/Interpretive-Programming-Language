@@ -33,7 +33,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
 	if (tokens[i + 1].line != line) break;
 
         std::cout << "In between " << std::endl;
-        if (tokens.back().token == "333") exit(0);
+        //if (tokens.back().token == "333") exit(0);
 
 	tempTokens.push_back(tokens[i + 1]);
         ++i;
@@ -42,7 +42,12 @@ void format(std::vector<Token>& tokens, std::string indent) {
       std::cout << "after " << std::endl;
       //if (tokens.back().token == "333") exit(0);
 
-      tempTokens.push_back(Token{0, 0, "END", END});
+      tempToken = Token{0, 0, "END", END};
+
+      std::cout << "token before, push back after" << std::endl;
+      if (tokens.back().token == "333") exit(0);
+
+      tempTokens.push_back(tempToken);
 
       //std::cout << "__________top" << std::endl;
       //for (Token token : tempTokens) {
