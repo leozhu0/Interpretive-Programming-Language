@@ -141,7 +141,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
         else if (tokens[i].token == "}") --numCurly;
 
         if (numCurly == 0) {
-	  if (!isElseIf || i = tokens.size() - 1 || (tokens[i + 1].token != "else" && tokens[i + 1].token != "else if")) break;
+	  if (!isElseIf || i == tokens.size() - 1 || (tokens[i + 1].token != "else" && tokens[i + 1].token != "else if")) break;
 
 	  while (tokens[i + 1].token != "{") {
             body.push_back(tokens[i]);
