@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <map>
 #include <cmath>
+#include <iomanip>
 
 std::map<std::string, double> variables;
 std::map<std::string, bool> isBool;
