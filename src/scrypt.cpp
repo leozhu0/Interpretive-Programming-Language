@@ -75,7 +75,7 @@ void EvaluateExpressionChunk(std::vector<Token> tokens){
         for(int i = 0; i < tokens[(int)tokens.size() - 1 - ((tokens[(int)tokens.size()-1].column == 1)?1:0)].line; i++){
             std::vector<Token> tempRow;
             
-            while(tokens[index].line == i+1){
+            while(tokens.size() > 0 && tokens[index].line == i+1){
                 tempRow.push_back(tokens[index]);
                 index++; 
             }
