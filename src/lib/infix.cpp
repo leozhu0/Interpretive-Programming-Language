@@ -9,13 +9,13 @@ std::map<std::string, double> variables;
 std::map<std::string, bool> isBool;
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
-
+/*
 	std::cout << "________________________top" << std::endl;
   for (Token token : tokens) {
     std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
   }
   std::cout << "_______________________bottom" << std::endl;
-
+*/
   if (tokens.size() == 1) {
     std::ostringstream error;
     error << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
