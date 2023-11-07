@@ -108,7 +108,7 @@ std::vector<Token> Lexer::lexer(){
                 } else if(Token::tokenType(rawInput) == VARIABLE){
                     if(Token::tokenType(element[0]) == NUMBER){
                         std::ostringstream error;
-                        error << "Syntax error on line "<< line <<" column "<< i<<"." << std::endl;
+                        error << "Syntax error on line "<< line <<" column "<< i<<".";
                         throw std::runtime_error(error.str());
                     } else if (Token::tokenType(element[0]) == VARIABLE || element == ""){
                         element += rawInput;
