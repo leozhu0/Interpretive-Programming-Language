@@ -7,7 +7,6 @@ int main() {
   std::string line;
 
   while (std::getline(std::cin, line)) {
-    std::cout << line << std::endl;
     try {
       InfixParser infixParser = InfixParser(lexer.lexer(line));
       std::cout << infixParser.toString() << std::endl << infixParser.calculate() << std::endl;
