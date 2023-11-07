@@ -7,6 +7,8 @@
 #include <vector>
 #include <fstream>
 #include <map>
+#include <sstream>
+#include <stdexcept>
 
 
 
@@ -26,8 +28,15 @@ double condToDouble(std::string raw){
         return 1;
     }
 
-    if(raw=="false"){
+    else if(raw=="false"){
         return 0;
+    }
+
+    else {
+        std::ostringstream error;
+        error << "Runtime error: condition is not a bool.";
+        throw std::runtime_error(error.str());
+        
     }
 
     return stod(raw);
@@ -115,7 +124,7 @@ void ParseBlock(std::vector<Token>& tokens) {
             std::vector<Token> printExpr;
             while (i < (int)tokens.size()) {
                 printExpr.push_back(tokens[i]);
-                if(tokens[i].line != tokens[i+1].line){
+                if(i == (int)tokens.size()-1 || tokens[i].line != tokens[i+1].line){
                     
                     break;
                 }
@@ -337,7 +346,11 @@ int main() {
     /*if(tokens.at(0).token != "some_var"){
         PrintV(tokens);
     }*/
-    ParseBlock(tokens);
+    try {
+        ParseBlock(tokens);
+    } catch (const std::exception& e) {
+      std::cout << e.what() << std::endl;
+    }
 
     return 0;
 }
