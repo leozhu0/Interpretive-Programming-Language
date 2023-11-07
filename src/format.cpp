@@ -130,7 +130,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
 	std::cout << token.token << " " << token.type << std::endl;
       }
       std::cout << "__________top" << std::endl;
-      exit(0)
+      exit(0);
 
       format(body, indent + "    ");
       std::cout << indent << "}" << std::endl;
