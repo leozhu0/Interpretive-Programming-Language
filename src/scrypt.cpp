@@ -16,7 +16,7 @@ void PrintV(std::vector<Token> tokens){
     std::cout << "_______" << std::endl;
     if((int)tokens.size() > 0){
         for(int i = 0; i < (int)(tokens.size()); i++){
-            std::cout << tokens.at(si).token << " ";
+            std::cout << tokens.at(i).token << " ";
         }
     }
     std::cout << "_______" << std::endl;
