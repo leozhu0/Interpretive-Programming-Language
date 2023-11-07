@@ -99,6 +99,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     while ((precedence(nextOp) > precedence(currOp)) || (nextOp == "=" && precedence(nextOp) == precedence(currOp))) {
       int addedPrecedence = 1;
       if (nextOp == "=") --addedPrecedence;
+      size_t parenNumBuffer = parenNum;
 
       try {
         rightHandSide = createTree(rightHandSide, precedence(currOp) + addedPrecedence, tokens);
@@ -107,6 +108,8 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
 	delete leftHandSide;
 	throw std::runtime_error(e.what());
       }
+
+      parenNum = parenNumBuffer;
 
       try {      
 	nextOp = peak(tokens).token;
