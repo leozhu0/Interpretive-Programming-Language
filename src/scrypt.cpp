@@ -7,13 +7,16 @@
 #include <vector>
 #include <fstream>
 #include <map>
+#include <sstream>
+#include <stdexcept>
+
 
 
 void PrintV(std::vector<Token> tokens){
     std::cout << "_______" << std::endl;
     if((int)tokens.size() > 0){
         for(int i = 0; i < (int)(tokens.size()); i++){
-            std::cout << tokens.at(i).token << " " << tokens[i].type << " " << tokens[i].line << " " << tokens[i].column << std::endl;
+            std::cout << tokens.at(i).token << " ";
         }
     }
     std::cout << "_______" << std::endl;
@@ -25,8 +28,16 @@ double condToDouble(std::string raw){
         return 1;
     }
 
-    if(raw=="false"){
+    else if(raw=="false"){
         return 0;
+    }
+
+    else {
+        //std::ostringstream error;
+       std::cout << "Runtime error: condition is not a bool." <<std::endl;
+       exit(3);
+        //throw std::runtime_error(error.str());
+        
     }
 
     return stod(raw);
@@ -62,27 +73,30 @@ std::string EvaluateExpression(std::vector<Token> tokens){
 
 
 void EvaluateExpressionChunk(std::vector<Token> tokens){
-    //std::cout << "A";
-    //PrintV(tokens);
-    std::vector<std::vector<Token>> multilineTokens;
-    
-    int index = 0; 
-    //If END is on a new line, then stop at the line before, otherwise do the whole thing
-    for(int i = 0; i < tokens[(int)tokens.size() - 1 - ((tokens[(int)tokens.size()-1].column == 1)?1:0)].line; i++){
-        std::vector<Token> tempRow;
+    if(tokens.size() == 0){
+        return;
+    }
+        //std::cout << "A";
+        //PrintV(tokens);
+        std::vector<std::vector<Token>> multilineTokens;
         
-        while(tokens[index].line == i+1){
-            tempRow.push_back(tokens[index]);
-            index++; 
+        int index = 0; 
+        //If END is on a new line, then stop at the line before, otherwise do the whole thing
+        for(int i = 0; i < tokens[(int)tokens.size() - 1 - ((tokens[(int)tokens.size()-1].column == 1)?1:0)].line; i++){
+            std::vector<Token> tempRow;
+            
+            while((int)tokens.size() > index && tokens[index].line == i+1){
+                tempRow.push_back(tokens[index]);
+                index++; 
+            }
+            multilineTokens.push_back(tempRow);
         }
-        multilineTokens.push_back(tempRow);
-    }
 
-    for (const auto &line : multilineTokens)
-    {
-        EvaluateExpression(line);
-    }
-
+        for (const auto &line : multilineTokens)
+        {
+            EvaluateExpression(line);
+        }
+    
     //std::cout << "CHUNK";
 }
 
@@ -111,7 +125,7 @@ void ParseBlock(std::vector<Token>& tokens) {
             std::vector<Token> printExpr;
             while (i < (int)tokens.size()) {
                 printExpr.push_back(tokens[i]);
-                if(tokens[i].line != tokens[i+1].line){
+                if(i == (int)tokens.size()-1 || tokens[i].line != tokens[i+1].line){
                     
                     break;
                 }
@@ -253,8 +267,6 @@ void ParseBlock(std::vector<Token>& tokens) {
                 
                 ParseBlock(block);
                 prevCond = true;
-            } else {
-                prevCond = false;
             }
             
             i++;
@@ -328,10 +340,18 @@ void ParseBlock(std::vector<Token>& tokens) {
 int main() {
     Lexer lexer = Lexer();
 
+
     std::vector<Token> tokens = lexer.lexer();
-
-
-    ParseBlock(tokens);
+    /*if(tokens.at(0).token != "some_var"){
+        PrintV(tokens);
+    }*/
+     //PrintV(tokens);
+    try {
+        ParseBlock(tokens);
+    } catch (const std::exception& e) {
+      std::cout << e.what() << std::endl;
+      exit(2);
+    }
 
     return 0;
 }
