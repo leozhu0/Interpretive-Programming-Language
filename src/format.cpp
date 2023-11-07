@@ -22,7 +22,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
       std::vector<Token> tempTokens = {tokens[i]};
 
       std::cout << "HERE " << tokens.size() << " " << i << std::endl;
-      if (tokens[1].token == "333") exit(0);
+      //if (tokens[1].token == "333") exit(0);
 
       while (true /*i + 1 != tokens.size() && tokens[i + 1].line == line*/) {
         if (i + 1 == tokens.size()) break;
@@ -33,12 +33,13 @@ void format(std::vector<Token>& tokens, std::string indent) {
       }
       tempTokens.push_back(Token{0, 0, "END", END});
 
-      std::cout << "__________top" << std::endl;
-      for (Token token : tempTokens) {
-        std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
-      }
-      std::cout << "__________bottom" << std::endl;
-      //if (tempTokens.back().token == "333") exit(0);
+      //std::cout << "__________top" << std::endl;
+      //for (Token token : tempTokens) {
+      //  std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
+      //}
+      //std::cout << "__________bottom" << std::endl;
+      std::cout << "THERE " << std::endl;
+      if (tempTokens.back().token == "333") exit(0);
 
       InfixParser parser = InfixParser(tempTokens);
       std::cout << parser.toString() << std::endl;
