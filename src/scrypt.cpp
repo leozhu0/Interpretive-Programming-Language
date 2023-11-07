@@ -328,9 +328,10 @@ void ParseBlock(std::vector<Token>& tokens) {
 int main() {
     Lexer lexer = Lexer();
 
+
     std::vector<Token> tokens = lexer.lexer();
 
-
+    PrintV(tokens);
     ParseBlock(tokens);
 
     return 0;
