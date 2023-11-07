@@ -296,6 +296,12 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       return tempNode;
     }
 
+    else if (tokens[i].type == COMMAND) {
+      std::ostringstream error;
+      error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token;
+      throw std::runtime_error(error.str());
+    }
+
   }
 
   std::ostringstream error;
@@ -406,7 +412,7 @@ OpNode::~OpNode() {
 }
 
 double OpNode::getValue() {
-  if (lhs->getReturnType() != NUMBER && lhs->getReturnType() != NUMBER) {
+  if (lhs->getReturnType() != NUMBER || rhs->getReturnType() != NUMBER) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
@@ -483,7 +489,7 @@ double CompareNode::getValue() {
 }
 
 double LogicNode::getValue() {
-  if (lhs->getReturnType() != BOOL && lhs->getReturnType() != BOOL) {
+  if (lhs->getReturnType() != BOOL || rhs->getReturnType() != BOOL) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
