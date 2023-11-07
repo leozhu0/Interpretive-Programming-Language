@@ -26,11 +26,13 @@ void format(std::vector<Token>& tokens, std::string indent) {
         ++i;
       }
       tempTokens.push_back(Token{0, 0, "END", END});
-/*
+
+      std::cout << "__________top" << std::endl;
       for (Token token : tempTokens) {
         std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
       }
-*/
+      std::cout << "__________bottom" << std::endl;
+
       InfixParser parser = InfixParser(tempTokens);
       std::cout << parser.toString() << std::endl;
     }
@@ -125,14 +127,12 @@ void format(std::vector<Token>& tokens, std::string indent) {
 
       if (isElseIf) body.push_back(tokens[i]);
 
-      if (body.size() > 3) {
       std::cout << "__________top" << std::endl;
       for (Token token : body) {
 	std::cout << token.token << " " << token.type << std::endl;
       }
-      std::cout << "__________top" << std::endl;
+      std::cout << "__________bottom" << std::endl;
       exit(0);
-      }
 
       format(body, indent + "    ");
       std::cout << indent << "}" << std::endl;
