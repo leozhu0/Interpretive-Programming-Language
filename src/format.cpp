@@ -36,7 +36,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
     }
 
     // while and if case
-    else if (tokens[i].token != "else") {
+    else if (tokens[i].token != "else" && tokens[i].token != "else if") {
       if (tokens[i].token == "if") {
         if (ifCounter != 0) {
 	  //TODO
@@ -84,27 +84,25 @@ void format(std::vector<Token>& tokens, std::string indent) {
     }
 
     // else case
-    else if (tokens[i].token == "else") {
+    else if (tokens[i].token == "else" || tokens[i].token == "else if") {
       if (ifCounter == 0) {
         //TODO
       }
 
       --ifCounter;
-      ++i;
       std::cout << "else {" << std::endl;
 
       size_t numCurly = 1;
       std::vector<Token> body;
       bool endingCurly = false;
 
-      if (tokens[i].token == "if") {
-        body.push_back(tokens[i]);
+      if (tokens[i].token == "else if") {
+        body.push_back(Token{0, 0, "if", COMMAND});
 	body.push_back(tokens[i + 1]);
-	++i;
 	endingCurly = true;
       }
 
-      ++i;
+      i += 2;
 
       while (true) {
         if (tokens[i].token == "{") ++numCurly;
