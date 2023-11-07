@@ -164,10 +164,10 @@ void ParseBlock(std::vector<Token>& tokens) {
             while (condToDouble(EvaluateExpression(conditionExpr)) != 0) {
                 //std::cout << "F";
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
-                std::cout << "A" << std::endl;
+                //std::cout << "A" << std::endl;
                 //PrintV(block);
                 ParseBlock(block);
-                std::cout << "B" << std::endl;
+                //std::cout << "B" << std::endl;
             }
            // std::cout << "G";
         } 
