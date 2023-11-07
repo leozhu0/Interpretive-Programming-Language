@@ -21,7 +21,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
       int line = tokens[i].line;
       std::vector<Token> tempTokens = {tokens[i]};
 
-      while (i + 1 != tokens.size() && tokens[i + 1].line == line) {
+      while (true /*i + 1 != tokens.size() && tokens[i + 1].line == line*/) {
 	tempTokens.push_back(tokens[i + 1]);
         ++i;
       }
@@ -32,7 +32,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
         std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
       }
       std::cout << "__________bottom" << std::endl;
-      if (tempTokens.back().token == "333") exit(0);
+      //if (tempTokens.back().token == "333") exit(0);
 
       InfixParser parser = InfixParser(tempTokens);
       std::cout << parser.toString() << std::endl;
