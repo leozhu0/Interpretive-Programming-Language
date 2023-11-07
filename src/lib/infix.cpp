@@ -6,14 +6,15 @@
 #include <cmath>
 
 std::map<std::string, double> variables;
+std::map<std::string, bool> isBool;
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
 /*
-	std::cout << "_____________________" << std::endl;
+	std::cout << "________________________top" << std::endl;
   for (Token token : tokens) {
-    std::cout << token.token << " " << token.type << std::endl;
+    std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
   }
-  std::cout << "_______________________" << std::endl;
+  std::cout << "_______________________bottom" << std::endl;
 */
   if (tokens.size() == 1) {
     std::ostringstream error;
@@ -42,6 +43,7 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
   if (updateVariables) {
     for (const auto& pair : variableBuffer) {
       variables[pair.first] = pair.second->getValue();
+      isBool[pair.first] = (pair.second->returnType == BOOL ? true : false);
     }
   }
   
@@ -97,6 +99,7 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
     while ((precedence(nextOp) > precedence(currOp)) || (nextOp == "=" && precedence(nextOp) == precedence(currOp))) {
       int addedPrecedence = 1;
       if (nextOp == "=") --addedPrecedence;
+      size_t parenNumBuffer = parenNum;
 
       try {
         rightHandSide = createTree(rightHandSide, precedence(currOp) + addedPrecedence, tokens);
@@ -105,6 +108,8 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
 	delete leftHandSide;
 	throw std::runtime_error(e.what());
       }
+
+      parenNum = parenNumBuffer;
 
       try {      
 	nextOp = peak(tokens).token;
@@ -335,8 +340,11 @@ double InfixParser::calculate() {
 }
 */
 
-//________________________________________________________________________
-/*
+//___________________________________________________________________________________________________
+TokenType Node::getReturnType() {
+  return returnType;
+}
+
 double NumNode::getValue() {
   return std::stod(value);
 }
@@ -369,11 +377,18 @@ double VarNode::getValue(){
     throw std::runtime_error(error.str());
   }
 
-   return variables[value];
+  returnType = (isBool[value] ? BOOL : NUMBER);
+  
+  return variables[value];
 }
 
 std::string VarNode::toString() {
-   return value;
+  return value;
+}
+
+TokenType VarNode::getReturnType() {
+  if (isBool[value]) return BOOL;
+  else return NUMBER;
 }
 
 double BoolNode::getValue() {
@@ -391,7 +406,7 @@ OpNode::~OpNode() {
 }
 
 double OpNode::getValue() {
-  if (lhs->returnType != NUMBER && lhs->returnType != NUMBER) {
+  if (lhs->getReturnType() != NUMBER && lhs->getReturnType() != NUMBER) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
@@ -428,11 +443,16 @@ std::string OpNode::toString() {
 }
 
 double AssignNode::getValue() {
+  returnType = rhs->getReturnType();
   return lhs->getValue();
 }
 
+TokenType AssignNode::getReturnType() {
+  return lhs->getReturnType();
+}
+
 double CompareNode::getValue() {
-  if (lhs->returnType != rhs->returnType) {
+  if (lhs->getReturnType() != rhs->getReturnType()) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
@@ -442,7 +462,7 @@ double CompareNode::getValue() {
 
   else if (value == "!=") return std::not_equal_to<double>()(lhs->getValue(),rhs->getValue());
 
-  if (lhs->returnType == BOOL) {
+  if (lhs->getReturnType() == BOOL) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
@@ -463,7 +483,7 @@ double CompareNode::getValue() {
 }
 
 double LogicNode::getValue() {
-  if (lhs->returnType != BOOL && lhs->returnType != BOOL) {
+  if (lhs->getReturnType() != BOOL && lhs->getReturnType() != BOOL) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
@@ -480,4 +500,4 @@ double LogicNode::getValue() {
     exit(1);
   }
 }
-*/
+
