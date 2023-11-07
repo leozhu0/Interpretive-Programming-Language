@@ -34,7 +34,7 @@ double condToDouble(std::string raw){
 
     else {
         //std::ostringstream error;
-       std::cout << "Runtime error: condition is not a bool.";
+       std::cout << "Runtime error: condition is not a bool." <<std::endl;
        exit(3);
         //throw std::runtime_error(error.str());
         
