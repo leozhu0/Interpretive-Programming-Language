@@ -45,7 +45,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
       Token tempToken = Token{0, 0, "END", END};
 
       std::cout << "token before, push back after" << std::endl;
-      if (tokens.back().token == "333") exit(0);
+      //if (tokens.back().token == "333") exit(0);
 
       tempTokens.push_back(tempToken);
 
