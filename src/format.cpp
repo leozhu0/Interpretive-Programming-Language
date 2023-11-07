@@ -22,30 +22,30 @@ void format(std::vector<Token>& tokens, std::string indent) {
       std::vector<Token> tempTokens;
       tempTokens.push_back(tokens[i]);
 
-      std::cout << "HERE " << tokens.size() << " " << i << std::endl;
+      //std::cout << "HERE " << tokens.size() << " " << i << std::endl;
       //if (tokens[1].token == "333") exit(0);
 
       //i + 1 != tokens.size() && tokens[i + 1].line == line
       while (true) {
-        std::cout << "Inside " << i + 1 << " " << tokens.size() << std::endl;
+        //std::cout << "Inside " << i + 1 << " " << tokens.size() << std::endl;
         //if (tokens.back().token == "333") exit(0);
 
         if (i + 1 == tokens.size()) break;
 	if (tokens[i + 1].line != line) break;
 
-        std::cout << "In between " << std::endl;
+        //std::cout << "In between " << std::endl;
         //if (tokens.back().token == "333") exit(0);
 
 	tempTokens.push_back(tokens[i + 1]);
         ++i;
       }
 
-      std::cout << "after " << std::endl;
+      //std::cout << "after " << std::endl;
       //if (tokens.back().token == "333") exit(0);
 
       Token tempToken = Token{0, 0, "END", END};
 
-      std::cout << "token before, push back after" << std::endl;
+      //std::cout << "token before, push back after" << std::endl;
       //if (tokens.back().token == "333") exit(0);
 
       tempTokens.push_back(tempToken);
@@ -55,8 +55,8 @@ void format(std::vector<Token>& tokens, std::string indent) {
       //  std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
       //}
       //std::cout << "__________bottom" << std::endl;
-      std::cout << "THERE " << std::endl;
-      if (tempTokens.back().token == "333") exit(0);
+      //std::cout << "THERE " << std::endl;
+      //if (tempTokens.back().token == "333") exit(0);
 
       InfixParser parser = InfixParser(tempTokens);
       std::cout << parser.toString() << std::endl;
@@ -154,11 +154,11 @@ void format(std::vector<Token>& tokens, std::string indent) {
 
       if (isElseIf) body.push_back(tokens[i]);
 
-      std::cout << "__________top else" << std::endl;
-      for (Token token : body) {
-	std::cout << token.token << " " << token.type << std::endl;
-      }
-      std::cout << "__________bottom else" << std::endl;
+      //std::cout << "__________top else" << std::endl;
+      //for (Token token : body) {
+	//std::cout << token.token << " " << token.type << std::endl;
+      //}
+      //std::cout << "__________bottom else" << std::endl;
 
       format(body, indent + "    ");
       std::cout << indent << "}" << std::endl;
