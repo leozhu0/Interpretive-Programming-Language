@@ -21,7 +21,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
       int line = tokens[i].line;
       std::vector<Token> tempTokens = {tokens[i]};
 
-      std::cout << "here 1" << std::endl;
+      std::cout << "HERE " << tokens.size() << " " << i << std::endl;
       if (tokens[1].token == "333") exit(0);
 
       while (true /*i + 1 != tokens.size() && tokens[i + 1].line == line*/) {
@@ -134,11 +134,11 @@ void format(std::vector<Token>& tokens, std::string indent) {
 
       if (isElseIf) body.push_back(tokens[i]);
 
-      std::cout << "__________top" << std::endl;
+      std::cout << "__________top else" << std::endl;
       for (Token token : body) {
 	std::cout << token.token << " " << token.type << std::endl;
       }
-      std::cout << "__________bottom" << std::endl;
+      std::cout << "__________bottom else" << std::endl;
 
       format(body, indent + "    ");
       std::cout << indent << "}" << std::endl;
