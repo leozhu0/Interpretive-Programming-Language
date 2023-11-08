@@ -22,41 +22,16 @@ void format(std::vector<Token>& tokens, std::string indent) {
       std::vector<Token> tempTokens;
       tempTokens.push_back(tokens[i]);
 
-      //std::cout << "HERE " << tokens.size() << " " << i << std::endl;
-      //if (tokens[1].token == "333") exit(0);
-
       //i + 1 != tokens.size() && tokens[i + 1].line == line
       while (true) {
-        //std::cout << "Inside " << i + 1 << " " << tokens.size() << std::endl;
-        //if (tokens.back().token == "333") exit(0);
-
         if (i + 1 == tokens.size()) break;
 	if (tokens[i + 1].line != line) break;
-
-        //std::cout << "In between " << std::endl;
-        //if (tokens.back().token == "333") exit(0);
 
 	tempTokens.push_back(tokens[i + 1]);
         ++i;
       }
 
-      //std::cout << "after " << std::endl;
-      //if (tokens.back().token == "333") exit(0);
-
-      Token tempToken = Token{0, 0, "END", END};
-
-      //std::cout << "token before, push back after" << std::endl;
-      //if (tokens.back().token == "333") exit(0);
-
-      tempTokens.push_back(tempToken);
-
-      //std::cout << "__________top" << std::endl;
-      //for (Token token : tempTokens) {
-      //  std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
-      //}
-      //std::cout << "__________bottom" << std::endl;
-      //std::cout << "THERE " << std::endl;
-      //if (tempTokens.back().token == "333") exit(0);
+      tempTokens.push_back(Token{0, 0, "END", END});
 
       InfixParser parser = InfixParser(tempTokens);
       std::cout << parser.toString() << std::endl;
