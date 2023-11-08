@@ -166,7 +166,7 @@ int main() {
     }
     catch (const std::exception& e) {
       std::cout << e.what() << std::endl;
-      exit(2);
+      return 2;
     }
 
     return 0;
