@@ -7,7 +7,9 @@
 void format(std::vector<Token>& tokens, std::string indent) {
   size_t ifCounter = 0;
 
+  // loops through the entire vector of tokens
   for (size_t i = 0; i < tokens.size(); ++i) {
+    // end case
     if (tokens[i].type == END) break;
     std::cout << indent;
 
@@ -94,6 +96,8 @@ void format(std::vector<Token>& tokens, std::string indent) {
 
       ++i;
 
+      // else if case needs to include if condition
+      // this loop does this
       if (isElseIf) {
         body.push_back(Token{0, 0, "if", COMMAND});
 
@@ -114,6 +118,8 @@ void format(std::vector<Token>& tokens, std::string indent) {
         if (numCurly == 0) {
 	  if (!isElseIf || i == tokens.size() - 1 || (tokens[i + 1].token != "else" && tokens[i + 1].token != "else if")) break;
 
+	  // else if case needs to consider whether or not the following command is else or else if
+	  // if it is, it needs to be included before called recursively
 	  while (tokens[i + 1].token != "{") {
             body.push_back(tokens[i]);
 	    ++i;
