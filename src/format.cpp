@@ -41,7 +41,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
     else if (tokens[i].token != "else" && tokens[i].token != "else if") {
       if (tokens[i].token == "if") {
         if (ifCounter != 0) {
-	  //TODO
+	  // Not checked
 	}
 	
         std::cout << "if ";
@@ -58,12 +58,6 @@ void format(std::vector<Token>& tokens, std::string indent) {
 	++i;
       }
       condition.push_back(Token{0, 0, "END", END});
-
-      /*
-      for (Token token : condition) {
-        std::cout << token.token << " " << token.type << std::endl;
-      }
-      */
 
       ++i;
       InfixParser parser = InfixParser(condition);
@@ -88,7 +82,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
     // else case
     else if (tokens[i].token == "else" || tokens[i].token == "else if") {
       if (ifCounter == 0) {
-        //TODO
+        // Not checked
       }
 
       --ifCounter;
@@ -131,12 +125,6 @@ void format(std::vector<Token>& tokens, std::string indent) {
       }
 
       if (isElseIf) body.push_back(tokens[i]);
-
-      //std::cout << "__________top else" << std::endl;
-      //for (Token token : body) {
-	//std::cout << token.token << " " << token.type << std::endl;
-      //}
-      //std::cout << "__________bottom else" << std::endl;
 
       format(body, indent + "    ");
       std::cout << indent << "}" << std::endl;

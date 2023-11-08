@@ -336,13 +336,7 @@ std::string InfixParser::calculate() {
 
   return result;
 }
-/*
-void InfixParser::deleteBuffer() {
-  for (auto pair : variableBuffer) {
-    delete pair.second;
-  }
-}
-*/
+
 //___________________________________________________________________________________________________
 TokenType Node::getReturnType() {
   return returnType;
