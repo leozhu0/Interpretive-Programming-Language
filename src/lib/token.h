@@ -14,7 +14,9 @@ enum TokenType {
   COMPARE,
   COMMAND,
   BLOCK,
-  BOOL
+  BOOL,
+  COMMA,
+  SEMICOLON
 };
 
 class Token {

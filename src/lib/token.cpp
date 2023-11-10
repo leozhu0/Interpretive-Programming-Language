@@ -19,6 +19,14 @@ TokenType Token::tokenType(char token){
         return OPERATOR;
     }
 
+    if(token == ';') {
+        return SEMICOLON;
+    }
+
+    if(token == ',') {
+        return COMMA;
+    }
+
     if(token == '&' || token == '^' || token == '|') {
         return LOGIC;
     }
