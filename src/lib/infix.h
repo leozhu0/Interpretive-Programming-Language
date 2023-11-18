@@ -7,6 +7,7 @@
 struct Node {
   std::string value;
   TokenType returnType;
+  bool isVar = false;
 
   Node(TokenType type = NUMBER) : returnType(type) {}
   virtual ~Node() {};
@@ -21,6 +22,7 @@ struct NumNode : public Node {
 };
 
 struct VarNode : public Node {
+  VarNode() {isVar == true;}
   double getValue();
   std::string toString();
   TokenType getReturnType();
