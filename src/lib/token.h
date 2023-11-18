@@ -19,7 +19,8 @@ enum TokenType {
   SEMICOLON,
   RETURN,
   FUNCTION,
-  BRACKET
+  BRACKET,
+  NILL
 };
 
 class Token {

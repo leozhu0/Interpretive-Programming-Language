@@ -35,7 +35,9 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
             sequence.push_back(Token{line,column, element, FUNCTION});
         } else if(element == "return"){
             sequence.push_back(Token{line,column, element, RETURN});
-        } else {
+        } else if(element == "null"){
+            sequence.push_back(Token{line,column, element, NILL});
+        }else {
             sequence.push_back(Token{line,column, element, type});
         }
     }
@@ -231,6 +233,8 @@ void Lexer::pushSeqThrow(std::string element, TokenType type, int line, int colu
             sequence.push_back(Token{line,column, element, FUNCTION});
         } else if(element == "return"){
             sequence.push_back(Token{line,column, element, RETURN});
+        } else if(element == "null"){
+            sequence.push_back(Token{line,column, element, NILL});
         } else {
             sequence.push_back(Token{line,column, element, type});
         }
