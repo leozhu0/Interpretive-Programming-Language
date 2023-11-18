@@ -31,7 +31,13 @@ void Lexer::pushSeq(std::string element, TokenType type, int line, int column, s
             sequence.push_back(Token{line,column, element, BOOL});
         } else if(element == "<=" || element == ">=" || element == "==" || element == ">" || element == "<" || element == "!="){
             sequence.push_back(Token{line,column, element, COMPARE});
-        } else {
+        } else if(element == "def"){
+            sequence.push_back(Token{line,column, element, FUNCTION});
+        } else if(element == "return"){
+            sequence.push_back(Token{line,column, element, RETURN});
+        } else if(element == "null"){
+            sequence.push_back(Token{line,column, element, NILL});
+        }else {
             sequence.push_back(Token{line,column, element, type});
         }
     }
@@ -221,10 +227,15 @@ void Lexer::pushSeqThrow(std::string element, TokenType type, int line, int colu
             sequence.push_back(Token{line,column, element, COMMAND});
         } else if(element == "true" || element == "false"){
             sequence.push_back(Token{line,column, element, BOOL});
-        }else if(element == "<=" || element == ">=" || element == "==" || element == ">" || element == "<" || element == "!="){
+        } else if(element == "<=" || element == ">=" || element == "==" || element == ">" || element == "<" || element == "!="){
             sequence.push_back(Token{line,column, element, COMPARE});
-        }
-        else {
+        } else if(element == "def"){
+            sequence.push_back(Token{line,column, element, FUNCTION});
+        } else if(element == "return"){
+            sequence.push_back(Token{line,column, element, RETURN});
+        } else if(element == "null"){
+            sequence.push_back(Token{line,column, element, NILL});
+        } else {
             sequence.push_back(Token{line,column, element, type});
         }
     }
