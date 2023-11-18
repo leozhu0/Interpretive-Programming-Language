@@ -171,7 +171,7 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
     if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT || tokens[i].type == COMPARE || tokens[i].type == LOGIC) {
 
-      if ((tokens[i - 1].token == "(") || (tokens[i].type == ASSIGNMENT && tokens[i - 1].type != VARIABLE)) {
+      if ((tokens[i - 1].token == "(") || /*(tokens[i].type == ASSIGNMENT && tokens[i - 1].type != VARIABLE)*/) {
         std::ostringstream error;
         error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token;
 	throw std::runtime_error(error.str());
@@ -367,7 +367,7 @@ std::string NumNode::toString() {
   return result;
 }
 
-double VarNode::getValue(){
+double VarNode::getValue() {
   if(variables.find(value) == variables.end()){
     std::ostringstream error;
     error <<"Runtime error: unknown identifier " << value;
@@ -449,17 +449,13 @@ TokenType AssignNode::getReturnType() {
 }
 
 double CompareNode::getValue() {
-  if (lhs->getReturnType() != rhs->getReturnType()) {
-    std::ostringstream error;
-    error << "Runtime error: invalid operand type.";
-    throw std::runtime_error(error.str());
-  }
+  if ((value == "==" || value == "!=") && lhs->getReturnType() != rhs->getReturnType()) return false;
 
   if (value == "==") return std::equal_to<double>()(lhs->getValue(),rhs->getValue());
 
   else if (value == "!=") return std::not_equal_to<double>()(lhs->getValue(),rhs->getValue());
 
-  if (lhs->getReturnType() == BOOL) {
+  if (lhs->getReturnType() != rhs->getReturnType() || lhs->getReturnType() == BOOL) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
