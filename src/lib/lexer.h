@@ -1,7 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include "token.h"
+#include "token.cpp" // cpp
 class Lexer {
     private:
         TokenType tokenType(char token);

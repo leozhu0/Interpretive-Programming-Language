@@ -11,12 +11,24 @@ TokenType Token::tokenType(char token){
         return PARENTHESIS;
     }
 
+    if(token == ']' || token == '[') {
+        return BRACKET;
+    }
+
     if(token == '}' || token == '{') {
         return BLOCK;
     }
 
     if(token == '+' || token == '-' || token == '*' || token == '/' || token == '%') {
         return OPERATOR;
+    }
+
+    if(token == ';') {
+        return SEMICOLON;
+    }
+
+    if(token == ',') {
+        return COMMA;
     }
 
     if(token == '&' || token == '^' || token == '|') {
