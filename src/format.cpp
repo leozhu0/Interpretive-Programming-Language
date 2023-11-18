@@ -1,8 +1,8 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include "lib/infix.h"
-#include "lib/lexer.h"
+#include "lib/infix.cpp"
+#include "lib/lexer.cpp"
 
 void format(std::vector<Token>& tokens, std::string indent) {
   size_t ifCounter = 0;
@@ -20,23 +20,21 @@ void format(std::vector<Token>& tokens, std::string indent) {
 	++i;
       }
 
-      int line = tokens[i].line;
-      std::vector<Token> tempTokens;
-      tempTokens.push_back(tokens[i]);
+      std::vector<Token> tempTokens{tokens[i]};
+      ++i;
 
-      //i + 1 != tokens.size() && tokens[i + 1].line == line
-      while (true) {
-        if (i + 1 == tokens.size()) break;
-	if (tokens[i + 1].line != line) break;
-
-	tempTokens.push_back(tokens[i + 1]);
-        ++i;
+      // potentially need to add the case where the vector ends with a ";"
+      while (tokens[i].token != ";") {
+	tempTokens.push_back(tokens[i]);
+	++i;
       }
 
-      tempTokens.push_back(Token{0, 0, "END", END});
+      tempTokens.push_back(tokens[i]);
+      tempTokens.back().token = "END";
+      tempTokens.back().type = END;
 
       InfixParser parser = InfixParser(tempTokens);
-      std::cout << parser.toString() << std::endl;
+      std::cout << parser.toString() << ";" << std::endl;
     }
 
     // while and if case

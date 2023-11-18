@@ -171,7 +171,7 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
     if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT || tokens[i].type == COMPARE || tokens[i].type == LOGIC) {
 
-      if ((tokens[i - 1].token == "(") || /*(tokens[i].type == ASSIGNMENT && tokens[i - 1].type != VARIABLE)*/) {
+      if ((tokens[i - 1].token == "(") /*|| (tokens[i].type == ASSIGNMENT && tokens[i - 1].type != VARIABLE)*/) {
         std::ostringstream error;
         error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token;
 	throw std::runtime_error(error.str());
@@ -440,6 +440,12 @@ std::string OpNode::toString() {
 }
 
 double AssignNode::getValue() {
+  if (lhs->isVar) {
+    std::ostringstream error;
+    error << "Runtime error: invalid assignee.";
+    throw std::runtime_error(error.str());
+  }
+
   returnType = rhs->getReturnType();
   return lhs->getValue();
 }
