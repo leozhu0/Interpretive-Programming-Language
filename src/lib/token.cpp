@@ -11,6 +11,10 @@ TokenType Token::tokenType(char token){
         return PARENTHESIS;
     }
 
+    if(token == ']' || token == '[') {
+        return BRACKET;
+    }
+
     if(token == '}' || token == '{') {
         return BLOCK;
     }

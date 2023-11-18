@@ -16,7 +16,10 @@ enum TokenType {
   BLOCK,
   BOOL,
   COMMA,
-  SEMICOLON
+  SEMICOLON,
+  RETURN,
+  FUNCTION,
+  BRACKET
 };
 
 class Token {
