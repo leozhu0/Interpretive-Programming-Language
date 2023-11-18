@@ -7,7 +7,9 @@
 void format(std::vector<Token>& tokens, std::string indent) {
   size_t ifCounter = 0;
 
+  // loops through the entire vector of tokens
   for (size_t i = 0; i < tokens.size(); ++i) {
+    // end case
     if (tokens[i].type == END) break;
     std::cout << indent;
 
@@ -19,27 +21,29 @@ void format(std::vector<Token>& tokens, std::string indent) {
       }
 
       int line = tokens[i].line;
-      std::vector<Token> tempTokens = {tokens[i]};
+      std::vector<Token> tempTokens;
+      tempTokens.push_back(tokens[i]);
 
-      while (i + 1 != tokens.size() && tokens[i + 1].line == line) {
+      //i + 1 != tokens.size() && tokens[i + 1].line == line
+      while (true) {
+        if (i + 1 == tokens.size()) break;
+	if (tokens[i + 1].line != line) break;
+
 	tempTokens.push_back(tokens[i + 1]);
         ++i;
       }
+
       tempTokens.push_back(Token{0, 0, "END", END});
-/*
-      for (Token token : tempTokens) {
-        std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
-      }
-*/
+
       InfixParser parser = InfixParser(tempTokens);
       std::cout << parser.toString() << std::endl;
     }
 
     // while and if case
-    else if (tokens[i].token != "else") {
+    else if (tokens[i].token != "else" && tokens[i].token != "else if") {
       if (tokens[i].token == "if") {
         if (ifCounter != 0) {
-	  //TODO
+	  // Not checked
 	}
 	
         std::cout << "if ";
@@ -56,12 +60,6 @@ void format(std::vector<Token>& tokens, std::string indent) {
 	++i;
       }
       condition.push_back(Token{0, 0, "END", END});
-
-      /*
-      for (Token token : condition) {
-        std::cout << token.token << " " << token.type << std::endl;
-      }
-      */
 
       ++i;
       InfixParser parser = InfixParser(condition);
@@ -84,24 +82,31 @@ void format(std::vector<Token>& tokens, std::string indent) {
     }
 
     // else case
-    else if (tokens[i].token == "else") {
+    else if (tokens[i].token == "else" || tokens[i].token == "else if") {
       if (ifCounter == 0) {
-        //TODO
+        // Not checked
       }
 
       --ifCounter;
-      ++i;
       std::cout << "else {" << std::endl;
 
+      bool isElseIf = (tokens[i].token == "else if" ? true : false);
       size_t numCurly = 1;
       std::vector<Token> body;
-      bool endingCurly = false;
 
-      if (tokens[i].token == "if") {
-        body.push_back(tokens[i]);
-	body.push_back(tokens[i + 1]);
-	++i;
-	endingCurly = true;
+      ++i;
+
+      // else if case needs to include if condition
+      // this loop does this
+      if (isElseIf) {
+        body.push_back(Token{0, 0, "if", COMMAND});
+
+	while (tokens[i].token != "{") {
+	  body.push_back(tokens[i]);
+	  ++i;
+	}
+
+	body.push_back(tokens[i]);
       }
 
       ++i;
@@ -110,12 +115,22 @@ void format(std::vector<Token>& tokens, std::string indent) {
         if (tokens[i].token == "{") ++numCurly;
         else if (tokens[i].token == "}") --numCurly;
 
-        if (numCurly == 0) break;
+        if (numCurly == 0) {
+	  if (!isElseIf || i == tokens.size() - 1 || (tokens[i + 1].token != "else" && tokens[i + 1].token != "else if")) break;
+
+	  // else if case needs to consider whether or not the following command is else or else if
+	  // if it is, it needs to be included before called recursively
+	  while (tokens[i + 1].token != "{") {
+            body.push_back(tokens[i]);
+	    ++i;
+	  }
+	}
+
         body.push_back(tokens[i]);
         ++i;
       }
 
-      if (endingCurly) body.push_back(tokens[i]);
+      if (isElseIf) body.push_back(tokens[i]);
 
       format(body, indent + "    ");
       std::cout << indent << "}" << std::endl;
@@ -129,14 +144,24 @@ void format(std::vector<Token>& tokens, std::string indent) {
 }
 
 int main() {
-    Lexer lexer = Lexer();
+    std::vector<Token> tokens;
 
-    std::vector<Token> tokens = lexer.lexer();
-/*    for (Token token : tokens) {
-      std::cout << token.token << " " << token.type << " " << token.line << " " << token.column << std::endl;
+    try {
+      Lexer lexer = Lexer();
+      tokens = lexer.lexer();
     }
-*/
-    format(tokens, "");
+    catch (const std::exception& e) {
+      std::cout << e.what() << std::endl;
+      exit(1);
+    }
+
+    try {
+      format(tokens, "");
+    }
+    catch (const std::exception& e) {
+      std::cout << e.what() << std::endl;
+      return 2;
+    }
 
     return 0;
 }
