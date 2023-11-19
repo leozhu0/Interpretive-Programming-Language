@@ -7,11 +7,10 @@
 #include <vector>
 //#include "../scrypt.cpp"
 
-Value Function::getValue(std::vector<Value> argVals){
+Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
 	//run the code using the arguments
-	//std::map<std::string, Value> variables
 	//for(int i = 0; i < argVals.size(); i++){
-	//variables[arguments[i]] = argVals[i]; 
+	//variables[arguments[i].token] = argVals[i]; 
 	//}
 	//return parseBlock(block, variables);
 	return Value{5.0};//for testing

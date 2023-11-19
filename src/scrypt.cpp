@@ -225,8 +225,8 @@ Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variab
                 i++;
             }
 		
-	    while(tokens[i].token != "{"){i++;}//Now we are at the index of the open {
-
+	    //while(tokens[i].token != "{"){i++;}//Now we are at the index of the open {
+		i++;
             
             //std::vector<Token> inputExpr(tokens.begin() + inputStart, tokens.begin() + i);
             int blockStart = i + 1;
@@ -240,10 +240,10 @@ Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variab
             
             std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
             
-	    printV(block);
-	    std::cout << "__"<<std::endl;
-	    printV(arguments);
-            //variables[funcName] = Function{arguments, block};
+	   // printV(block);
+	    //std::cout << "__"<<std::endl;
+	    //printV(arguments);
+            variables[funcName] = std::make_shared<Function>(Function{arguments, block});
 
             i++;
         } 

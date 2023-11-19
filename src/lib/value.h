@@ -13,12 +13,12 @@ class Function {
         std::vector<Token> arguments;
         std::vector<Token> block;
 
-        Value getValue(std::vector<Value> argVals);
+        Value getValue(std::vector<Value> argVals, std::map<std::string, Value> variables);
 };
 
 struct Value : public std::variant<double, 
                                     bool,
-				    Function
+				    std::shared_ptr<Function>
                                     //std::nullptr_t,
                                    // Function,
                                     //std::shared_ptr<std::vector<Value>>
