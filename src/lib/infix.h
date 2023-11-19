@@ -3,27 +3,30 @@
 #include <memory>
 #include "token.h"//cpp
 #include "node.h"//cpp
+#include "value.h"
 
 struct Node {
-  std::string value;
+  Value value;
   TokenType returnType;
   bool isVar = false;
 
   Node(TokenType type = NUMBER) : returnType(type) {}
   virtual ~Node() {};
-  virtual double getValue() = 0;
+  virtual Value getValue() = 0;
   virtual std::string toString() = 0;
   virtual TokenType getReturnType();
 };
 
 struct NumNode : public Node {
-  double getValue();
+  Value getValue();
   std::string toString();
 };
 
 struct VarNode : public Node {
+  std::string value;
+
   VarNode() {isVar = true;}
-  double getValue();
+  Value getValue();
   std::string toString();
   TokenType getReturnType();
 };
@@ -31,35 +34,36 @@ struct VarNode : public Node {
 struct BoolNode : public Node {
   BoolNode() : Node(BOOL) {}
 
-  double getValue();
+  Value getValue();
   std::string toString();
 };
 
 struct OpNode : public Node {
+  std::string value;
   Node* lhs;
   Node* rhs;
 
   OpNode(TokenType type = NUMBER) : Node(type) {}
   ~OpNode();
-  virtual double getValue();
+  virtual Value getValue();
   std::string toString();
 };
 
 struct AssignNode : public OpNode {
-  double getValue();
+  Value getValue();
   TokenType getReturnType();
 };
 
 struct CompareNode : public OpNode {
   CompareNode() : OpNode(BOOL) {}
 
-  double getValue();
+  Value getValue();
 };
 
 struct LogicNode : public OpNode {
   LogicNode() : OpNode(BOOL) {}
 
-  double getValue();
+  Value getValue();
 };
 
 //______________________________________________________________________________
@@ -75,11 +79,12 @@ class InfixParser {
   int precedence(std::string op);
   Token& peak(std::vector<Token> tokens);
   Node* nextNode(std::vector<Token> tokens);
+  Value stringtoValue(Token token);
 
 public:
   InfixParser(std::vector<Token> tokens);
   ~InfixParser();
 
   std::string toString();
-  std::string calculate();
+  Value calculate();
 };
