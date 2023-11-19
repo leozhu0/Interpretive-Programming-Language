@@ -1,6 +1,6 @@
 #include "lib/lexer.cpp" // cpp
 #include "lib/infix.cpp" //cpp
-#include "lib/value.h"
+#include "lib/value.cpp"
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -50,7 +50,7 @@ Value evaluateExpression(std::vector<Token> tokens){
     }
 
     InfixParser parser = InfixParser(tempRow);
-    return parser.calculate();
+    return Value{1.0};//parser.calculate();
 }
 
 
@@ -90,6 +90,19 @@ void evaluateExpressionChunk(std::vector<Token> tokens){
     }
 }
 
+bool isKeyword(Token token){
+    if(token.token == "print" ||
+    token.token == "def" ||
+    token.token == "return" ||
+    token.token == "while" ||
+    token.token == "else" ||
+    token.token == "else if" ||
+    token.token == "if"){
+        return true;
+    }
+    return false;
+}
+
 Value parseBlock(std::vector<Token>& tokens) {
     //The last token must always have an end (to know when to terminate later)
     if(tokens.back().type != END){
@@ -110,13 +123,16 @@ Value parseBlock(std::vector<Token>& tokens) {
             std::vector<Token> printExpr;
             while (i < (int)tokens.size()) {
                 printExpr.push_back(tokens[i]);
-                if(i == (int)tokens.size()-1 || tokens[i].line != tokens[i+1].line){
+                if(isKeyword(tokens[i])){
+                    std::cout <<"ERROR, keyword before ;"<<std::endl;
                     break;
                 }
+
+                if(tokens[i].token == ";"){ break; }
                 i++;
             }
 
-            std::cout << evaluateExpression(printExpr)<< std::endl;
+            std::cout << evaluateExpression(printExpr) << std::endl;
             i++;
         }
 
@@ -125,9 +141,12 @@ Value parseBlock(std::vector<Token>& tokens) {
             std::vector<Token> returnExpr;
             while (i < (int)tokens.size()) {
                 returnExpr.push_back(tokens[i]);
-                if(i == (int)tokens.size()-1 || tokens[i].line != tokens[i+1].line){
+                if(isKeyword(tokens[i])){
+                    std::cout <<"ERROR, keyword before ;"<<std::endl;
                     break;
                 }
+                
+                if(tokens[i].token == ";"){ break; }
                 i++;
             }
 
@@ -153,7 +172,7 @@ Value parseBlock(std::vector<Token>& tokens) {
 
             int blockEnd = i;
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
-            while (evaluateExpression(conditionExpr) != 0) {
+            while (evaluateExpression(conditionExpr) != Value{0.0} || evaluateExpression(conditionExpr) == Value{true}) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
                 parseBlock(block);
             }
@@ -175,7 +194,7 @@ Value parseBlock(std::vector<Token>& tokens) {
                 else if (tokens[i].token == "}") blockParen--;
             }
             
-            if (evaluateExpression(conditionExpr) != 0) {
+            if (evaluateExpression(conditionExpr) != Value{0.0} || evaluateExpression(conditionExpr) == Value{true}) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
                 parseBlock(block);
                 prevCond = true;
@@ -236,7 +255,7 @@ Value parseBlock(std::vector<Token>& tokens) {
                 else if (tokens[i].token == "}") blockParen--;
             }
 
-            if(prevCond == false && evaluateExpression(conditionExpr) != 0){
+            if(prevCond == false && (evaluateExpression(conditionExpr) != 0.0 || evaluateExpression(conditionExpr) == true)){
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
                 parseBlock(block);
                 prevCond = true;

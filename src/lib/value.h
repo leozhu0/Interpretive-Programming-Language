@@ -4,8 +4,9 @@
 #include <ostream>
 #include <vector>
 #include "token.h"
+#include <sstream>
 
-struct Value;
+/*struct Value;
 
 class Function {
     public:
@@ -13,20 +14,21 @@ class Function {
         std::vector<Token> block;
 
         Value getValue();
+};*/
+struct Value : public std::variant<double, 
+                                    bool//,
+                                    //std::nullptr_t,
+                                   // std::shared_ptr<Function>,
+                                    //std::shared_ptr<std::vector<Value>>
+                                    > {
+    using variant::variant;
 };
 
-struct Value : public std::variant<
-  double, 
-  bool, 
-  std::nullptr_t,
-  std::shared_ptr<Function>, 
-  std::shared_ptr<std::vector<Value>>
-> {
-
-  bool operator == (const Value& other) const;  
-  bool operator != (const Value& other) const;  
-};
 
 std::ostream& operator << (std::ostream& stream, const Value& value);
+
+bool operator==(const Value& lhs, const Value& rhs);
+
+bool operator!=(const Value& lhs, const Value& rhs);
 
 
