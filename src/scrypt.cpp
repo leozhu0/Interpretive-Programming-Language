@@ -255,7 +255,7 @@ Value parseBlock(std::vector<Token>& tokens) {
                 else if (tokens[i].token == "}") blockParen--;
             }
 
-            if(prevCond == false && (evaluateExpression(conditionExpr) != Value{0.0} || evaluateExpression(conditionExpr) == Value{true})){
+            if(prevCond == false && (evaluateExpression(conditionExpr) != 0.0 || evaluateExpression(conditionExpr) == true)){
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
                 parseBlock(block);
                 prevCond = true;
