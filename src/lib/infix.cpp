@@ -6,7 +6,7 @@
 #include <cmath>
 #include <iomanip>
 
-std::map<std::string, double> variables;
+std::map<std::string, Value> variables;
 std::map<std::string, bool> isBool;
 
 InfixParser::InfixParser(std::vector<Token> tokens) {
@@ -235,7 +235,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       if (tokens[i].type == NUMBER) tempNode = new NumNode;
       else tempNode = new BoolNode;
 
-      tempNode->value = tokens[i].token;
+      tempNode->value = stringToValue(tokens[i]);
 
       return tempNode;
     }
@@ -303,13 +303,29 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
   throw std::runtime_error(error.str());
 }
 
+Value InfixParser::stringToValue(Token& token) {
+  Value result;
+
+  if (token.type == BOOL) {
+    if (token.token == "true") result = true;
+    else result = false;
+
+  } else if (token.type == NUMBER) {
+    result = std::stod(token.token);
+  }
+
+  return result;
+}
 
 std::string InfixParser::toString() {
   return root->toString();
 }
 
+Value InfixParser::calculate() {
+  return root->getValue();
+}
 
-std::string InfixParser::calculate() {
+/*
   if (root->getReturnType() == BOOL) {
     return (root->getValue() ? "true" : "false");
   }
@@ -336,18 +352,19 @@ std::string InfixParser::calculate() {
 
   return result;
 }
+*/
 
 //___________________________________________________________________________________________________
 TokenType Node::getReturnType() {
   return returnType;
 }
 
-double NumNode::getValue() {
-  return std::stod(value);
+Value NumNode::getValue() {
+  return value;
 }
 
 std::string NumNode::toString() {
-  std::string result = value;
+  std::string result = std::to_string(std::get<double>(value));
   bool hasDecimal = false;
 
   // removing trailing 0s after the decimal
@@ -367,7 +384,7 @@ std::string NumNode::toString() {
   return result;
 }
 
-double VarNode::getValue() {
+Value VarNode::getValue() {
   if(variables.find(value) == variables.end()){
     std::ostringstream error;
     error <<"Runtime error: unknown identifier " << value;
@@ -388,13 +405,13 @@ TokenType VarNode::getReturnType() {
   else return NUMBER;
 }
 
-double BoolNode::getValue() {
-  if (value == "true") return 1;
-  return 0;
+Value BoolNode::getValue() {
+  return value;
 }
 
 std::string BoolNode::toString() {
-  return value;
+  if (std::get<bool>(value)) return "true";
+  else return "false";
 }
 
 OpNode::~OpNode() {
@@ -402,30 +419,30 @@ OpNode::~OpNode() {
   delete rhs;
 }
 
-double OpNode::getValue() {
+Value OpNode::getValue() {
   if (lhs->getReturnType() != NUMBER || rhs->getReturnType() != NUMBER) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
   }
 
-  if (value == "+") return std::plus<double>()(lhs->getValue(),rhs->getValue());
+  if (value == "+") return std::get<double>(lhs->getValue()) + std::get<double>(rhs->getValue());
 
-  else if (value == "-") return std::minus<double>()(lhs->getValue(),rhs->getValue());
+  else if (value == "-") return std::get<double>(lhs->getValue()) - std::get<double>(rhs->getValue());
 
-  else if (value == "*") return std::multiplies<double>()(lhs->getValue(),rhs->getValue());
+  else if (value == "*") return std::get<double>(lhs->getValue()) * std::get<double>(rhs->getValue());
 
   else if (value == "/") {
-    if (rhs->getValue() == 0) {
+    if (std::get<double>(rhs->getValue()) == 0) {
       std::ostringstream error;
         error << "Runtime error: division by zero.";
         throw std::runtime_error(error.str());
       }
 
-    return std::divides<double>()(lhs->getValue(),rhs->getValue());
+    return std::get<double>(lhs->getValue()) / std::get<double>(rhs->getValue());
   }
 
-  else if (value == "%") return std::fmod(lhs->getValue(),rhs->getValue());
+  else if (value == "%") return std::fmod(std::get<double>(lhs->getValue()), std::get<double>(rhs->getValue()));
 
   else {
     std::cout << "This error should never happen. 3" << std::endl;
@@ -439,8 +456,9 @@ std::string OpNode::toString() {
   return result.str();
 }
 
-double AssignNode::getValue() {
-  if (lhs->isVar) {
+//TODO
+Value AssignNode::getValue() {
+  if (!(lhs->isVar)) {
     std::ostringstream error;
     error << "Runtime error: invalid assignee.";
     throw std::runtime_error(error.str());
@@ -454,12 +472,18 @@ TokenType AssignNode::getReturnType() {
   return lhs->getReturnType();
 }
 
-double CompareNode::getValue() {
+Value CompareNode::getValue() {
   if ((value == "==" || value == "!=") && lhs->getReturnType() != rhs->getReturnType()) return false;
 
-  if (value == "==") return std::equal_to<double>()(lhs->getValue(),rhs->getValue());
+  if (std::holds_alternative<double>(lhs->getValue())) {
+    if (value == "==") return std::get<double>(lhs->getValue()) == std::get<double>(rhs->getValue());
+    else if (value == "!=") return std::get<double>(lhs->getValue()) != std::get<double>(rhs->getValue());
+  }
 
-  else if (value == "!=") return std::not_equal_to<double>()(lhs->getValue(),rhs->getValue());
+  else if (std::holds_alternative<bool>(lhs->getValue())) {
+    if (value == "==") return std::get<bool>(lhs->getValue()) == std::get<bool>(rhs->getValue());
+    else if (value == "!=") return std::get<bool>(lhs->getValue()) != std::get<bool>(rhs->getValue());
+  }
 
   if (lhs->getReturnType() != rhs->getReturnType() || lhs->getReturnType() == BOOL) {
     std::ostringstream error;
@@ -467,13 +491,13 @@ double CompareNode::getValue() {
     throw std::runtime_error(error.str());
   }
 
-  if (value == "<") return std::less<double>()(lhs->getValue(),rhs->getValue());
+  if (value == "<") return std::get<double>(lhs->getValue()) < std::get<double>(rhs->getValue());
 
-  else if (value == ">") return std::greater<double>()(lhs->getValue(),rhs->getValue());
+  else if (value == ">") return std::get<double>(lhs->getValue()) > std::get<double>(rhs->getValue());
 
-  else if (value == "<=") return std::less_equal<double>()(lhs->getValue(),rhs->getValue());
+  else if (value == "<=") return std::get<double>(lhs->getValue()) <= std::get<double>(rhs->getValue());
 
-  else if (value == ">=") return std::greater_equal<double>()(lhs->getValue(),rhs->getValue());
+  else if (value == ">=") return std::get<double>(lhs->getValue()) >= std::get<double>(rhs->getValue());
 
   else {
     std::cout << "This error should never happen. 1" << std::endl;
@@ -481,18 +505,18 @@ double CompareNode::getValue() {
   }
 }
 
-double LogicNode::getValue() {
+Value LogicNode::getValue() {
   if (lhs->getReturnType() != BOOL || rhs->getReturnType() != BOOL) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
   }
 
-  if (value == "&") return std::logical_and<double>()(lhs->getValue(),rhs->getValue());
+  if (value == "&") return std::get<bool>(lhs->getValue()) && std::get<bool>(rhs->getValue());
 
-  else if (value == "|") return std::logical_or<double>()(lhs->getValue(),rhs->getValue());
+  else if (value == "|") return std::get<bool>(lhs->getValue()) || std::get<bool>(rhs->getValue());
 
-  else if (value == "^") return ((lhs->getValue() || rhs->getValue()) && !(rhs->getValue() && rhs->getValue()));
+  else if (value == "^") return ((std::get<bool>(lhs->getValue()) || std::get<bool>(rhs->getValue())) && !(std::get<bool>(rhs->getValue()) && std::get<bool>(rhs->getValue())));
 
   else {
     std::cout << "This error should never happen. 2" << std::endl;
