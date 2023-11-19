@@ -38,7 +38,7 @@ void printV(std::vector<Token> tokens){
 //     return stod(raw);
 // }
 
-Value evaluateExpression(std::vector<Token> tokens){
+Value evaluateExpression(std::vector<Token> tokens, std::map<std::string, Value> variables){
     //Return nothing if tokens vector is empty or just END
     if((int)tokens.size() == 0 || tokens.at(0).type == END){
         return Value();
@@ -49,12 +49,12 @@ Value evaluateExpression(std::vector<Token> tokens){
         tempRow.push_back(Token{tempRow.back().line, tempRow.back().column+1,"END", END});
     }
 
-    InfixParser parser = InfixParser(tempRow);
+    InfixParser parser = InfixParser(tempRow, variables);
     return parser.calculate();
 }
 
 
-void evaluateExpressionChunk(std::vector<Token> tokens){
+void evaluateExpressionChunk(std::vector<Token> tokens, std::map<std::string, Value> variables){
     if(tokens.size() == 0){
         return;
     }
@@ -86,7 +86,7 @@ void evaluateExpressionChunk(std::vector<Token> tokens){
 
     for (const auto &line : multilineTokens)
     {
-        evaluateExpression(line);
+        evaluateExpression(line, variables);
     }
 }
 
@@ -132,7 +132,7 @@ Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variab
                 i++;
             }
 
-            std::cout << evaluateExpression(printExpr) << std::endl;
+            std::cout << evaluateExpression(printExpr, variables) << std::endl;
             i++;
         }
 
@@ -150,7 +150,7 @@ Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variab
                 i++;
             }
 
-            return evaluateExpression(returnExpr);
+            return evaluateExpression(returnExpr, variables);
             i++;
         }
 
@@ -172,7 +172,7 @@ Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variab
 
             int blockEnd = i;
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
-            while (evaluateExpression(conditionExpr) != Value{0.0} || evaluateExpression(conditionExpr) == Value{true}) {
+            while (evaluateExpression(conditionExpr, variables) != Value{0.0} || evaluateExpression(conditionExpr, variables) == Value{true}) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
                 parseBlock(block, variables);
             }
@@ -194,7 +194,7 @@ Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variab
                 else if (tokens[i].token == "}") blockParen--;
             }
             
-            if (evaluateExpression(conditionExpr) != Value{0.0} || evaluateExpression(conditionExpr) == Value{true}) {
+            if (evaluateExpression(conditionExpr, variables) != Value{0.0} || evaluateExpression(conditionExpr, variables) == Value{true}) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
                 parseBlock(block, variables);
                 prevCond = true;
@@ -267,7 +267,7 @@ Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variab
                 else if (tokens[i].token == "}") blockParen--;
             }
 
-            if(prevCond == false && (evaluateExpression(conditionExpr) != 0.0 || evaluateExpression(conditionExpr) == true)){
+            if(prevCond == false && (evaluateExpression(conditionExpr, variables) != 0.0 || evaluateExpression(conditionExpr, variables) == true)){
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
                 parseBlock(block, variables);
                 prevCond = true;
@@ -313,7 +313,7 @@ Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variab
             std::vector<Token> block (tokens.begin() + blockStart, tokens.begin() + blockEnd);
             
             if((int)block.size() > 0 && block.at(0).type != END){
-                evaluateExpressionChunk(block);
+                evaluateExpressionChunk(block, variables);
             }
             
         }
