@@ -303,11 +303,11 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
   throw std::runtime_error(error.str());
 }
 
-Value stringToValue(Token& token) {
+Value InfixParser::stringToValue(Token& token) {
   Value result;
 
   if (token.type == BOOL) {
-    if (token.token == true) result = true;
+    if (token.token == "true") result = true;
     else result = false;
 
   } else if (token.type == NUMBER) {
@@ -433,7 +433,7 @@ Value OpNode::getValue() {
   else if (value == "*") return std::get<double>(lhs->getValue()) * std::get<double>(rhs->getValue());
 
   else if (value == "/") {
-    if (rhs->getValue() == 0) {
+    if (std::get<double>(rhs->getValue()) == 0) {
       std::ostringstream error;
         error << "Runtime error: division by zero.";
         throw std::runtime_error(error.str());
@@ -477,12 +477,12 @@ Value CompareNode::getValue() {
 
   if (std::holds_alternative<double>(lhs->getValue())) {
     if (value == "==") return std::get<double>(lhs->getValue()) == std::get<double>(rhs->getValue());
-    else if (value == "!=") return std::get<double>(lhs->getValue)() != std::get<double>(rhs->getValue());
+    else if (value == "!=") return std::get<double>(lhs->getValue()) != std::get<double>(rhs->getValue());
   }
 
   else if (std::holds_alternative<bool>(lhs->getValue())) {
     if (value == "==") return std::get<bool>(lhs->getValue()) == std::get<bool>(rhs->getValue());
-    else if (value == "!=") return std::get<bool>(lhs->getValue)() != std::get<bool>(rhs->getValue());
+    else if (value == "!=") return std::get<bool>(lhs->getValue()) != std::get<bool>(rhs->getValue());
   }
 
   if (lhs->getReturnType() != rhs->getReturnType() || lhs->getReturnType() == BOOL) {

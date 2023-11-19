@@ -1,5 +1,6 @@
-#include "lib/infix.h"//cpp
-#include "lib/lexer.h"//cpp
+#include "lib/infix.cpp"//cpp
+#include "lib/lexer.cpp"//cpp
+#include "lib/value.cpp"
 #include <iostream>
 
 int main() {

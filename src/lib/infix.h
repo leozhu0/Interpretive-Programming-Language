@@ -79,7 +79,7 @@ class InfixParser {
   int precedence(std::string op);
   Token& peak(std::vector<Token> tokens);
   Node* nextNode(std::vector<Token> tokens);
-  Value stringtoValue(Token token);
+  Value stringToValue(Token& token);
 
 public:
   InfixParser(std::vector<Token> tokens);
