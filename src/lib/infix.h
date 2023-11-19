@@ -22,7 +22,7 @@ struct NumNode : public Node {
 };
 
 struct VarNode : public Node {
-  VarNode() {isVar == true;}
+  VarNode() {isVar = true;}
   double getValue();
   std::string toString();
   TokenType getReturnType();
