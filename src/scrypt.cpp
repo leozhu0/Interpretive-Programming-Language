@@ -10,7 +10,7 @@
 #include <stdexcept>
 
 
-void PrintV(std::vector<Token> tokens){
+void printV(std::vector<Token> tokens){
     std::cout << "_______" << std::endl;
     if((int)tokens.size() > 0){
         for(int i = 0; i < (int)(tokens.size()); i++){
@@ -50,7 +50,7 @@ Value evaluateExpression(std::vector<Token> tokens){
     }
 
     InfixParser parser = InfixParser(tempRow);
-    return Value{1.0};//parser.calculate();
+    return parser.calculate();
 }
 
 
@@ -103,7 +103,7 @@ bool isKeyword(Token token){
     return false;
 }
 
-Value parseBlock(std::vector<Token>& tokens) {
+Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variables) {
     //The last token must always have an end (to know when to terminate later)
     if(tokens.back().type != END){
         tokens.push_back(Token{tokens.back().line, tokens.back().column+1,"END", END});
@@ -174,7 +174,7 @@ Value parseBlock(std::vector<Token>& tokens) {
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
             while (evaluateExpression(conditionExpr) != Value{0.0} || evaluateExpression(conditionExpr) == Value{true}) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
-                parseBlock(block);
+                parseBlock(block, variables);
             }
            
         } 
@@ -196,7 +196,7 @@ Value parseBlock(std::vector<Token>& tokens) {
             
             if (evaluateExpression(conditionExpr) != Value{0.0} || evaluateExpression(conditionExpr) == Value{true}) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
-                parseBlock(block);
+                parseBlock(block, variables);
                 prevCond = true;
             } else{
                 prevCond = false;
@@ -204,11 +204,18 @@ Value parseBlock(std::vector<Token>& tokens) {
             i++;
         } 
 
-        /*else if (tokens[i].token == "def") {
-            int inputStart = i + 1;
+        else if (tokens[i].token == "def") {
+            //int inputStart = i + 1;
+		i++;
+		std::string funcName = "";
+		while(tokens[i].token != "(") {
+			funcName += tokens[i].token;
+			i++;
+		}
+		i++;
             std::vector<Token> arguments;
             bool argIndex = true;
-            while (tokens[i].token != "{") {
+            while (tokens[i].token != ")") {
                 if(argIndex){
                     arguments.push_back(tokens[i]);
                     argIndex = false;
@@ -217,8 +224,11 @@ Value parseBlock(std::vector<Token>& tokens) {
                 }
                 i++;
             }
+		
+	    while(tokens[i].token != "{"){i++;}//Now we are at the index of the open {
+
             
-            std::vector<Token> inputExpr(tokens.begin() + inputStart, tokens.begin() + i);
+            //std::vector<Token> inputExpr(tokens.begin() + inputStart, tokens.begin() + i);
             int blockStart = i + 1;
             int blockParen = 1;
             while (blockParen > 0) {
@@ -229,15 +239,17 @@ Value parseBlock(std::vector<Token>& tokens) {
             
             
             std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
-            STOREFUNCTIONINMAP(arguments, block);
-          
+            
+	    printV(block);
+	    std::cout << "__"<<std::endl;
+	    printV(arguments);
+            //variables[funcName] = Function{arguments, block};
+
             i++;
         } 
         
-        else if (tokens[i].token == "return"){
-
-        }
-        */
+       
+        
 
         else if (tokens[i].token == "else if") {
             int conditionStart = i + 1;
@@ -257,7 +269,7 @@ Value parseBlock(std::vector<Token>& tokens) {
 
             if(prevCond == false && (evaluateExpression(conditionExpr) != 0.0 || evaluateExpression(conditionExpr) == true)){
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
-                parseBlock(block);
+                parseBlock(block, variables);
                 prevCond = true;
             }
             i++;
@@ -276,7 +288,7 @@ Value parseBlock(std::vector<Token>& tokens) {
             
             if(prevCond == false){
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
-                parseBlock(block);
+                parseBlock(block, variables);
             }
             prevCond = true;
         } 
@@ -322,7 +334,8 @@ int main() {
     }
 
     try {
-        parseBlock(tokens);
+	std::map<std::string, Value> variables;
+        parseBlock(tokens, variables);
     } 
     catch (const std::exception& e) {
       std::cout << e.what() << std::endl;

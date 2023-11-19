@@ -6,19 +6,21 @@
 #include "token.h"
 #include <sstream>
 
-/*struct Value;
+struct Value;
 
 class Function {
     public:
         std::vector<Token> arguments;
         std::vector<Token> block;
 
-        Value getValue();
-};*/
+        Value getValue(std::vector<Value> argVals);
+};
+
 struct Value : public std::variant<double, 
-                                    bool//,
+                                    bool,
+				    Function
                                     //std::nullptr_t,
-                                   // std::shared_ptr<Function>,
+                                   // Function,
                                     //std::shared_ptr<std::vector<Value>>
                                     > {
     using variant::variant;
