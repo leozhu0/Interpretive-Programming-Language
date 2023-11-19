@@ -1,6 +1,6 @@
 #include "lib/lexer.cpp" // cpp
 #include "lib/infix.cpp" //cpp
-#include "lib/value.h"
+#include "lib/value.cpp"
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -41,7 +41,7 @@ void PrintV(std::vector<Token> tokens){
 Value evaluateExpression(std::vector<Token> tokens){
     //Return nothing if tokens vector is empty or just END
     if((int)tokens.size() == 0 || tokens.at(0).type == END){
-        return Value{};
+        return Value();
     }
 
     std::vector<Token> tempRow = tokens;
@@ -50,7 +50,7 @@ Value evaluateExpression(std::vector<Token> tokens){
     }
 
     InfixParser parser = InfixParser(tempRow);
-    return parser.calculate();
+    return Value{1.0};//parser.calculate();
 }
 
 
@@ -113,7 +113,7 @@ Value parseBlock(std::vector<Token>& tokens) {
     bool prevCond = true;
     int i = 0;
     if((int)tokens.size() == 0) {
-        return Value{};
+        return Value();
     }
     
     //Iterativly go through each token (i changes within loop based on the code)
@@ -132,7 +132,7 @@ Value parseBlock(std::vector<Token>& tokens) {
                 i++;
             }
 
-            std::cout << evaluateExpression(printExpr)<< std::endl;
+            std::cout << evaluateExpression(printExpr) << std::endl;
             i++;
         }
 
@@ -172,7 +172,7 @@ Value parseBlock(std::vector<Token>& tokens) {
 
             int blockEnd = i;
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
-            while (evaluateExpression(conditionExpr) != 0) {
+            while (evaluateExpression(conditionExpr) != Value{0.0} || evaluateExpression(conditionExpr) == Value{true}) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
                 parseBlock(block);
             }
@@ -194,7 +194,7 @@ Value parseBlock(std::vector<Token>& tokens) {
                 else if (tokens[i].token == "}") blockParen--;
             }
             
-            if (evaluateExpression(conditionExpr) != 0) {
+            if (evaluateExpression(conditionExpr) != Value{0.0} || evaluateExpression(conditionExpr) == Value{true}) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
                 parseBlock(block);
                 prevCond = true;
@@ -255,7 +255,7 @@ Value parseBlock(std::vector<Token>& tokens) {
                 else if (tokens[i].token == "}") blockParen--;
             }
 
-            if(prevCond == false && evaluateExpression(conditionExpr) != 0){
+            if(prevCond == false && (evaluateExpression(conditionExpr) != Value{0.0} || evaluateExpression(conditionExpr) == Value{true})){
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
                 parseBlock(block);
                 prevCond = true;
@@ -286,7 +286,7 @@ Value parseBlock(std::vector<Token>& tokens) {
         } 
         
         else if(tokens[i].type == END){
-            return Value{};
+            return Value();
         }
 
         //Evalutate expressions that are not commands (And create vars)
@@ -307,7 +307,7 @@ Value parseBlock(std::vector<Token>& tokens) {
         }
     }
 
-    return Value{};
+    return Value();
 }
 
 int main() {
