@@ -41,7 +41,7 @@ void PrintV(std::vector<Token> tokens){
 Value evaluateExpression(std::vector<Token> tokens){
     //Return nothing if tokens vector is empty or just END
     if((int)tokens.size() == 0 || tokens.at(0).type == END){
-        return Value();
+        return Value{};
     }
 
     std::vector<Token> tempRow = tokens;
@@ -90,6 +90,19 @@ void evaluateExpressionChunk(std::vector<Token> tokens){
     }
 }
 
+bool isKeyword(Token token){
+    if(token.token == "print" ||
+    token.token == "def" ||
+    token.token == "return" ||
+    token.token == "while" ||
+    token.token == "else" ||
+    token.token == "else if" ||
+    token.token == "if"){
+        return true;
+    }
+    return false;
+}
+
 Value parseBlock(std::vector<Token>& tokens) {
     //The last token must always have an end (to know when to terminate later)
     if(tokens.back().type != END){
@@ -100,7 +113,7 @@ Value parseBlock(std::vector<Token>& tokens) {
     bool prevCond = true;
     int i = 0;
     if((int)tokens.size() == 0) {
-        return Value();
+        return Value{};
     }
     
     //Iterativly go through each token (i changes within loop based on the code)
@@ -110,9 +123,12 @@ Value parseBlock(std::vector<Token>& tokens) {
             std::vector<Token> printExpr;
             while (i < (int)tokens.size()) {
                 printExpr.push_back(tokens[i]);
-                if(i == (int)tokens.size()-1 || tokens[i].line != tokens[i+1].line){
+                if(isKeyword(tokens[i])){
+                    std::cout <<"ERROR, keyword before ;"<<std::endl;
                     break;
                 }
+
+                if(tokens[i].token == ";"){ break; }
                 i++;
             }
 
@@ -125,9 +141,12 @@ Value parseBlock(std::vector<Token>& tokens) {
             std::vector<Token> returnExpr;
             while (i < (int)tokens.size()) {
                 returnExpr.push_back(tokens[i]);
-                if(i == (int)tokens.size()-1 || tokens[i].line != tokens[i+1].line){
+                if(isKeyword(tokens[i])){
+                    std::cout <<"ERROR, keyword before ;"<<std::endl;
                     break;
                 }
+                
+                if(tokens[i].token == ";"){ break; }
                 i++;
             }
 
@@ -267,7 +286,7 @@ Value parseBlock(std::vector<Token>& tokens) {
         } 
         
         else if(tokens[i].type == END){
-            return Value();
+            return Value{};
         }
 
         //Evalutate expressions that are not commands (And create vars)
@@ -288,7 +307,7 @@ Value parseBlock(std::vector<Token>& tokens) {
         }
     }
 
-    return Value();
+    return Value{};
 }
 
 int main() {
