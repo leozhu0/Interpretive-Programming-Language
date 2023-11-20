@@ -5,7 +5,8 @@
 #include <vector>
 #include "token.h"
 #include <sstream>
-#include "scrypt.h"
+//#include "scrypt.h"
+/*
 struct Value;
 extern Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variables);
 class Function {
@@ -15,7 +16,7 @@ class Function {
 
         Value getValue(std::vector<Value> argVals, std::map<std::string, Value> variables);
 };
-
+*/
 struct Value : public std::variant<double, 
                                     bool,
 				   // std::shared_ptr<Function>,
@@ -27,7 +28,7 @@ struct Value : public std::variant<double,
 };
 
 using Array = std::shared_ptr<std::vector<Value>>;
-using Func = std::shared_ptr<Function>;
+//using Func = std::shared_ptr<Function>;
 
 std::ostream& operator << (std::ostream& stream, const Value& value);
 

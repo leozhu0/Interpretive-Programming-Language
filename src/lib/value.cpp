@@ -9,7 +9,7 @@
 //#include "scrypt.h"
 
 
-
+/*
 
 Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
 	//run the code using the arguments
@@ -20,7 +20,7 @@ Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value
 	return parseBlock(this->block, variables);
 	//return Value{5.0};//for testing
 }
-
+*/
 
 /*std::ostream& operator << (std::ostream& stream, const Value& value) {
     stream << std::visit([](const auto& arg) -> std::string{
