@@ -2,8 +2,7 @@
 #include <vector>
 #include <memory>
 #include <map>
-#include "token.h"//cpp
-#include "node.h"//cpp
+#include "token.h"
 #include "value.h"
 
 struct Node {
@@ -34,6 +33,14 @@ struct VarNode : public Node {
 
 struct BoolNode : public Node {
   BoolNode() : Node(BOOL) {}
+
+  Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
+  std::string toString();
+};
+
+struct ArrayNode : public Node {
+  std::vector<Node*> value;
+  Node* lookUp = nullptr;
 
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
   std::string toString();
