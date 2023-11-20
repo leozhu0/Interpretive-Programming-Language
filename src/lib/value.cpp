@@ -1,5 +1,6 @@
 #include "value.h"
 #include <iostream>
+#include <memory>
 #include <string>
 #include <variant>
 #include <sstream>
@@ -7,55 +8,101 @@
 #include <vector>
 //#include "scrypt.h"
 
+
+
+
 Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
 	//run the code using the arguments
-//	for(int i = 0; i < argVals.size(); i++){
-//	variables[arguments[i].token] = argVals[i]; 
-//	}
+	for(int i = 0; i < argVals.size(); i++){
+		variables[arguments[i].token] = argVals[i]; 
+	}
 //
 	return parseBlock(this->block, variables);
 	//return Value{5.0};//for testing
 }
 
 
-std::ostream& operator << (std::ostream& stream, const Value& value) {
+/*std::ostream& operator << (std::ostream& stream, const Value& value) {
     stream << std::visit([](const auto& arg) -> std::string{
         std::stringstream ss;
         ss << arg;
         return ss.str();
     }, value);
     return stream;
+}*/
+std::ostream& operator << (std::ostream& os, const Value& value) {
+  std::visit([&os](const auto& tempValue) -> void {
+    if constexpr (std::is_same_v<std::decay_t<decltype(tempValue)>, Array>) {
+      const std::vector<Value>& tempValues = *tempValue;
+      os << "[";
+
+      for (Value value : tempValues) {
+        if (value != tempValues.back()) os << value << ", ";
+        else os << value;
+      }
+
+      os << "]";
+    }
+
+    else os << tempValue;
+
+  }, value);
+
+  return os;
 }
 
 bool operator==(const Value& lhs, const Value& rhs) {
-    if (lhs.index() != rhs.index()) {
+	//std::cout << "TYPE" << rhs.index()<<std::endl;
+	//std::cout << "TYPE:" << lhs.index()<<std::endl;
+    //if (lhs.index() != rhs.index()) {
         // Different types, return false
-        return false;
-    }
+      //  return false;
+    //}
+    if (  !((std::holds_alternative<double>(lhs) && std::holds_alternative<double>(rhs)) ||
+        (std::holds_alternative<bool>(lhs) && std::holds_alternative<bool>(rhs)) ||
+        (std::holds_alternative<Array>(lhs) && std::holds_alternative<Array>(rhs)) /*||
+        (std::holds_alternative<Func>(lhs) && std::holds_alternative<Func>(rhs)) */  ) ) {
+		return false;
+	}
 
     // Same types, compare values
-    bool result = std::visit([](const auto& a, const auto& b) -> bool {
-        return static_cast<bool>(a == b);
+    return std::visit([](const auto& a, const auto& b) -> bool {
+
+
+/* 	if constexpr (std::is_same_v<std::decay_t<decltype(a)>, Func> || std::is_same_v<std::decay_t<decltype(b)>, Func>){
+         return false;
+         }*/
+
+
+	if constexpr (std::is_same_v<std::decay_t<decltype(a)>, Array> && std::is_same_v<std::decay_t<decltype(b)>, Array>) {
+	const std::vector<Value>& va = *a;
+	const std::vector<Value>& vb = *b;
+		if(va.size() != vb.size()){
+			return false;
+		}
+		for(size_t i = 0; i< va.size(); ++i){
+			if(va[i] != vb[i]){
+				return false;
+			}
+		}
+
+		return true;
+
+	}
+
+
+	
+        return (a == b);
     }, lhs, rhs);
     
-    return result;
+    
 }
+
 
 bool operator!=(const Value& lhs, const Value& rhs) {
-    if (lhs.index() != rhs.index()) {
-        // Different types, return false
-        return false;
-    }
+	return !(lhs == rhs);
 
-    // Same types, compare values
-    bool result = std::visit([](const auto& a, const auto& b) -> bool {
-        return static_cast<bool>(a != b);
-    }, lhs, rhs);
-    
-    return result;
-}
-
-
+ }
 
 //std::ostream& operator << (std::ostream& stream, const Value& value);
 
