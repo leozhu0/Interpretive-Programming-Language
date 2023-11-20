@@ -5,15 +5,16 @@
 #include <sstream>
 #include <map>
 #include <vector>
-//#include "../scrypt.cpp"
+//#include "scrypt.h"
 
 Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
 	//run the code using the arguments
-	//for(int i = 0; i < argVals.size(); i++){
-	//variables[arguments[i].token] = argVals[i]; 
-	//}
-	//return parseBlock(block, variables);
-	return Value{5.0};//for testing
+//	for(int i = 0; i < argVals.size(); i++){
+//	variables[arguments[i].token] = argVals[i]; 
+//	}
+//
+	return parseBlock(this->block, variables);
+	//return Value{5.0};//for testing
 }
 
 
