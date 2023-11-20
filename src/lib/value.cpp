@@ -7,11 +7,14 @@
 #include <vector>
 //#include "scrypt.h"
 
+
+
+
 Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
 	//run the code using the arguments
-//	for(int i = 0; i < argVals.size(); i++){
-//	variables[arguments[i].token] = argVals[i]; 
-//	}
+	for(int i = 0; i < argVals.size(); i++){
+		variables[arguments[i].token] = argVals[i]; 
+	}
 //
 	return parseBlock(this->block, variables);
 	//return Value{5.0};//for testing
@@ -55,7 +58,19 @@ bool operator!=(const Value& lhs, const Value& rhs) {
     return result;
 }
 
+/*int main(){
 
+        std::vector<Token> tokens;
+
+        Lexer lexer = Lexer();
+        tokens = lexer.lexer();
+
+        std::map<std::string, Value> variables;
+        parseBlock(tokens, variables);
+
+
+    return 0;
+}*/
 
 //std::ostream& operator << (std::ostream& stream, const Value& value);
 
