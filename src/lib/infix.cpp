@@ -300,7 +300,9 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 
       while (tokens[index + 1].token != "]") {
         tempNode->value.push_back(createTree(nextNode(tokens), 0, tokens));
-        ++index;
+        
+	if (tokens[index + 1].token == "]") break;
+	++index;
       }
 
       ++index;
