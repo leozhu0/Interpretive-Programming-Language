@@ -293,7 +293,6 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
     else if (tokens[i].token == "[") {
       // add error cases from "("
       // definitely more error cases that could be added to this as well as "(" case (such as type == logic or comparison)
-      //size_t bracketNum = 1;
       index = i;
 
       ArrayNode* tempNode = new ArrayNode;
@@ -315,67 +314,6 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       }
 
       return tempNode;
-
-      /*
-      size_t bracketNum = 1;
-      ++i;
-
-      ArrayNode* tempNode = new ArrayNode;
-
-      // add error cases where it reaches the end of the vector
-      while (true) {
-        std::vector<Token> tempTokens;
-
-        while (true) {
-          if (tokens[i].token == "[") ++bracketNum;
-	  else if (tokens[i].token == "]") --bracketNum;
-
-	  if (bracketNum == 0) break;
-	  if (tokens[i].token == "," && bracketNum == 1) break;
-
-	  tempTokens.push_back(tokens[i]);
-	  ++i;
-	}
-
-	if (tempTokens.size() != 0) {
-	  tempTokens.push_back(tokens[i]);
-          tempTokens.back().token = "END";
-	  tempTokens.back().type = END;
-
-	  for (Token token : tempTokens) {
-	    std::cout << token.token << " " << token.type << " " << " " << token.line << " " <<  token.column << std::endl;
-	  }
-	  std::cout << "_____" << std::endl;
-          
-	  tempNode->value.push_back(createTree(nextNode(tempTokens), 0, tempTokens));
-	}
-
-	if (bracketNum == 0) break;
-	else ++i;
-      }
-
-      // Parsing array lookup
-      if (tokens[i + 1].token == "[") {
-        i += 2;
-	std::vector<Token> tempTokens;
-
-	while (tokens[i].token != "]") {
-	  tempTokens.push_back(tokens[i]);
-	  ++i;
-	}
-
-	tempTokens.push_back(tokens[i]);
-        tempTokens.back().token = "END";
-        tempTokens.back().type = END;
-
-	tempNode->lookUp = createTree(nextNode(tempTokens), 0, tempTokens);
-      }
-
-      std::cout << "working" << std::endl;
-
-      index = i;
-      return tempNode;
-      */
     }
 
     else if (tokens[i].type == COMMAND) {
@@ -476,6 +414,7 @@ std::string BoolNode::toString() {
 Value ArrayNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   Value result;
 
+  // no array look up
   if (lookUp == nullptr) {
     result = std::make_shared<std::vector<Value>>();
 
@@ -484,8 +423,16 @@ Value ArrayNode::getValue([[maybe_unused]] std::map<std::string, Value>& variabl
     }
   }
 
+  // array lookup
   else {
-    result = value[std::get<double>(lookUp->getValue(variables))]->getValue(variables);
+    if (!(std::holds_alternative<double>(lookUp->getValue(variables)))) throw std::runtime_error("Runtime error: index is not a number.");
+
+    double arrayIndex = std::get<double>(lookUp->getValue(variables));
+
+    if (std::fmod(arrayIndex, 1) != 0) throw std::runtime_error("Runtime error: index is not an integer.");
+    if (arrayIndex >= value.size() || arrayIndex < 0) throw std::runtime_error("Runtime error: index out of bounds.");
+
+    result = value[arrayIndex]->getValue(variables);
   } 
 
   return result;
