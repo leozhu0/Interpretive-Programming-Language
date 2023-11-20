@@ -325,35 +325,6 @@ Value InfixParser::calculate() {
   return root->getValue(varCache);
 }
 
-/*
-  if (root->getReturnType() == BOOL) {
-    return (root->getValue() ? "true" : "false");
-  }
-
-  std::ostringstream tempStr;
-  tempStr << std::fixed << std::setprecision(5) << root->getValue();
-
-  std::string result = tempStr.str();
-  bool hasDecimal = false;
-
-  // removing trailing 0s after the decimal
-  for (char digit : result) {
-    if (digit == '.') {
-      hasDecimal = true;
-      break;
-    }
-  }
-
-  while (hasDecimal == true && result.back() == '0') {
-    result.pop_back();
-  }
-
-  if (result.back() == '.') result.pop_back();
-
-  return result;
-}
-*/
-
 //___________________________________________________________________________________________________
 TokenType Node::getReturnType([[maybe_unused]] std::map<std::string, Value>& variables) {
   return returnType;

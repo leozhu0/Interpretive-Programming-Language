@@ -6,6 +6,7 @@
 
 void format(std::vector<Token>& tokens, std::string indent) {
   size_t ifCounter = 0;
+  std::map<std::string, Value> variables;
 
   // loops through the entire vector of tokens
   for (size_t i = 0; i < tokens.size(); ++i) {
@@ -33,7 +34,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
       tempTokens.back().token = "END";
       tempTokens.back().type = END;
 
-      InfixParser parser = InfixParser(tempTokens);
+      InfixParser parser = InfixParser(tempTokens, variables);
       std::cout << parser.toString() << ";" << std::endl;
     }
 
@@ -60,7 +61,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
       condition.push_back(Token{0, 0, "END", END});
 
       ++i;
-      InfixParser parser = InfixParser(condition);
+      InfixParser parser = InfixParser(condition, variables);
       std::cout << parser.toString() << " {" << std::endl;
 
       size_t numCurly = 1;
@@ -142,24 +143,24 @@ void format(std::vector<Token>& tokens, std::string indent) {
 }
 
 int main() {
-    std::vector<Token> tokens;
+  std::vector<Token> tokens;
 
-    try {
-      Lexer lexer = Lexer();
-      tokens = lexer.lexer();
-    }
-    catch (const std::exception& e) {
-      std::cout << e.what() << std::endl;
-      exit(1);
-    }
+  try {
+    Lexer lexer = Lexer();
+    tokens = lexer.lexer();
+  }
+  catch (const std::exception& e) {
+    std::cout << e.what() << std::endl;
+    exit(1);
+  }
 
-    try {
-      format(tokens, "");
-    }
-    catch (const std::exception& e) {
-      std::cout << e.what() << std::endl;
-      return 2;
-    }
+  try {
+    format(tokens, "");
+  }
+  catch (const std::exception& e) {
+    std::cout << e.what() << std::endl;
+    return 2;
+  }
 
-    return 0;
+  return 0;
 }
