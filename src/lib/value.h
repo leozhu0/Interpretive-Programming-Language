@@ -5,7 +5,7 @@
 #include <vector>
 #include "token.h"
 #include <sstream>
-
+#include "scrypt.h"
 struct Value;
 
 class Function {
@@ -26,6 +26,8 @@ struct Value : public std::variant<double,
     using variant::variant;
 };
 
+using Array = std::shared_ptr<std::vector<Value>>;
+using Func = std::shared_ptr<Function>;
 
 std::ostream& operator << (std::ostream& stream, const Value& value);
 
