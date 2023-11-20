@@ -6,10 +6,11 @@
 int main() {
   Lexer lexer = Lexer();
   std::string line;
+  std::map<std::string, Value> variables;
 
   while (std::getline(std::cin, line)) {
     try {
-      InfixParser infixParser = InfixParser(lexer.lexer(line));
+      InfixParser infixParser = InfixParser(lexer.lexer(line), variables);
       std::cout << infixParser.toString() << std::endl << infixParser.calculate() << std::endl;
     }
 
