@@ -205,7 +205,7 @@ Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variab
             i++;
         } 
 
-        else if (tokens[i].token == "def") {
+/*        else if (tokens[i].token == "def") {
             //int inputStart = i + 1;
 		i++;
 		std::string funcName = "";
@@ -250,7 +250,7 @@ Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variab
         } 
         
        
-        
+  */      
 
         else if (tokens[i].token == "else if") {
             int conditionStart = i + 1;
