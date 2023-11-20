@@ -6,10 +6,10 @@
 #include <cmath>
 #include <iomanip>
 
-std::map<std::string, Value> variables;
-std::map<std::string, bool> isBool;
+//std::map<std::string, Value> variables;
+//std::map<std::string, bool> isBool;
 
-InfixParser::InfixParser(std::vector<Token> tokens) {
+InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>& variables) : varCache(variables) {
   if (tokens.size() == 1) {
     std::ostringstream error;
     error << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
@@ -36,8 +36,8 @@ InfixParser::InfixParser(std::vector<Token> tokens) {
 
   if (updateVariables) {
     for (const auto& pair : variableBuffer) {
-      variables[pair.first] = pair.second->getValue();
-      isBool[pair.first] = (pair.second->returnType == BOOL ? true : false);
+      variables[pair.first] = pair.second->getValue(variables);
+      //isBool[pair.first] = (pair.second->returnType == BOOL ? true : false);
     }
   }
   
@@ -262,7 +262,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       // do not update stored variables when there is an error
       if (tokens[i + 1].token != "=") {
         try {
-	  tempNode->getValue();
+	  tempNode->getValue(varCache);
 	}
 	catch (const std::exception& e) {
 	  updateVariables = false;
@@ -322,44 +322,15 @@ std::string InfixParser::toString() {
 }
 
 Value InfixParser::calculate() {
-  return root->getValue();
+  return root->getValue(varCache);
 }
-
-/*
-  if (root->getReturnType() == BOOL) {
-    return (root->getValue() ? "true" : "false");
-  }
-
-  std::ostringstream tempStr;
-  tempStr << std::fixed << std::setprecision(5) << root->getValue();
-
-  std::string result = tempStr.str();
-  bool hasDecimal = false;
-
-  // removing trailing 0s after the decimal
-  for (char digit : result) {
-    if (digit == '.') {
-      hasDecimal = true;
-      break;
-    }
-  }
-
-  while (hasDecimal == true && result.back() == '0') {
-    result.pop_back();
-  }
-
-  if (result.back() == '.') result.pop_back();
-
-  return result;
-}
-*/
 
 //___________________________________________________________________________________________________
-TokenType Node::getReturnType() {
+TokenType Node::getReturnType([[maybe_unused]] std::map<std::string, Value>& variables) {
   return returnType;
 }
 
-Value NumNode::getValue() {
+Value NumNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   return value;
 }
 
@@ -384,14 +355,14 @@ std::string NumNode::toString() {
   return result;
 }
 
-Value VarNode::getValue() {
+Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   if(variables.find(value) == variables.end()){
     std::ostringstream error;
     error <<"Runtime error: unknown identifier " << value;
     throw std::runtime_error(error.str());
   }
 
-  returnType = (isBool[value] ? BOOL : NUMBER);
+  returnType = (std::holds_alternative<bool>(variables[value]) ? BOOL : NUMBER);
   
   return variables[value];
 }
@@ -400,12 +371,12 @@ std::string VarNode::toString() {
   return value;
 }
 
-TokenType VarNode::getReturnType() {
-  if (isBool[value]) return BOOL;
+TokenType VarNode::getReturnType([[maybe_unused]] std::map<std::string, Value>& variables) {
+  if (std::holds_alternative<bool>(variables[value])) return BOOL;
   else return NUMBER;
 }
 
-Value BoolNode::getValue() {
+Value BoolNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   return value;
 }
 
@@ -419,30 +390,30 @@ OpNode::~OpNode() {
   delete rhs;
 }
 
-Value OpNode::getValue() {
-  if (lhs->getReturnType() != NUMBER || rhs->getReturnType() != NUMBER) {
+Value OpNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
+  if (lhs->getReturnType(variables) != NUMBER || rhs->getReturnType(variables) != NUMBER) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
   }
 
-  if (value == "+") return std::get<double>(lhs->getValue()) + std::get<double>(rhs->getValue());
+  if (value == "+") return std::get<double>(lhs->getValue(variables)) + std::get<double>(rhs->getValue(variables));
 
-  else if (value == "-") return std::get<double>(lhs->getValue()) - std::get<double>(rhs->getValue());
+  else if (value == "-") return std::get<double>(lhs->getValue(variables)) - std::get<double>(rhs->getValue(variables));
 
-  else if (value == "*") return std::get<double>(lhs->getValue()) * std::get<double>(rhs->getValue());
+  else if (value == "*") return std::get<double>(lhs->getValue(variables)) * std::get<double>(rhs->getValue(variables));
 
   else if (value == "/") {
-    if (std::get<double>(rhs->getValue()) == 0) {
+    if (std::get<double>(rhs->getValue(variables)) == 0) {
       std::ostringstream error;
         error << "Runtime error: division by zero.";
         throw std::runtime_error(error.str());
       }
 
-    return std::get<double>(lhs->getValue()) / std::get<double>(rhs->getValue());
+    return std::get<double>(lhs->getValue(variables)) / std::get<double>(rhs->getValue(variables));
   }
 
-  else if (value == "%") return std::fmod(std::get<double>(lhs->getValue()), std::get<double>(rhs->getValue()));
+  else if (value == "%") return std::fmod(std::get<double>(lhs->getValue(variables)), std::get<double>(rhs->getValue(variables)));
 
   else {
     std::cout << "This error should never happen. 3" << std::endl;
@@ -456,48 +427,47 @@ std::string OpNode::toString() {
   return result.str();
 }
 
-//TODO
-Value AssignNode::getValue() {
+Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   if (!(lhs->isVar)) {
     std::ostringstream error;
     error << "Runtime error: invalid assignee.";
     throw std::runtime_error(error.str());
   }
 
-  returnType = rhs->getReturnType();
-  return lhs->getValue();
+  returnType = rhs->getReturnType(variables);
+  return lhs->getValue(variables);
 }
 
-TokenType AssignNode::getReturnType() {
-  return lhs->getReturnType();
+TokenType AssignNode::getReturnType([[maybe_unused]] std::map<std::string, Value>& variables) {
+  return lhs->getReturnType(variables);
 }
 
-Value CompareNode::getValue() {
-  if ((value == "==" || value == "!=") && lhs->getReturnType() != rhs->getReturnType()) return false;
+Value CompareNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
+  if ((value == "==" || value == "!=") && lhs->getReturnType(variables) != rhs->getReturnType(variables)) return false;
 
-  if (std::holds_alternative<double>(lhs->getValue())) {
-    if (value == "==") return std::get<double>(lhs->getValue()) == std::get<double>(rhs->getValue());
-    else if (value == "!=") return std::get<double>(lhs->getValue()) != std::get<double>(rhs->getValue());
+  if (std::holds_alternative<double>(lhs->getValue(variables))) {
+    if (value == "==") return std::get<double>(lhs->getValue(variables)) == std::get<double>(rhs->getValue(variables));
+    else if (value == "!=") return std::get<double>(lhs->getValue(variables)) != std::get<double>(rhs->getValue(variables));
   }
 
-  else if (std::holds_alternative<bool>(lhs->getValue())) {
-    if (value == "==") return std::get<bool>(lhs->getValue()) == std::get<bool>(rhs->getValue());
-    else if (value == "!=") return std::get<bool>(lhs->getValue()) != std::get<bool>(rhs->getValue());
+  else if (std::holds_alternative<bool>(lhs->getValue(variables))) {
+    if (value == "==") return std::get<bool>(lhs->getValue(variables)) == std::get<bool>(rhs->getValue(variables));
+    else if (value == "!=") return std::get<bool>(lhs->getValue(variables)) != std::get<bool>(rhs->getValue(variables));
   }
 
-  if (lhs->getReturnType() != rhs->getReturnType() || lhs->getReturnType() == BOOL) {
+  if (lhs->getReturnType(variables) != rhs->getReturnType(variables) || lhs->getReturnType(variables) == BOOL) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
   }
 
-  if (value == "<") return std::get<double>(lhs->getValue()) < std::get<double>(rhs->getValue());
+  if (value == "<") return std::get<double>(lhs->getValue(variables)) < std::get<double>(rhs->getValue(variables));
 
-  else if (value == ">") return std::get<double>(lhs->getValue()) > std::get<double>(rhs->getValue());
+  else if (value == ">") return std::get<double>(lhs->getValue(variables)) > std::get<double>(rhs->getValue(variables));
 
-  else if (value == "<=") return std::get<double>(lhs->getValue()) <= std::get<double>(rhs->getValue());
+  else if (value == "<=") return std::get<double>(lhs->getValue(variables)) <= std::get<double>(rhs->getValue(variables));
 
-  else if (value == ">=") return std::get<double>(lhs->getValue()) >= std::get<double>(rhs->getValue());
+  else if (value == ">=") return std::get<double>(lhs->getValue(variables)) >= std::get<double>(rhs->getValue(variables));
 
   else {
     std::cout << "This error should never happen. 1" << std::endl;
@@ -505,18 +475,18 @@ Value CompareNode::getValue() {
   }
 }
 
-Value LogicNode::getValue() {
-  if (lhs->getReturnType() != BOOL || rhs->getReturnType() != BOOL) {
+Value LogicNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
+  if (lhs->getReturnType(variables) != BOOL || rhs->getReturnType(variables) != BOOL) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
   }
 
-  if (value == "&") return std::get<bool>(lhs->getValue()) && std::get<bool>(rhs->getValue());
+  if (value == "&") return std::get<bool>(lhs->getValue(variables)) && std::get<bool>(rhs->getValue(variables));
 
-  else if (value == "|") return std::get<bool>(lhs->getValue()) || std::get<bool>(rhs->getValue());
+  else if (value == "|") return std::get<bool>(lhs->getValue(variables)) || std::get<bool>(rhs->getValue(variables));
 
-  else if (value == "^") return ((std::get<bool>(lhs->getValue()) || std::get<bool>(rhs->getValue())) && !(std::get<bool>(rhs->getValue()) && std::get<bool>(rhs->getValue())));
+  else if (value == "^") return ((std::get<bool>(lhs->getValue(variables)) || std::get<bool>(rhs->getValue(variables))) && !(std::get<bool>(rhs->getValue(variables)) && std::get<bool>(rhs->getValue(variables))));
 
   else {
     std::cout << "This error should never happen. 2" << std::endl;
