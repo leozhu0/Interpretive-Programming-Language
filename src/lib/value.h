@@ -1,3 +1,5 @@
+//#ifndef VALUE_H
+//#define VALUE_H
 #pragma once
 #include <variant>
 #include <memory>
@@ -46,3 +48,4 @@ class Function {
 
 //        Value getValue(std::vector<Value> argVals, std::map<std::string, Value> variables);
 };*/
+//#endif
