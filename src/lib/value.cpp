@@ -47,11 +47,10 @@ std::ostream& operator << (std::ostream& os, const Value& value) {
       const std::vector<Value>& tempValues = *tempValue;
       os << "[";
 
-      for (Value value : tempValues) {
-        if (value != tempValues.back()) os << value << ", ";
-        else os << value;
-      }
-
+	for (size_t i = 0; i < tempValues.size(); ++i) {
+  		if (i != tempValues.size() - 1) os << value << ", ";
+  		else os << value;
+	}
       os << "]";
     }
 
