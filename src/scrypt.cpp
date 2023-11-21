@@ -1,4 +1,4 @@
-#include "lib/run.h"
+#include "lib/run.cpp"
 //#include "lib/lexer.cpp" // cpp
 //#include "lib/infix.cpp" //cpp
 //#include "lib/value.cpp"
