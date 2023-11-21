@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef LEXER_H
+#define LEXER_H
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -15,4 +17,4 @@ class Lexer {
 
 
 
-
+#endif
