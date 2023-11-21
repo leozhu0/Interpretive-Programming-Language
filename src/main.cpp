@@ -1,4 +1,4 @@
-#include "lib/scrypt.h"
+#include "lib/scrypt.cpp"
 //#include "lib/lexer.cpp" // cpp
 //#include "lib/infix.cpp" //cpp
 //#include "lib/value.cpp"
@@ -22,8 +22,9 @@ int main() {
     }
 
     try {
+	Scrypt scrypt = Scrypt();
         std::map<std::string, Value> variables;
-        parseBlock(tokens, variables);
+        scrypt.parseBlock(tokens, variables);
     }
     catch (const std::exception& e) {
       std::cout << e.what() << std::endl;

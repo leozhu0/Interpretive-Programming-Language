@@ -3,17 +3,18 @@
 #include <memory>
 #include <ostream>
 #include <vector>
-#include "token.h"
+//#include "token.h"
 #include <sstream>
-//#include "scrypt.h"
+#include <map>
+//#include "scrypt.cpp"
 
 struct Value;
-extern Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variables);
+//Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variables);
 class Function {
     public:
         std::vector<Token> arguments;
         std::vector<Token> block;
-
+//	Scrypt scrypt = Scrypt();
         Value getValue(std::vector<Value> argVals, std::map<std::string, Value> variables);
 };
 
@@ -35,9 +36,9 @@ std::ostream& operator << (std::ostream& stream, const Value& value);
 
 bool operator==(const Value& lhs, const Value& rhs);
 bool operator!=(const Value& lhs, const Value& rhs);
+/*
 
-
-/*extern Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variables);
+extern Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variables);
 class Function {
     public:
         std::vector<Token> arguments;
