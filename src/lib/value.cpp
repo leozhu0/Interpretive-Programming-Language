@@ -1,4 +1,4 @@
-#pragma once
+//#pragma once
 #include "value.h"
 #include <iostream>
 #include <memory>

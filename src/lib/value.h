@@ -3,7 +3,7 @@
 #include <memory>
 #include <ostream>
 #include <vector>
-//#include "token.h"
+#include "token.h"
 #include <sstream>
 #include <map>
 //#include "scrypt.cpp"
