@@ -7,7 +7,7 @@
 #include <sstream>
 #include <map>
 #include <vector>
-//#include "scrypt.cpp"
+#include "run.h"
 
 Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
         //run the code using the arguments

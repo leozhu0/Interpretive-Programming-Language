@@ -8,7 +8,7 @@
 #include "token.h"
 #include <sstream>
 #include <map>
-#include "run.h"
+//#include "run.h"
 //#include "scrypt.cpp"
 
 struct Value;
@@ -30,9 +30,7 @@ struct Value : public std::variant<double,
     using variant::variant;
 
     
-if (std::holds_alternative<Func>(value)) {
-  return os;
-}};
+};
 
 using Array = std::shared_ptr<std::vector<Value>>;
 using Func = std::shared_ptr<Function>;
