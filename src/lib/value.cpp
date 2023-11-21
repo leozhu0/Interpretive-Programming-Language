@@ -46,7 +46,7 @@ std::ostream& operator << (std::ostream& os, const Value& value) {
 
   else if (std::holds_alternative<bool>(value)) {
     if (std::get<bool>(value)) os << "true";
-    else os "false";
+    else os << "false";
 
     return os;
   }
