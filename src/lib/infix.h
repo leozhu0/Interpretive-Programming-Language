@@ -9,6 +9,7 @@ struct Node {
   Value value;
   TokenType returnType;
   bool isVar = false;
+  Node* lookUp = nullptr;
 
   Node(TokenType type = NUMBER) : returnType(type) {}
   virtual ~Node() {};
@@ -40,7 +41,6 @@ struct BoolNode : public Node {
 
 struct ArrayNode : public Node {
   std::vector<Node*> value;
-  Node* lookUp = nullptr;
 
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
   std::string toString();

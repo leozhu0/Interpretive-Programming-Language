@@ -169,7 +169,7 @@ int InfixParser::precedence(std::string op) {
 // deals with errors
 Token& InfixParser::peak(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
-    if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT || tokens[i].type == COMPARE || tokens[i].type == LOGIC || tokens[i].type == COMMA || tokens[i].token == "]") {
+    if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT || tokens[i].type == COMPARE || tokens[i].type == LOGIC || tokens[i].type == COMMA) {
 
       if ((tokens[i - 1].token == "(") /*|| (tokens[i].type == ASSIGNMENT && tokens[i - 1].type != VARIABLE)*/) {
         std::ostringstream error;
@@ -177,7 +177,7 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
 	throw std::runtime_error(error.str());
       }
 
-      else if (tokens[i + 1].type == OPERATOR || tokens[i + 1].type == ASSIGNMENT || tokens[i + 1].type == COMPARE || tokens[i + 1].type == LOGIC || tokens[i + 1].token == ")" || (tokens[i + 1].type == END && tokens[i].token != "]")) {
+      else if (tokens[i + 1].type == OPERATOR || tokens[i + 1].type == ASSIGNMENT || tokens[i + 1].type == COMPARE || tokens[i + 1].type == LOGIC || tokens[i + 1].token == ")" || tokens[i + 1].type == END) {
         std::ostringstream error;
         error << "BBB Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
 	throw std::runtime_error(error.str());
@@ -203,6 +203,11 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
       return tokens[i];
     }
 
+    else if (tokens[i].token == "]") {
+      // assuming valid pairing
+
+      return tokens[i];
+    }
   }
 
   // returns END token
@@ -258,6 +263,13 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 
       VarNode* tempNode = new VarNode;
       tempNode->value = tokens[i].token;
+
+      // Accounting for array lookup
+      if (tokens[index + 1].token == "[") {
+        ++index;
+        tempNode->lookUp = createTree(nextNode(tokens), 0, tokens);
+        ++index;
+      }
 
       // do not update stored variables when there is an error
       if (tokens[i + 1].token != "=") {
@@ -517,6 +529,8 @@ TokenType AssignNode::getReturnType([[maybe_unused]] std::map<std::string, Value
 }
 
 Value CompareNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
+
+/*
   if ((value == "==" || value == "!=") && lhs->getReturnType(variables) != rhs->getReturnType(variables)) return false;
 
   if (std::holds_alternative<double>(lhs->getValue(variables))) {
@@ -528,8 +542,20 @@ Value CompareNode::getValue([[maybe_unused]] std::map<std::string, Value>& varia
     if (value == "==") return std::get<bool>(lhs->getValue(variables)) == std::get<bool>(rhs->getValue(variables));
     else if (value == "!=") return std::get<bool>(lhs->getValue(variables)) != std::get<bool>(rhs->getValue(variables));
   }
+*/
+  if (value == "==") return lhs->getValue(variables) == rhs->getValue(variables);
 
+  if (value == "!=") return lhs->getValue(variables) != rhs->getValue(variables);
+
+/*
   if (lhs->getReturnType(variables) != rhs->getReturnType(variables) || lhs->getReturnType(variables) == BOOL) {
+    std::ostringstream error;
+    error << "Runtime error: invalid operand type.";
+    throw std::runtime_error(error.str());
+  }
+*/
+
+  if (!(std::holds_alternative<double>(lhs->getValue(variables)) && std::holds_alternative<double>(rhs->getValue(variables)))) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
     throw std::runtime_error(error.str());
