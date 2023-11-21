@@ -8,6 +8,7 @@
 #include "token.h"
 #include <sstream>
 #include <map>
+#include "run.h"
 //#include "scrypt.cpp"
 
 struct Value;
