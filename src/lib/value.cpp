@@ -48,8 +48,8 @@ std::ostream& operator << (std::ostream& os, const Value& value) {
       os << "[";
 
 	for (size_t i = 0; i < tempValues.size(); ++i) {
-  		if (i != tempValues.size() - 1) os << value << ", ";
-  		else os << value;
+  		if (i != tempValues.size() - 1) os << tempValues.at(i) << ", ";
+  		else os << tempValues.at(i);
 	}
       os << "]";
     }
