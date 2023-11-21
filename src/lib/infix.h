@@ -25,6 +25,7 @@ struct NumNode : public Node {
 
 struct VarNode : public Node {
   std::string value;
+  std::vector<Node*> arguments;
 
   VarNode() {isVar = true;}
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
@@ -81,7 +82,7 @@ class InfixParser {
   int index = -1;
   size_t parenNum = 0;
   bool updateVariables = true;
-  std::vector<std::pair<std::string, Node*>> variableBuffer;
+  std::vector<std::pair<Node*, Node*>> variableBuffer;
   std::map<std::string, Value>& varCache;
 
   Node* createTree(Node* leftHandSide, int minPrecedence, std::vector<Token> tokens);
