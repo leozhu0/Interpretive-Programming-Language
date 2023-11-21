@@ -1,3 +1,6 @@
+#ifndef INFIX_H
+#define INFIX_H
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -104,3 +107,5 @@ public:
   std::string toString();
   Value calculate();
 };
+
+#endif

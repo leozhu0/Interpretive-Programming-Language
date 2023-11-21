@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef TOKEN_H
+#define TOKEN_H
 #include <string>
 
 enum TokenType {
@@ -32,3 +34,4 @@ class Token {
     TokenType type;
   
 };
+#endif

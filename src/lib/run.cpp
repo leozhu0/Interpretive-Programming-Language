@@ -1,5 +1,5 @@
 //#pragma once
-#include "scrypt.h"
+#include "run.h"
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -8,15 +8,15 @@
 #include <sstream>
 #include <stdexcept>
 
-Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
+/*Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
         //run the code using the arguments
-      for(int i = 0; i < argVals.size(); i++){
+      for(int i = 0; i < (int)argVals.size(); i++){
               variables[arguments[i].token] = argVals[i];
       }
       Scrypt scrypt = Scrypt();
       return scrypt.parseBlock(block, variables);
 //        return Value{5.0};//for testing
-}
+}*/
 
 void Scrypt::printV(std::vector<Token> tokens){
     std::cout << "_______" << std::endl;
@@ -68,7 +68,7 @@ void Scrypt::evaluateExpressionChunk(std::vector<Token> tokens, std::map<std::st
     }
     std::vector<std::vector<Token>> multilineTokens;
     
-    int index = 0; 
+    //int index = 0; 
 
 
     for(int i = 0; i < (int)tokens.size(); i++){
