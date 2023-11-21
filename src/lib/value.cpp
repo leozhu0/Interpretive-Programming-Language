@@ -51,17 +51,23 @@ std::ostream& operator << (std::ostream& os, const Value& value) {
   return os;
 }
 
-bool operator==(const Value& lhs, const Value& rhs) {
+/*bool operator==(const Value& lhs, const Value& rhs) {
 	//std::cout << "TYPE" << rhs.index()<<std::endl;
 	//std::cout << "TYPE:" << lhs.index()<<std::endl;
     //if (lhs.index() != rhs.index()) {
         // Different types, return false
       //  return false;
+    //
+    //
+    //
     //}
+    
+	if(std::holds_alternative<Function>(lhs) || std::holds_alternative<Function>(rhs)){
+		return false;
+	}
     if (  !((std::holds_alternative<double>(lhs) && std::holds_alternative<double>(rhs)) ||
         (std::holds_alternative<bool>(lhs) && std::holds_alternative<bool>(rhs)) ||
-        (std::holds_alternative<Array>(lhs) && std::holds_alternative<Array>(rhs)) /*||
-        (std::holds_alternative<Func>(lhs) && std::holds_alternative<Func>(rhs)) */  ) ) {
+        (std::holds_alternative<Array>(lhs) && std::holds_alternative<Array>(rhs))   ) ) {
 		return false;
 	}
 
@@ -69,9 +75,9 @@ bool operator==(const Value& lhs, const Value& rhs) {
     return std::visit([](const auto& a, const auto& b) -> bool {
 
 
-/* 	if constexpr (std::is_same_v<std::decay_t<decltype(a)>, Func> || std::is_same_v<std::decay_t<decltype(b)>, Func>){
-         return false;
-         }*/
+// 	if constexpr (std::is_same_v<std::decay_t<decltype(a)>, Func> || std::is_same_v<std::decay_t<decltype(b)>, Func>){
+  //       return false;
+    //     }
 
 
 	if constexpr (std::is_same_v<std::decay_t<decltype(a)>, Array> && std::is_same_v<std::decay_t<decltype(b)>, Array>) {
@@ -97,7 +103,22 @@ bool operator==(const Value& lhs, const Value& rhs) {
     
     
 }
+*/
+using ValueBase = std::variant<double,
+                                    bool,
+                                   std::shared_ptr<Function>,
+                                    std::shared_ptr<std::vector<Value>>
+                                    >;
 
+bool operator == (const Value& lhs, const Value& rhs){
+	const Array *a = std::get_if<Array>(&lhs);
+	const Array *b = std::get_if<Array>(&rhs);
+	if(a != nullptr && b != nullptr){
+		return (**a == **b);
+	}
+
+	return ((const ValueBase) lhs == (const ValueBase) rhs);
+}
 
 bool operator!=(const Value& lhs, const Value& rhs) {
 	return !(lhs == rhs);
