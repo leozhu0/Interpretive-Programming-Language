@@ -1,5 +1,5 @@
 //#pragma once
-#include "value.h"
+//#include "value.h"
 #include <iostream>
 #include <memory>
 #include <string>
@@ -7,7 +7,7 @@
 #include <sstream>
 #include <map>
 #include <vector>
-//#include "run.h"
+#include "run.h"
 
 Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
         //run the code using the arguments
