@@ -32,6 +32,10 @@
     return stream;
 }*/
 std::ostream& operator << (std::ostream& os, const Value& value) {
+  if (std::holds_alternative<Func>(value)) {
+    return os;
+  }
+
   std::visit([&os](const auto& tempValue) -> void {
     if constexpr (std::is_same_v<std::decay_t<decltype(tempValue)>, Array>) {
       const std::vector<Value>& tempValues = *tempValue;
