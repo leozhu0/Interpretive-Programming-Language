@@ -1,11 +1,14 @@
-#pragma once
+#ifndef VALUE_H
+#define VALUE_H
+//#pragma once
 #include <variant>
 #include <memory>
 #include <ostream>
 #include <vector>
-//#include "token.h"
+#include "token.h"
 #include <sstream>
 #include <map>
+//#include "run.h"
 //#include "scrypt.cpp"
 
 struct Value;
@@ -30,7 +33,7 @@ struct Value : public std::variant<double,
 };
 
 using Array = std::shared_ptr<std::vector<Value>>;
-//using Func = std::shared_ptr<Function>;
+using Func = std::shared_ptr<Function>;
 
 std::ostream& operator << (std::ostream& stream, const Value& value);
 
@@ -46,3 +49,4 @@ class Function {
 
 //        Value getValue(std::vector<Value> argVals, std::map<std::string, Value> variables);
 };*/
+#endif

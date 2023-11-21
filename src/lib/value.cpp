@@ -1,5 +1,5 @@
-#pragma once
-#include "value.h"
+//#pragma once
+//#include "value.h"
 #include <iostream>
 #include <memory>
 #include <string>
@@ -7,9 +7,17 @@
 #include <sstream>
 #include <map>
 #include <vector>
-//#include "scrypt.cpp"
+#include "run.h"
 
-
+Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
+        //run the code using the arguments
+      for(int i = 0; i < (int)argVals.size(); i++){
+              variables[arguments[i].token] = argVals[i];
+      }
+      Scrypt scrypt = Scrypt();
+      return scrypt.parseBlock(block, variables);
+//        return Value{5.0};//for testing
+}
 
 
 //Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
@@ -32,16 +40,17 @@
     return stream;
 }*/
 std::ostream& operator << (std::ostream& os, const Value& value) {
+  
+
   std::visit([&os](const auto& tempValue) -> void {
     if constexpr (std::is_same_v<std::decay_t<decltype(tempValue)>, Array>) {
       const std::vector<Value>& tempValues = *tempValue;
       os << "[";
 
-      for (Value value : tempValues) {
-        if (value != tempValues.back()) os << value << ", ";
-        else os << value;
-      }
-
+	for (size_t i = 0; i < tempValues.size(); ++i) {
+  		if (i != tempValues.size() - 1) os << tempValues.at(i) << ", ";
+  		else os << tempValues.at(i);
+	}
       os << "]";
     }
 
