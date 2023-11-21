@@ -8,7 +8,7 @@
 #include <sstream>
 #include <stdexcept>
 
-Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
+/*Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
         //run the code using the arguments
       for(int i = 0; i < (int)argVals.size(); i++){
               variables[arguments[i].token] = argVals[i];
@@ -16,7 +16,7 @@ Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value
       Scrypt scrypt = Scrypt();
       return scrypt.parseBlock(block, variables);
 //        return Value{5.0};//for testing
-}
+}*/
 
 void Scrypt::printV(std::vector<Token> tokens){
     std::cout << "_______" << std::endl;

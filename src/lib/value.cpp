@@ -9,7 +9,15 @@
 #include <vector>
 //#include "scrypt.cpp"
 
-
+Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
+        //run the code using the arguments
+      for(int i = 0; i < (int)argVals.size(); i++){
+              variables[arguments[i].token] = argVals[i];
+      }
+      Scrypt scrypt = Scrypt();
+      return scrypt.parseBlock(block, variables);
+//        return Value{5.0};//for testing
+}
 
 
 //Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
