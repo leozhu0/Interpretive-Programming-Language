@@ -1,3 +1,4 @@
+#pragma once
 #include "value.h"
 #include <iostream>
 #include <memory>
@@ -6,21 +7,21 @@
 #include <sstream>
 #include <map>
 #include <vector>
-//#include "scrypt.h"
+//#include "scrypt.cpp"
 
 
-/*
 
-Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
+
+//Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
 	//run the code using the arguments
-	for(int i = 0; i < argVals.size(); i++){
-		variables[arguments[i].token] = argVals[i]; 
-	}
-//
-	return parseBlock(this->block, variables);
-	//return Value{5.0};//for testing
-}
-*/
+//	for(int i = 0; i < argVals.size(); i++){
+//		variables[arguments[i].token] = argVals[i]; 
+//	}
+//	Scrypt scrypt = Scrypt();
+//	return scrypt.parseBlock(block, variables);
+//	return Value{5.0};//for testing
+//}
+
 
 /*std::ostream& operator << (std::ostream& stream, const Value& value) {
     stream << std::visit([](const auto& arg) -> std::string{
