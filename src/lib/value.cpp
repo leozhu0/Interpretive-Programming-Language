@@ -13,7 +13,7 @@
 
 
 //Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
-	//run the code using the arguments
+//	//run the code using the arguments
 //	for(int i = 0; i < argVals.size(); i++){
 //		variables[arguments[i].token] = argVals[i]; 
 //	}

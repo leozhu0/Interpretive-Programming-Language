@@ -1,8 +1,9 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include "lib/infix.cpp"
-#include "lib/lexer.cpp"
+#include "lib/infix.h"
+#include "lib/lexer.h"
+#include "lib/value.h"
 
 void format(std::vector<Token>& tokens, std::string indent) {
   size_t ifCounter = 0;
@@ -14,10 +15,15 @@ void format(std::vector<Token>& tokens, std::string indent) {
     if (tokens[i].type == END) break;
     std::cout << indent;
 
-    // expression and print case
-    if (tokens[i].type != COMMAND || tokens[i].token == "print") {
+    // expression, print, and return case
+    if ((tokens[i].type != COMMAND && tokens[i].type != FUNCTION) || tokens[i].token == "print") {
       if (tokens[i].token == "print") {
         std::cout << "print ";
+	++i;
+      }
+
+      else if (tokens[i].token == "return") {
+        std::cout << "return ";
 	++i;
       }
 
@@ -38,7 +44,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
       std::cout << parser.toString() << ";" << std::endl;
     }
 
-    // while and if case
+    // while, if, and def case
     else if (tokens[i].token != "else" && tokens[i].token != "else if") {
       if (tokens[i].token == "if") {
         if (ifCounter != 0) {
@@ -49,7 +55,9 @@ void format(std::vector<Token>& tokens, std::string indent) {
         ++ifCounter;
       }	
 
-      else std::cout << "while ";
+      else if (tokens[i].token == "while") std::cout << "while ";
+
+      else std::cout << "def ";
 
       ++i;
       std::vector<Token> condition;

@@ -9,6 +9,7 @@ struct Node {
   Value value;
   TokenType returnType;
   bool isVar = false;
+  Node* lookUp = nullptr;
 
   Node(TokenType type = NUMBER) : returnType(type) {}
   virtual ~Node() {};
@@ -24,6 +25,8 @@ struct NumNode : public Node {
 
 struct VarNode : public Node {
   std::string value;
+  std::vector<Node*> arguments;
+  bool noArgs = false;
 
   VarNode() {isVar = true;}
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
@@ -40,7 +43,6 @@ struct BoolNode : public Node {
 
 struct ArrayNode : public Node {
   std::vector<Node*> value;
-  Node* lookUp = nullptr;
 
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
   std::string toString();
@@ -81,7 +83,7 @@ class InfixParser {
   int index = -1;
   size_t parenNum = 0;
   bool updateVariables = true;
-  std::vector<std::pair<std::string, Node*>> variableBuffer;
+  std::vector<std::pair<Node*, Node*>> variableBuffer;
   std::map<std::string, Value>& varCache;
 
   Node* createTree(Node* leftHandSide, int minPrecedence, std::vector<Token> tokens);
