@@ -265,7 +265,7 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
 // deals with errors
 Node* InfixParser::nextNode(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
-    if (tokens[i].type == NUMBER || tokens[i].type == BOOL) {
+    if (tokens[i].type == NUMBER || tokens[i].type == BOOL /*|| tokens[i].type == NILL*/) {
 
       if (tokens[i + 1].type == NUMBER || tokens[i + 1].type == VARIABLE || tokens[i + 1].type == BOOL || tokens[i + 1].token == "(") {
         std::ostringstream error;
@@ -284,7 +284,8 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       Node* tempNode;
 
       if (tokens[i].type == NUMBER) tempNode = new NumNode;
-      else tempNode = new BoolNode;
+      else if (tokens[i].type == BOOL) tempNode = new BoolNode;
+      //else tempNode = new NullNode;
 
       tempNode->value = stringToValue(tokens[i]);
 
@@ -407,6 +408,8 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
         ++index;
 	tempNode->lookUp = createTree(nextNode(tokens), 0, tokens);
 	++index;
+
+	if (tokens[index + 1].token == "=") tempNode->isVar = true;
       }
 
       return tempNode;
@@ -431,10 +434,17 @@ Value InfixParser::stringToValue(Token& token) {
   if (token.type == BOOL) {
     if (token.token == "true") result = true;
     else result = false;
-
-  } else if (token.type == NUMBER) {
+  }
+  
+  else if (token.type == NUMBER) {
     result = std::stod(token.token);
   }
+
+  /*
+  else if (token.type == NILL) {
+    result = nullptr;
+  }
+  */
 
   return result;
 }
@@ -620,6 +630,18 @@ std::string ArrayNode::toString() {
 
   return result.str();
 }
+
+/*
+Value NullNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables)
+  if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
+
+  return value;
+}
+
+std::string NullNode::toString() {
+  return "null";
+}
+*/
 
 OpNode::~OpNode() {
   delete lhs;
