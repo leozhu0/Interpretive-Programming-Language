@@ -26,6 +26,7 @@ struct NumNode : public Node {
 struct VarNode : public Node {
   std::string value;
   std::vector<Node*> arguments;
+  bool noArgs = false;
 
   VarNode() {isVar = true;}
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);

@@ -5,11 +5,18 @@
 #include <map>
 #include <cmath>
 #include <iomanip>
+using Func = std::shared_ptr<Function>;
 
 //std::map<std::string, Value> variables;
 //std::map<std::string, bool> isBool;
 
 InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>& variables) : varCache(variables) {
+  //std::cout << "__begin__" << std::endl;
+  //for (Token token : tokens) {
+  //  std::cout << token.token << std::endl;
+  //}
+  //std::cout << "__end__" << std::endl;
+
   if (tokens.size() == 1) {
     std::ostringstream error;
     error << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
@@ -40,6 +47,9 @@ InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>
 
       Node* key = pair.first;
       Node* data = pair.second;
+
+      VarNode* varKey = (VarNode*) key;
+      if (varKey->arguments.size() != 0) continue;
 
       std::string keyStr = pair.first->toString();
       if (keyStr.back() == ']') {
@@ -278,12 +288,18 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 
       tempNode->value = stringToValue(tokens[i]);
 
+      if (tokens[i + 1].token == "[") {
+        ++index;
+        tempNode->lookUp = createTree(nextNode(tokens), 0, tokens);
+        ++index;
+      }
+
       return tempNode;
     }
 
     else if (tokens[i].type == VARIABLE) {
       
-      if (tokens[i + 1].type == NUMBER || tokens[i + 1].type == VARIABLE || tokens[i + 1].type == BOOL || tokens[i + 1].token == "(") {
+      if (tokens[i + 1].type == NUMBER || tokens[i + 1].type == VARIABLE || tokens[i + 1].type == BOOL /*|| tokens[i + 1].token == "("*/) {
         std::ostringstream error;
         error << "Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
 	throw std::runtime_error(error.str());
@@ -306,13 +322,14 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
         tempNode->lookUp = createTree(nextNode(tokens), 0, tokens);
         ++index;
       }
-/*
-      // Account for function arguments
+
+      // Accounting for function arguments
       else if (tokens[index + 1].token == "(") {
         ++index;
+	tempNode->isVar = false;
 
-        if (tokens[index + 2].token == ")") {
-          //TODO argument = NULL
+        if (tokens[index + 1].token == ")") {
+          tempNode->noArgs = true;
 	  ++index;
 	}
         
@@ -337,7 +354,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 	}
 
       }
-*/
+
       // do not update stored variables when there is an error
       if (tokens[i + 1].token != "=") {
         try {
@@ -436,6 +453,8 @@ TokenType Node::getReturnType([[maybe_unused]] std::map<std::string, Value>& var
 }
 
 Value NumNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
+  if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
+
   return value;
 }
 
@@ -467,16 +486,19 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
     throw std::runtime_error(error.str());
   }
 
-  returnType = (std::holds_alternative<bool>(variables[value]) ? BOOL : NUMBER);
+  //returnType = (std::holds_alternative<bool>(variables[value]) ? BOOL : NUMBER);
 
   Value varData = variables[value];
 
   if (std::holds_alternative<double>(varData) || std::holds_alternative<bool>(varData)) {
-    if (lookUp == nullptr) return varData;
-    else throw std::runtime_error("Runtime error: not an array.");
+    if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
+    else if (arguments.size() != 0) throw std::runtime_error("Runtime error: not a function.");
+    else return varData;
   }
 
   else if (std::holds_alternative<Array>(varData)) {
+    if (arguments.size() != 0) throw std::runtime_error("Runtime error: not a function.");
+
     if (lookUp == nullptr) return varData;
    
     else {
@@ -493,7 +515,26 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
     }
   }
 
-  return variables[value];
+  else if (std::holds_alternative<Func>(varData)) {
+    if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
+
+    if (noArgs) return std::get<Func>(varData)->getValue({}, variables);
+
+    else if (arguments.size() == 0) return varData;
+
+    else {
+      std::vector<Value> tempArgs;
+
+      for (Node* node : arguments) {
+        tempArgs.push_back(node->getValue(variables));
+      }
+
+      return std::get<Func>(varData)->getValue(tempArgs, variables);
+    }
+  }
+
+  std::cout << "This error should never happen. Did you forget varaible being able to be null?" << std::endl;
+  exit(2);
 }
 
 std::string VarNode::toString() {
@@ -502,6 +543,20 @@ std::string VarNode::toString() {
   result << value;
 
   if (lookUp != nullptr) result << "[" << lookUp->toString() << "]";
+  
+  else if (noArgs) result << "()";
+
+  else if (arguments.size() != 0) {
+    result << "(";
+
+    for (Node* node : arguments) {
+      result << node->toString();
+
+      if (node!= arguments.back()) result << ", ";
+    }
+
+    result << ")";
+  }
 
   return result.str();
 }
@@ -512,6 +567,8 @@ TokenType VarNode::getReturnType([[maybe_unused]] std::map<std::string, Value>& 
 }
 
 Value BoolNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
+  if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
+
   return value;
 }
 
@@ -616,7 +673,7 @@ Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variab
   }
 
   returnType = rhs->getReturnType(variables);
-  return lhs->getValue(variables);
+  return rhs->getValue(variables);
 }
 
 TokenType AssignNode::getReturnType([[maybe_unused]] std::map<std::string, Value>& variables) {
