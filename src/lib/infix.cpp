@@ -394,12 +394,29 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 
       ArrayNode* tempNode = new ArrayNode;
 
+      size_t bracketNum = 1;
+      size_t j = index + 1;
+
+      while (true) {
+        if (tokens[j].token == "[") ++bracketNum;
+	else if (tokens[j].token == "]") --bracketNum;
+
+	if (bracketNum == 0) break;
+	else if (tokens[j].type == COMMA) tempNode->value.push_back(createTree(nextNode(tokens), 0, tokens));
+
+	++j;
+      }
+
+      tempNode->value.push_back(createTree(nextNode(tokens), 0, tokens));
+
+      /*
       while (tokens[index + 1].token != "]") {
         tempNode->value.push_back(createTree(nextNode(tokens), 0, tokens));
         
 	if (tokens[index + 1].token == "]") break;
 	++index;
       }
+      */
 
       ++index;
 

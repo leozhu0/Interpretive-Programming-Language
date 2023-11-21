@@ -90,6 +90,7 @@ class InfixParser {
   Node* root;
   int index = -1;
   size_t parenNum = 0;
+  //size_t bracketNum = 0;
   bool updateVariables = true;
   std::vector<std::pair<Node*, Node*>> variableBuffer;
   std::map<std::string, Value>& varCache;
