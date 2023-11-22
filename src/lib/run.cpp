@@ -58,6 +58,7 @@ Value Scrypt::evaluateExpression(std::vector<Token> tokens, std::map<std::string
     }
 
     InfixParser parser = InfixParser(tempRow, variables);
+    //printV(tempRow);
     return parser.calculate();
 }
 
@@ -111,7 +112,7 @@ bool Scrypt::isKeyword(Token token){
     return false;
 }
 
-Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variables) {
+Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value>& variables) {
     //The last token must always have an end (to know when to terminate later)
     if(tokens.back().type != END){
         tokens.push_back(Token{tokens.back().line, tokens.back().column+1,"END", END});
@@ -180,7 +181,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
 
             int blockEnd = i;
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
-            while (evaluateExpression(conditionExpr, variables) != Value{0.0} || evaluateExpression(conditionExpr, variables) == Value{true}) {
+            while (evaluateExpression(conditionExpr, variables) == Value{true}) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
                 parseBlock(block, variables);
             }
@@ -202,7 +203,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
                 else if (tokens[i].token == "}") blockParen--;
             }
             
-            if (evaluateExpression(conditionExpr, variables) != Value{0.0} || evaluateExpression(conditionExpr, variables) == Value{true}) {
+            if (evaluateExpression(conditionExpr, variables) == Value{true}) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
                 parseBlock(block, variables);
                 prevCond = true;
@@ -275,7 +276,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
                 else if (tokens[i].token == "}") blockParen--;
             }
 
-            if(prevCond == false && (evaluateExpression(conditionExpr, variables) != 0.0 || evaluateExpression(conditionExpr, variables) == true)){
+            if(prevCond == false && (evaluateExpression(conditionExpr, variables) == true)){
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
                 parseBlock(block, variables);
                 prevCond = true;
@@ -284,10 +285,17 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
         }
         
         else if (tokens[i].token == "else") {
-            i++; 
-            int blockStart = i + 1;
-            int blockParen = 1;
 
+	    i++; 
+            int blockStart = i + 1;
+
+
+	    if(tokens[blockStart].token == "}"){
+		i++;
+            } else {
+
+            int blockParen = 1;
+          
             while (blockParen > 0) {
                 i++;
                 if (tokens[i].token == "{") blockParen++;
@@ -298,6 +306,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
                 parseBlock(block, variables);
             }
+	  }
             prevCond = true;
         } 
         

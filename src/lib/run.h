@@ -20,6 +20,6 @@ class Scrypt {
 		void evaluateExpressionChunk(std::vector<Token> tokens, std::map<std::string, Value>& variables);
 		bool isKeyword(Token token);
 	public:
-		Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variables);
+		Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value>& variables);
 };
 #endif
