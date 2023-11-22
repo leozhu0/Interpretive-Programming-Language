@@ -498,7 +498,10 @@ Value NumNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
 
 std::string NumNode::toString() {
   std::ostringstream result;
+
   result << std::to_string(std::get<double>(value));
+
+  if (lookUp != nullptr) result << "[" << lookUp->toString() << "]";
 
   /*
   bool hasDecimal = false;
@@ -518,7 +521,7 @@ std::string NumNode::toString() {
   if (result.back() == '.') result.pop_back();
   */
 
-  return result;
+  return result.str();
 }
 
 VarNode::~VarNode() {
@@ -623,8 +626,14 @@ Value BoolNode::getValue([[maybe_unused]] std::map<std::string, Value>& variable
 }
 
 std::string BoolNode::toString() {
-  if (std::get<bool>(value)) return "true";
-  else return "false";
+  std::ostringstream result;
+
+  if (std::get<bool>(value)) result << "true";
+  else result << "false";
+
+  if (lookUp != nullptr) result << "[" << lookUp->toString() << "]";
+
+  return result.str();
 }
 
 ArrayNode::~ArrayNode() {
