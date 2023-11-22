@@ -214,6 +214,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
         } 
 
         else if (tokens[i].token == "def") {
+		//std::cout << "START";
             //int inputStart = i + 1;
 		i++;
 		std::string funcName = "";
@@ -248,8 +249,9 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
             
             
             std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
-            
-	   // printV(block);
+           
+	  // std::cout << funcName<<std::endl; 
+	    //printV(block);
 	    //std::cout << "__"<<std::endl;
 	    //printV(arguments);
             variables[funcName] = std::make_shared<Function>(Function{arguments, block});
@@ -322,7 +324,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
         else {
             int blockStart = i;
             
-            while(i < (int)tokens.size() && tokens[i].type != COMMAND && tokens[i].token != "}"){
+            while(i < (int)tokens.size() && tokens[i].type != COMMAND && tokens[i].type != FUNCTION && tokens[i].token != "}"){
                 i++;
             }
             int blockEnd = i;
