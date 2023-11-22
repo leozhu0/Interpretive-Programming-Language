@@ -695,8 +695,7 @@ std::string ArrayNode::toString() {
   return result.str();
 }
 
-
-Value NullNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables)
+Value NullNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
 
   return value;
@@ -705,7 +704,6 @@ Value NullNode::getValue([[maybe_unused]] std::map<std::string, Value>& variable
 std::string NullNode::toString() {
   return "null";
 }
-
 
 OpNode::~OpNode() {
   delete lhs;

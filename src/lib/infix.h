@@ -57,7 +57,7 @@ struct ArrayNode : public Node {
 struct NullNode : public Node {
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
   std::string toString();
-}
+};
 
 struct OpNode : public Node {
   std::string value;
