@@ -58,6 +58,7 @@ Value Scrypt::evaluateExpression(std::vector<Token> tokens, std::map<std::string
     }
 
     InfixParser parser = InfixParser(tempRow, variables);
+    //printV(tempRow);
     return parser.calculate();
 }
 
@@ -111,7 +112,7 @@ bool Scrypt::isKeyword(Token token){
     return false;
 }
 
-Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value> variables) {
+Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value>& variables) {
     //The last token must always have an end (to know when to terminate later)
     if(tokens.back().type != END){
         tokens.push_back(Token{tokens.back().line, tokens.back().column+1,"END", END});
