@@ -740,7 +740,8 @@ Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variab
     throw std::runtime_error(error.str());
   }
 
-  returnType = rhs->getReturnType(variables);
+  //returnType = rhs->getReturnType(variables);
+  if (variables.find(lhs->value) == variables.end()) return rhs->getValue;
   return lhs->getValue(variables);
 }
 
