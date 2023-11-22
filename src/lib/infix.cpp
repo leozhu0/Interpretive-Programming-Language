@@ -768,11 +768,17 @@ Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variab
     throw std::runtime_error(error.str());
   }
 
-  //returnType = rhs->getReturnType(variables);
-  //if (variables.find(((VarNode*)lhs)->value) == variables.end()) return rhs->getValue(variables);
-  //else if (lhs->value == rhs->value) return lhs->getValue(variables);
+  else if (!(rhs->isVar)) return lhs->getValue(variables);
+
+  else if (rhs->lookUp != nullptr) {
+    if (!(std::holds_alternative<double>(rhs->lookUp->getValue(variables)))) throw std::runtime_error("Runtime error: index is not a number.");
+    
+    double arrayIndex = std::get<double>(rhs->lookUp->getValue(variables));
+
+    if (std::fmod(arrayIndex, 1) != 0) throw std::runtime_error("Runtime error: index is not an integer.");
+    if (arrayIndex < 0) throw std::runtime_error("Runtime error: index out of bounds.");
+  }
   
-  rhs->getValue(variables);
   return lhs->getValue(variables);
 }
 
