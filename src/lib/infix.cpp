@@ -475,9 +475,9 @@ Value InfixParser::calculate() {
 }
 
 //___________________________________________________________________________________________________
-Node::~Node() {
-  if (lookUp != nullptr) delete lookUp;
-}
+//Node::~Node() {
+//  if (lookUp != nullptr) delete lookUp;
+//}
 
 TokenType Node::getReturnType([[maybe_unused]] std::map<std::string, Value>& variables) {
   return returnType;
