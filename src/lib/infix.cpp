@@ -778,7 +778,8 @@ Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variab
     if (std::fmod(arrayIndex, 1) != 0) throw std::runtime_error("Runtime error: index is not an integer.");
     if (arrayIndex < 0) throw std::runtime_error("Runtime error: index out of bounds.");
   }
-  
+
+  rhs->getValue(variables);  
   return lhs->getValue(variables);
 }
 
