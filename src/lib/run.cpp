@@ -1,4 +1,3 @@
-//#pragma once
 #include "run.h"
 #include <iostream>
 #include <iomanip>
@@ -7,16 +6,6 @@
 #include <map>
 #include <sstream>
 #include <stdexcept>
-
-/*Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
-        //run the code using the arguments
-      for(int i = 0; i < (int)argVals.size(); i++){
-              variables[arguments[i].token] = argVals[i];
-      }
-      Scrypt scrypt = Scrypt();
-      return scrypt.parseBlock(block, variables);
-//        return Value{5.0};//for testing
-}*/
 
 void Scrypt::printV(std::vector<Token> tokens){
     std::cout << "_______" << std::endl;
@@ -29,22 +18,6 @@ void Scrypt::printV(std::vector<Token> tokens){
 }
 
 
-// double condToDouble(std::string raw){
-//     if(raw == "true"){
-//         return 1;
-//     }
-
-//     else if(raw=="false"){
-//         return 0;
-//     }
-
-//     else {
-//        std::cout << "Runtime error: condition is not a bool." << std::endl;
-//        exit(3);
-//     }
-
-//     return stod(raw);
-// }
 
 Value Scrypt::evaluateExpression(std::vector<Token> tokens, std::map<std::string, Value>& variables){
     //Return nothing if tokens vector is empty or just END
@@ -58,7 +31,6 @@ Value Scrypt::evaluateExpression(std::vector<Token> tokens, std::map<std::string
     }
 
     InfixParser parser = InfixParser(tempRow, variables);
-    //printV(tempRow);
     return parser.calculate();
 }
 
@@ -69,7 +41,6 @@ void Scrypt::evaluateExpressionChunk(std::vector<Token> tokens, std::map<std::st
     }
     std::vector<std::vector<Token>> multilineTokens;
     
-    //int index = 0; 
 
 
     for(int i = 0; i < (int)tokens.size(); i++){
@@ -82,16 +53,6 @@ void Scrypt::evaluateExpressionChunk(std::vector<Token> tokens, std::map<std::st
     }
 
 
-    //If END is on a new line, then stop at the line before, otherwise do the whole thing
-    /*for(int i = 0; i < tokens[(int)tokens.size() - 1 - ((tokens[(int)tokens.size()-1].column == 1)?1:0)].line; i++){
-        std::vector<Token> tempRow;
-        
-        while((int)tokens.size() > index && tokens[index].line == i+1){
-            tempRow.push_back(tokens[index]);
-            index++; 
-        }
-        multilineTokens.push_back(tempRow);
-    }*/
 
     for (const auto &line : multilineTokens)
     {
@@ -214,8 +175,6 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
         } 
 
         else if (tokens[i].token == "def") {
-		//std::cout << "START";
-            //int inputStart = i + 1;
 		i++;
 		std::string funcName = "";
 		while(tokens[i].token != "(") {
@@ -235,10 +194,8 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
                 i++;
             }
 		
-	    //while(tokens[i].token != "{"){i++;}//Now we are at the index of the open {
 		i++;
             
-            //std::vector<Token> inputExpr(tokens.begin() + inputStart, tokens.begin() + i);
             int blockStart = i + 1;
             int blockParen = 1;
             while (blockParen > 0) {
@@ -250,10 +207,6 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
             
             std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
            
-	  // std::cout << funcName<<std::endl; 
-	    //printV(block);
-	    //std::cout << "__"<<std::endl;
-	    //printV(arguments);
             variables[funcName] = std::make_shared<Function>(Function{arguments, block});
 
             i++;

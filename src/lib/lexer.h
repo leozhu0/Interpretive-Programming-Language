@@ -1,10 +1,9 @@
-//#pragma once
 #ifndef LEXER_H
 #define LEXER_H
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include "token.h" // cpp
+#include "token.h"
 class Lexer {
     private:
         TokenType tokenType(char token);

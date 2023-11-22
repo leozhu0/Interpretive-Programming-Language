@@ -1,7 +1,4 @@
 #include "lib/run.h"
-//#include "lib/lexer.h" // cpp
-//#include "lib/infix.cpp" //cpp
-//#include "lib/value.cpp"
 #include <iostream>
 #include <iomanip>
 #include <vector>
