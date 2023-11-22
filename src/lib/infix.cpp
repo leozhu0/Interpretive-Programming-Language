@@ -733,7 +733,7 @@ std::string OpNode::toString() {
 
 Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   if (!(lhs->isVar)) {
-    if (lookUp != nullptr) return rhs->getValue(variables);
+    if (lhs->lookUp != nullptr) return rhs->getValue(variables);
     //if (lhs->isValidArrayAssignment) return rhs->getValue(variables);
 
     std::ostringstream error;
