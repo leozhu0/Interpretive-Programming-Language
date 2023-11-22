@@ -26,6 +26,7 @@ Value Function::getValue(std::vector<Value> argVals){
      variablesCopy[arguments[i].token] = argVals[i];
   }
 
+
   Scrypt scrypt = Scrypt();
   return scrypt.parseBlock(block, variablesCopy, true);
 }

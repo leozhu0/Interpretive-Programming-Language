@@ -241,8 +241,10 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
             std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
  		          
             variables[funcName] = std::make_shared<Function>(Function{arguments, block, variables});
-
-            i++;
+	  
+	    (std::get<Func>(variables[funcName]))->variables = variables;
+	    
+	    i++;
         } 
         
        
