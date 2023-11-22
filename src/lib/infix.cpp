@@ -652,7 +652,7 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
   else if (value == "push") {
     if (arguments.size() != 2) throw std::runtime_error("Runtime error: incorrect argument count.");
 
-    return pop(arguments[0]->getValue(variables), arguments[1]->getValue(variables));
+    return push(arguments[0]->getValue(variables), arguments[1]->getValue(variables));
   }
 
   Value varData = variables[value];
