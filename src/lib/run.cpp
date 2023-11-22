@@ -74,7 +74,7 @@ bool Scrypt::isKeyword(Token token){
     return false;
 }
 
-Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value>& variables) {
+Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value>& variables, bool inFunc) {
     /*variables["len"] = std::make_shared<Value>(Value(nullptr));
     variables["pop"] = std::make_shared<Value>(Value(nullptr));
     variables["push"] = std::make_shared<Value>(Value(nullptr));
@@ -116,6 +116,11 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
         }
 
         if (tokens[i].token == "return") {
+	    if(!inFunc){
+		    std::cout << "Runtime error: unexpected return." <<std::endl;
+		    exit(1);
+	    }
+
             i++;
             std::vector<Token> returnExpr;
             while (i < (int)tokens.size()) {
@@ -157,7 +162,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
             while (evaluateExpression(conditionExpr, variables) == Value{true}) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
-                parseBlock(block, variables);
+                parseBlock(block, variables, inFunc);
             }
            
         } 
@@ -179,7 +184,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
             
             if (evaluateExpression(conditionExpr, variables) == Value{true}) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
-                parseBlock(block, variables);
+                parseBlock(block, variables, inFunc);
                 prevCond = true;
             } else{
                 prevCond = false;
@@ -220,7 +225,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
             
             std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
  		          
-            variables[funcName] = std::make_shared<Function>(Function{arguments, block});
+            variables[funcName] = std::make_shared<Function>(Function{arguments, block, variables});
 
             i++;
         } 
@@ -246,7 +251,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
 
             if(prevCond == false && (evaluateExpression(conditionExpr, variables) == true)){
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
-                parseBlock(block, variables);
+                parseBlock(block, variables, inFunc);
                 prevCond = true;
             }
             i++;
@@ -272,7 +277,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
             
             if(prevCond == false){
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
-                parseBlock(block, variables);
+                parseBlock(block, variables, inFunc);
             }
 	  }
             prevCond = true;

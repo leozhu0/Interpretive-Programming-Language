@@ -7,19 +7,19 @@
 #include <vector>
 #include "run.h"
 
-Value Function::getValue(std::vector<Value> argVals, std::map<std::string, Value> variables){
-
+Value Function::getValue(std::vector<Value> argVals){
+  std::map<std::string, Value> variablesCopy = variables;
   if((int)block.size() == 0){
 	  return nullptr;
   }
   //Combine the var names and value arguments to make variables
   for(int i = 0; i < (int)argVals.size(); i++){
      //Add these variables to the map
-     variables[arguments[i].token] = argVals[i];
+     variablesCopy[arguments[i].token] = argVals[i];
   }
 
   Scrypt scrypt = Scrypt();
-  return scrypt.parseBlock(block, variables);
+  return scrypt.parseBlock(block, variablesCopy, true);
 }
 
 

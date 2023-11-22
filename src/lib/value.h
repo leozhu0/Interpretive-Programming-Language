@@ -14,8 +14,8 @@ class Function {
     public:
         std::vector<Token> arguments;
         std::vector<Token> block;
-
-        Value getValue(std::vector<Value> argVals, std::map<std::string, Value> variables);
+        std::map<std::string, Value> variables;
+        Value getValue(std::vector<Value> argVals);
 };
 
 //class Function;
