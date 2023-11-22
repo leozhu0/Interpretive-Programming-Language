@@ -395,7 +395,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       ArrayNode* tempNode = new ArrayNode;
 
       size_t bracketNum = 1;
-      size_t j = index + 1;
+      int j = index + 1;
 
       while (true) {
         if (tokens[j].token == "[") ++bracketNum;
