@@ -12,10 +12,11 @@ struct Node {
   Value value;
   TokenType returnType;
   bool isVar = false;
+  //bool isValidArrayAssignment = false;
   Node* lookUp = nullptr;
 
   Node(TokenType type = NUMBER) : returnType(type) {}
-  virtual ~Node() {};
+  virtual ~Node();
   virtual Value getValue([[maybe_unused]] std::map<std::string, Value>& variables) = 0;
   virtual std::string toString() = 0;
   virtual TokenType getReturnType([[maybe_unused]] std::map<std::string, Value>& variables);
@@ -31,6 +32,7 @@ struct VarNode : public Node {
   std::vector<Node*> arguments;
   bool noArgs = false;
 
+  ~VarNode();
   VarNode() {isVar = true;}
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
   std::string toString();
@@ -47,10 +49,16 @@ struct BoolNode : public Node {
 struct ArrayNode : public Node {
   std::vector<Node*> value;
 
+  ~ArrayNode();
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
   std::string toString();
 };
-
+/*
+struct NullNode : public Node {
+  Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
+  std::string toString();
+}
+*/
 struct OpNode : public Node {
   std::string value;
   Node* lhs;
@@ -85,6 +93,7 @@ class InfixParser {
   Node* root;
   int index = -1;
   size_t parenNum = 0;
+  //size_t bracketNum = 0;
   bool updateVariables = true;
   std::vector<std::pair<Node*, Node*>> variableBuffer;
   std::map<std::string, Value>& varCache;

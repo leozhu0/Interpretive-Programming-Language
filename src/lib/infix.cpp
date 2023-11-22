@@ -5,7 +5,6 @@
 #include <map>
 #include <cmath>
 #include <iomanip>
-using Func = std::shared_ptr<Function>;
 
 //std::map<std::string, Value> variables;
 //std::map<std::string, bool> isBool;
@@ -49,7 +48,7 @@ InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>
       Node* data = pair.second;
 
       VarNode* varKey = (VarNode*) key;
-      if (varKey->arguments.size() != 0) continue;
+      if (varKey->arguments.size() != 0 || varKey->noArgs) continue;
 
       std::string keyStr = pair.first->toString();
       if (keyStr.back() == ']') {
@@ -82,7 +81,14 @@ InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>
 
       else if (key->lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
 
-      variables[keyStr] = data->getValue(variables);
+      try {
+	data->getValue(variables);
+        variables[keyStr] = data->getValue(variables);
+      }
+
+      catch (...) {
+        continue;
+      }
       //isBool[pair.first] = (pair.second->returnType == BOOL ? true : false);
     }
   }
@@ -265,7 +271,7 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
 // deals with errors
 Node* InfixParser::nextNode(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
-    if (tokens[i].type == NUMBER || tokens[i].type == BOOL) {
+    if (tokens[i].type == NUMBER || tokens[i].type == BOOL /*|| tokens[i].type == NILL*/) {
 
       if (tokens[i + 1].type == NUMBER || tokens[i + 1].type == VARIABLE || tokens[i + 1].type == BOOL || tokens[i + 1].token == "(") {
         std::ostringstream error;
@@ -284,7 +290,8 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       Node* tempNode;
 
       if (tokens[i].type == NUMBER) tempNode = new NumNode;
-      else tempNode = new BoolNode;
+      else if (tokens[i].type == BOOL) tempNode = new BoolNode;
+      //else tempNode = new NullNode;
 
       tempNode->value = stringToValue(tokens[i]);
 
@@ -356,20 +363,28 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       }
 
       // do not update stored variables when there is an error
-      if (tokens[i + 1].token != "=") {
+      if (tokens[i + 1].token != "=" /*&& !(std::holds_alternative<Func>(variables[tempNode->value]))*/) {
+        std::streambuf* coutBuffer = std::cout.rdbuf();
+
         try {
+	  std::stringstream tempStream;
+	  std::cout.rdbuf(tempStream.rdbuf());
+
 	  tempNode->getValue(varCache);
 	}
 	catch (const std::exception& e) {
 	  updateVariables = false;
+	  std::cout.rdbuf(coutBuffer);
 	}
+
+	std::cout.rdbuf(coutBuffer);
       }
 
       return tempNode;
     }
 
     else if (tokens[i].token == "(") {
-      if (tokens[i + 1].token == ")" || tokens[i + 1].type == OPERATOR || tokens[i + 1].type == ASSIGNMENT) {
+      if (tokens[i + 1].token == ")" || tokens[i + 1].type == OPERATOR || tokens[i + 1].type == ASSIGNMENT || tokens[i + 1].type == COMMA) {
         std::ostringstream error;
         error << "Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
 	throw std::runtime_error(error.str());
@@ -393,12 +408,29 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 
       ArrayNode* tempNode = new ArrayNode;
 
+      size_t bracketNum = 1;
+      int j = index + 1;
+
+      while (true) {
+        if (tokens[j].token == "[") ++bracketNum;
+	else if (tokens[j].token == "]") --bracketNum;
+
+	if (bracketNum == 0) break;
+	else if (tokens[j].type == COMMA) tempNode->value.push_back(createTree(nextNode(tokens), 0, tokens));
+
+	++j;
+      }
+
+      if (j != index + 1) tempNode->value.push_back(createTree(nextNode(tokens), 0, tokens));
+
+      /*
       while (tokens[index + 1].token != "]") {
         tempNode->value.push_back(createTree(nextNode(tokens), 0, tokens));
         
 	if (tokens[index + 1].token == "]") break;
 	++index;
       }
+      */
 
       ++index;
 
@@ -407,6 +439,8 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
         ++index;
 	tempNode->lookUp = createTree(nextNode(tokens), 0, tokens);
 	++index;
+
+	//if (tokens[index + 1].token == "=") tempNode->isValidArrayAssignment = true;
       }
 
       return tempNode;
@@ -431,10 +465,17 @@ Value InfixParser::stringToValue(Token& token) {
   if (token.type == BOOL) {
     if (token.token == "true") result = true;
     else result = false;
-
-  } else if (token.type == NUMBER) {
+  }
+  
+  else if (token.type == NUMBER) {
     result = std::stod(token.token);
   }
+
+  /*
+  else if (token.type == NILL) {
+    result = nullptr;
+  }
+  */
 
   return result;
 }
@@ -448,6 +489,10 @@ Value InfixParser::calculate() {
 }
 
 //___________________________________________________________________________________________________
+Node::~Node() {
+  if (lookUp != nullptr) delete lookUp;
+}
+
 TokenType Node::getReturnType([[maybe_unused]] std::map<std::string, Value>& variables) {
   return returnType;
 }
@@ -459,7 +504,11 @@ Value NumNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
 }
 
 std::string NumNode::toString() {
-  std::string result = std::to_string(std::get<double>(value));
+  std::ostringstream result;
+
+  result << std::get<double>(value);
+
+  /*
   bool hasDecimal = false;
 
   // removing trailing 0s after the decimal
@@ -475,8 +524,19 @@ std::string NumNode::toString() {
   }
 
   if (result.back() == '.') result.pop_back();
+  */
 
-  return result;
+  if (lookUp != nullptr) result << "[" << lookUp->toString() << "]";
+
+  return result.str();
+}
+
+VarNode::~VarNode() {
+  if (arguments.size() == 0) return;
+
+  for (Node* node : arguments) {
+    delete node;
+  }
 }
 
 Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
@@ -573,8 +633,22 @@ Value BoolNode::getValue([[maybe_unused]] std::map<std::string, Value>& variable
 }
 
 std::string BoolNode::toString() {
-  if (std::get<bool>(value)) return "true";
-  else return "false";
+  std::ostringstream result;
+
+  if (std::get<bool>(value)) result << "true";
+  else result << "false";
+
+  if (lookUp != nullptr) result << "[" << lookUp->toString() << "]";
+
+  return result.str();
+}
+
+ArrayNode::~ArrayNode() {
+  if (value.size() == 0) return;
+
+  for (Node* node : value) {
+    delete node;
+  }
 }
 
 Value ArrayNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
@@ -620,6 +694,18 @@ std::string ArrayNode::toString() {
 
   return result.str();
 }
+
+/*
+Value NullNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables)
+  if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
+
+  return value;
+}
+
+std::string NullNode::toString() {
+  return "null";
+}
+*/
 
 OpNode::~OpNode() {
   delete lhs;
@@ -667,13 +753,18 @@ std::string OpNode::toString() {
 
 Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   if (!(lhs->isVar)) {
+    if (lhs->lookUp != nullptr) return rhs->getValue(variables);
+    //if (lhs->isValidArrayAssignment) return rhs->getValue(variables);
+
     std::ostringstream error;
     error << "Runtime error: invalid assignee.";
     throw std::runtime_error(error.str());
   }
 
-  returnType = rhs->getReturnType(variables);
-  return rhs->getValue(variables);
+  //returnType = rhs->getReturnType(variables);
+  if (variables.find(((VarNode*)lhs)->value) == variables.end()) return rhs->getValue(variables);
+  rhs->getValue(variables);
+  return lhs->getValue(variables);
 }
 
 TokenType AssignNode::getReturnType([[maybe_unused]] std::map<std::string, Value>& variables) {
