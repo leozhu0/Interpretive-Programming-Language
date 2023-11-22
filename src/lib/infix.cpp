@@ -5,7 +5,6 @@
 #include <map>
 #include <cmath>
 #include <iomanip>
-using Func = std::shared_ptr<Function>;
 
 //std::map<std::string, Value> variables;
 //std::map<std::string, bool> isBool;
@@ -364,7 +363,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       }
 
       // do not update stored variables when there is an error
-      if (tokens[i + 1].token != "=") {
+      if (tokens[i + 1].token != "=" && !(std::holds_alternative<Func>(variables[tempNode->value]))) {
         try {
 	  tempNode->getValue(varCache);
 	}
