@@ -117,8 +117,9 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
 
         if (tokens[i].token == "return") {
 	    if(!inFunc){
-		    std::cout << "Runtime error: unexpected return." <<std::endl;
-		    exit(1);
+		    std::ostringstream error;
+		    error << "Runtime error: unexpected return.";
+		    throw std::runtime_error(error.str());
 	    }
 
             i++;

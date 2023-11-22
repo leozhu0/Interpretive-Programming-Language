@@ -6,8 +6,16 @@
 #include <map>
 #include <vector>
 #include "run.h"
+#include <stdexcept>
 
 Value Function::getValue(std::vector<Value> argVals){
+
+  if((int)arguments.size() != (int)argVals.size()){
+	std::ostringstream error;
+	error << "Runtime error: incorrect argument count.";
+	throw std::runtime_error(error.str());
+  }
+
   std::map<std::string, Value> variablesCopy = variables;
   if((int)block.size() == 0){
 	  return nullptr;
