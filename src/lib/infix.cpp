@@ -402,7 +402,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       }
 
       // do not update stored variables when there is an error
-      if (tokens[i + 1].token != "=" /*&& !(std::holds_alternative<Func>(variables[tempNode->value]))*/) {
+      if (tokens[i + 1].token != "=" && (tempNode.value != "push" && tempNode.value != "pop")/*&& !(std::holds_alternative<Func>(variables[tempNode->value]))*/) {
         std::streambuf* coutBuffer = std::cout.rdbuf();
 
         try {
