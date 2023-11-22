@@ -12,10 +12,10 @@
 Value len(Value value) {
   if (!std::holds_alternative<Array>(value)) throw std::runtime_error("Runtime error: not an array.");
 
-  return std::get<Array>(value)->size();
+  return (double) std::get<Array>(value)->size();
 }
 
-Value pop(Value& value) {
+Value pop(Value value) {
   if (!std::holds_alternative<Array>(value)) throw std::runtime_error("Runtime error: not an array.");
 
   Array tempArray = std::get<Array>(value);
@@ -27,7 +27,7 @@ Value pop(Value& value) {
   return last;
 }
 
-Value push(Value& value, Value element) {
+Value push(Value value, Value element) {
   if (!std::holds_alternative<Array>(value)) throw std::runtime_error("Runtime error: not an array.");
 
   std::get<Array>(value)->push_back(element);
