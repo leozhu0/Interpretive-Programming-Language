@@ -130,8 +130,9 @@ std::ostream& operator << (std::ostream& os, const Value& value) {
 */
 using ValueBase = std::variant<double,
                                     bool,
-                                   std::shared_ptr<Function>,
-                                    std::shared_ptr<std::vector<Value>>
+                                    std::shared_ptr<Function>,
+                                    std::shared_ptr<std::vector<Value>>,
+				    std::nullptr_t
                                     >;
 
 bool operator == (const Value& lhs, const Value& rhs){
