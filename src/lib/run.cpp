@@ -6,6 +6,7 @@
 #include <map>
 #include <sstream>
 #include <stdexcept>
+#include <memory>
 
 void Scrypt::printV(std::vector<Token> tokens){
     std::cout << "_______" << std::endl;
@@ -74,6 +75,10 @@ bool Scrypt::isKeyword(Token token){
 }
 
 Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value>& variables) {
+    /*variables["len"] = std::make_shared<Value>(Value(nullptr));
+    variables["pop"] = std::make_shared<Value>(Value(nullptr));
+    variables["push"] = std::make_shared<Value>(Value(nullptr));
+*/
     //The last token must always have an end (to know when to terminate later)
     if(tokens.back().type != END){
         tokens.push_back(Token{tokens.back().line, tokens.back().column+1,"END", END});
@@ -83,7 +88,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
     bool prevCond = true;
     int i = 0;
     if((int)tokens.size() == 0) {
-        return Value();
+        return nullptr;//nullptr;
     }
     
     //Iterativly go through each token (i changes within loop based on the code)
@@ -92,17 +97,21 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
             i++;
             std::vector<Token> printExpr;
             while (i < (int)tokens.size()) {
-                printExpr.push_back(tokens[i]);
+		if(tokens[i].token == ";"){break;}
+                //printExpr.push_back(tokens[i]);
                 if(isKeyword(tokens[i])){
                     std::cout <<"ERROR, keyword before ;"<<std::endl;
                     break;
                 }
-
-                if(tokens[i].token == ";"){ break; }
+ 		printExpr.push_back(tokens[i]);
+                //if(tokens[i].token == ";"){ break; }
                 i++;
             }
 
-            std::cout << evaluateExpression(printExpr, variables) << std::endl;
+	    
+	    if((int)printExpr.size() > 0){
+            	std::cout << evaluateExpression(printExpr, variables) << std::endl;
+	    }
             i++;
         }
 
@@ -110,16 +119,20 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
             i++;
             std::vector<Token> returnExpr;
             while (i < (int)tokens.size()) {
-                returnExpr.push_back(tokens[i]);
+                //returnExpr.push_back(tokens[i]);
+		if(tokens[i].token == ";"){break;}
                 if(isKeyword(tokens[i])){
                     std::cout <<"ERROR, keyword before ;"<<std::endl;
                     break;
                 }
-                
-                if(tokens[i].token == ";"){ break; }
+                returnExpr.push_back(tokens[i]);
+                //if(tokens[i].token == ";"){ break; }
                 i++;
             }
 
+	    if((int)returnExpr.size() == 0){
+	    	return nullptr;
+	    }
             return evaluateExpression(returnExpr, variables);
             i++;
         }
@@ -206,7 +219,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
             
             
             std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
-           
+ 		          
             variables[funcName] = std::make_shared<Function>(Function{arguments, block});
 
             i++;
@@ -270,7 +283,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
         } 
         
         else if(tokens[i].type == END){
-            return Value();
+            return nullptr;
         }
 
         //Evalutate expressions that are not commands (And create vars)
@@ -291,7 +304,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
         }
     }
 
-    return Value();
+    return nullptr;
 }
 
 
