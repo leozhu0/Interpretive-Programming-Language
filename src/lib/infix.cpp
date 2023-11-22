@@ -539,7 +539,7 @@ Value InfixParser::calculate() {
 
       try {
         data->getValue(varCache);
-        varCache[keyValue] = data->getValue(varCache);
+        varCache[key->value] = data->getValue(varCache);
       } catch (...) {
         std::cout.rdbuf(coutBuffer);
         continue;
