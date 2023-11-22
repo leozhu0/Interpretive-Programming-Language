@@ -506,6 +506,14 @@ std::string NumNode::toString() {
   return result;
 }
 
+VarNode::~VarNode() {
+  if (arguments.size() == 0) return;
+
+  for (Node* node : arguments) {
+    delete node;
+  }
+}
+
 Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   if(variables.find(value) == variables.end()){
     std::ostringstream error;
@@ -602,6 +610,14 @@ Value BoolNode::getValue([[maybe_unused]] std::map<std::string, Value>& variable
 std::string BoolNode::toString() {
   if (std::get<bool>(value)) return "true";
   else return "false";
+}
+
+ArrayNode::~ArrayNode() {
+  if (value.size() == 0) return;
+
+  for (Node* node : value) {
+    delete node;
+  }
 }
 
 Value ArrayNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {

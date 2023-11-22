@@ -31,6 +31,7 @@ struct VarNode : public Node {
   std::vector<Node*> arguments;
   bool noArgs = false;
 
+  ~VarNode();
   VarNode() {isVar = true;}
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
   std::string toString();
@@ -47,6 +48,7 @@ struct BoolNode : public Node {
 struct ArrayNode : public Node {
   std::vector<Node*> value;
 
+  ~ArrayNode();
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
   std::string toString();
 };
