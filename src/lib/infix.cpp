@@ -10,11 +10,11 @@
 //std::map<std::string, bool> isBool;
 
 InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>& variables) : varCache(variables) {
-  //std::cout << "__begin__" << std::endl;
-  //for (Token token : tokens) {
-  //  std::cout << token.token << std::endl;
-  //}
-  //std::cout << "__end__" << std::endl;
+  std::cout << "__begin__" << std::endl;
+  for (Token token : tokens) {
+    std::cout << token.token;
+  }
+  std::cout << std::endl << "__end__" << std::endl;
 
   if (tokens.size() == 1) {
     std::ostringstream error;
@@ -40,6 +40,7 @@ InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>
     throw std::runtime_error(error.str());
   }
 
+  /*
   if (updateVariables) {
     for (const auto& pair : variableBuffer) {
       if (!(pair.first->isVar)) continue;
@@ -101,9 +102,10 @@ InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>
       //isBool[pair.first] = (pair.second->returnType == BOOL ? true : false);
     }
   }
+  */
   
   index = 0;
-  updateVariables = true;
+  //updateVariables = true;
 }
 
 InfixParser::~InfixParser() {
@@ -500,6 +502,52 @@ std::string InfixParser::toString() {
 }
 
 Value InfixParser::calculate() {
+  if (updateVariables) {
+    for (const auto& pair : variableBuffer) {
+      if (!(pair.first->isVar)) continue;
+
+      VarNode* key = (VarNode*) pair.first;
+      Node* data = pair.second;
+
+      if (key->arguments.size() != 0 || key->noArgs) continue;
+
+      // if the variable is already defined and has lookup
+      if (variables.find(key->value) != variables.end() && key->lookUp != nullptr) {
+        // checking if the variable is an array, and if so, we only want to change the value of a specific index
+        if (std::holds_alternative<Array>(variables[key->value])) {
+          if (!(std::holds_alternative<double>(key->lookUp->getValue(variables)))) throw std::runtime_error("Runtime error: index is not a number.");
+
+          double arrayIndex = std::get<double>(key->lookUp->getValue(variables));
+          Array tempArray = std::get<Array>(variables[key->value]);
+
+          if (std::fmod(arrayIndex, 1) != 0) throw std::runtime_error("Runtime error: index is not an integer.");
+          if (arrayIndex >= tempArray->size() || arrayIndex < 0) throw std::runtime_error("Runtime error: index out of bounds.");
+
+          tempArray->at(arrayIndex) = data->getValue(variables);
+          continue;
+        }
+
+        else throw std::runtime_error("Runtime error: not an array.");
+      }
+
+      // if variable is not defined and has lookup
+      else if (variables.find(key->value) == variables.end() && key->lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
+
+      std::streambuf* coutBuffer = std::cout.rdbuf();
+      std::stringstream tempStream;
+      std::cout.rdbuf(tempStream.rdbuf());
+
+      try {
+        data->getValue(variables);
+        variables[keyValue] = data->getValue(variables);
+      } catch (...) {
+        std::cout.rdbuf(coutBuffer);
+        continue;
+      }
+
+      std::cout.rdbuf(coutBuffer);
+    }
+
   return root->getValue(varCache);
 }
 
