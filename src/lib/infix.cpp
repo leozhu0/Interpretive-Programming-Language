@@ -9,6 +9,31 @@
 //std::map<std::string, Value> variables;
 //std::map<std::string, bool> isBool;
 
+Value len(Value value) {
+  if (!std::holds_alternative<Array>(value)) throw std::runtime_error("Runtime error: not an array.");
+
+  return std::get<Array>(value)->size();
+}
+
+Value pop(Value& value) {
+  if (!std::holds_alternative<Array>(value)) throw std::runtime_error("Runtime error: not an array.");
+
+  Array tempArray = std::get<Array>(value);
+
+  if (tempArray->size() == 0) throw std::runtime_error("Runtime error: underflow.");
+
+  Value last = tempArray->back();
+  tempArray->pop_back();
+  return last;
+}
+
+Value push(Value& value, Value element) {
+  if (!std::holds_alternative<Array>(value)) throw std::runtime_error("Runtime error: not an array.");
+
+  std::get<Array>(value)->push_back(element);
+  return nullptr;
+}
+
 InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>& variables) : varCache(variables) {
   //std::cout << "__begin__" << std::endl;
   //for (Token token : tokens) {
@@ -611,6 +636,24 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
   }
 
   //returnType = (std::holds_alternative<bool>(variables[value]) ? BOOL : NUMBER);
+  
+  if (value == "len") {
+    if (arguments.size() != 1) throw std::runtime_error("Runtime error: incorrect argument count.");
+
+    return len(arguments[0]->getValue(variables));
+  }
+
+  else if (value == "pop") {
+    if (arguments.size() != 1) throw std::runtime_error("Runtime error: incorrect argument count.");
+
+    return pop(arguments[0]->getValue(variables));
+  }
+
+  else if (value == "push") {
+    if (arguments.size() != 2) throw std::runtime_error("Runtime error: incorrect argument count.");
+
+    return pop(arguments[0]->getValue(variables), arguments[1]->getValue(variables));
+  }
 
   Value varData = variables[value];
 
