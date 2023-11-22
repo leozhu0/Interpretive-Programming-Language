@@ -10,11 +10,11 @@
 //std::map<std::string, bool> isBool;
 
 InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>& variables) : varCache(variables) {
-  std::cout << "__begin__" << std::endl;
-  for (Token token : tokens) {
-    std::cout << token.token;
-  }
-  std::cout << std::endl << "__end__" << std::endl;
+  //std::cout << "__begin__" << std::endl;
+  //for (Token token : tokens) {
+  //  std::cout << token.token;
+  //}
+  //std::cout << std::endl << "__end__" << std::endl;
 
   if (tokens.size() == 1) {
     std::ostringstream error;
