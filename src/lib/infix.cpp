@@ -584,7 +584,7 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
   else if (std::holds_alternative<Func>(varData)) {
     if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
 
-    if (noArgs) return std::get<Func>(varData)->getValue({}, variables);
+    if (noArgs) return std::get<Func>(varData)->getValue({});
 
     else if (arguments.size() == 0) return varData;
 
@@ -595,7 +595,7 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
         tempArgs.push_back(node->getValue(variables));
       }
 
-      return std::get<Func>(varData)->getValue(tempArgs, variables);
+      return std::get<Func>(varData)->getValue(tempArgs);
     }
   }
 
@@ -771,6 +771,7 @@ Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variab
   //returnType = rhs->getReturnType(variables);
   //if (variables.find(((VarNode*)lhs)->value) == variables.end()) return rhs->getValue(variables);
   //else if (lhs->value == rhs->value) return lhs->getValue(variables);
+  
   rhs->getValue(variables);
   return lhs->getValue(variables);
 }
