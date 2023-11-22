@@ -429,8 +429,6 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 	if (tokens[index + 1].token == "=") tempNode->isVar = true;
       }
 
-      std::cout << "index: " << index;
-
       return tempNode;
     }
 
