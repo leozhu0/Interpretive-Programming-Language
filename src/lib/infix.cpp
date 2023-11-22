@@ -433,7 +433,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 	tempNode->lookUp = createTree(nextNode(tokens), 0, tokens);
 	++index;
 
-	if (tokens[index + 1].token == "=") tempNode->isVar = true;
+	if (tokens[index + 1].token == "=") tempNode->isValidArrayAssignment = true;
       }
 
       return tempNode;
@@ -733,13 +733,15 @@ std::string OpNode::toString() {
 
 Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   if (!(lhs->isVar)) {
+    if (isValidArrayAssignment) return rhs->getValue(variables);
+
     std::ostringstream error;
     error << "Runtime error: invalid assignee.";
     throw std::runtime_error(error.str());
   }
 
   returnType = rhs->getReturnType(variables);
-  return rhs->getValue(variables);
+  return lhs->getValue(variables);
 }
 
 TokenType AssignNode::getReturnType([[maybe_unused]] std::map<std::string, Value>& variables) {
