@@ -81,14 +81,23 @@ InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>
 
       else if (key->lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
 
+      std::streambuf* coutBuffer = std::cout.rdbuf();
+      std::stringstream tempStream;
+      std::cout.rdbuf(tempStream.rdbuf());
+
       try {
+	//std::cout << "hi" << std::endl;
 	data->getValue(variables);
         variables[keyStr] = data->getValue(variables);
+	//std::cout << "bye" << std::endl;
       }
 
       catch (...) {
+	std::cout.rdbuf(coutBuffer);
         continue;
       }
+
+      std::cout.rdbuf(coutBuffer);
       //isBool[pair.first] = (pair.second->returnType == BOOL ? true : false);
     }
   }
@@ -781,19 +790,19 @@ Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variab
   }
   */
 
-  std::streambuf* coutBuffer = std::cout.rdbuf();
-  std::stringstream tempStream;
-  std::cout.rdbuf(tempStream.rdbuf());
+  //std::streambuf* coutBuffer = std::cout.rdbuf();
+  //std::stringstream tempStream;
+  //std::cout.rdbuf(tempStream.rdbuf());
 
   try {
     rhs->getValue(variables);
   }
   catch (...) {
-    std::cout.rdbuf(coutBuffer);
+    //std::cout.rdbuf(coutBuffer);
     throw;
   }
 
-  std::cout.rdbuf(coutBuffer);
+  //std::cout.rdbuf(coutBuffer);
 
   return lhs->getValue(variables);
 }
