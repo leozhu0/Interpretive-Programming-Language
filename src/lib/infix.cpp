@@ -271,7 +271,7 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
 // deals with errors
 Node* InfixParser::nextNode(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
-    if (tokens[i].type == NUMBER || tokens[i].type == BOOL /*|| tokens[i].type == NILL*/) {
+    if (tokens[i].type == NUMBER || tokens[i].type == BOOL || tokens[i].type == NILL) {
 
       if (tokens[i + 1].type == NUMBER || tokens[i + 1].type == VARIABLE || tokens[i + 1].type == BOOL || tokens[i + 1].token == "(") {
         std::ostringstream error;
@@ -291,7 +291,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 
       if (tokens[i].type == NUMBER) tempNode = new NumNode;
       else if (tokens[i].type == BOOL) tempNode = new BoolNode;
-      //else tempNode = new NullNode;
+      else tempNode = new NullNode;
 
       tempNode->value = stringToValue(tokens[i]);
 
@@ -471,11 +471,11 @@ Value InfixParser::stringToValue(Token& token) {
     result = std::stod(token.token);
   }
 
-  /*
+  
   else if (token.type == NILL) {
     result = nullptr;
   }
-  */
+  
 
   return result;
 }
@@ -695,8 +695,7 @@ std::string ArrayNode::toString() {
   return result.str();
 }
 
-/*
-Value NullNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables)
+Value NullNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
 
   return value;
@@ -705,7 +704,6 @@ Value NullNode::getValue([[maybe_unused]] std::map<std::string, Value>& variable
 std::string NullNode::toString() {
   return "null";
 }
-*/
 
 OpNode::~OpNode() {
   delete lhs;
