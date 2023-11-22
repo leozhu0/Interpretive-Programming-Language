@@ -15,7 +15,7 @@ struct Node {
   Node* lookUp = nullptr;
 
   Node(TokenType type = NUMBER) : returnType(type) {}
-  virtual ~Node() {if (lookUp != nullptr) delete lookUp;};
+  virtual ~Node();
   virtual Value getValue([[maybe_unused]] std::map<std::string, Value>& variables) = 0;
   virtual std::string toString() = 0;
   virtual TokenType getReturnType([[maybe_unused]] std::map<std::string, Value>& variables);
