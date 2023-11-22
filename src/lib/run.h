@@ -19,6 +19,7 @@ class Scrypt {
 		Value evaluateExpression(std::vector<Token> tokens, std::map<std::string, Value>& variables);
 		void evaluateExpressionChunk(std::vector<Token> tokens, std::map<std::string, Value>& variables);
 		bool isKeyword(Token token);
+		bool isBool(Value value);
 	public:
 		Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value>& variables, bool inFunc);
 };

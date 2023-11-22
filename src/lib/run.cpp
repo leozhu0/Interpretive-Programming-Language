@@ -7,6 +7,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <memory>
+#include <variant>
 
 void Scrypt::printV(std::vector<Token> tokens){
     std::cout << "_______" << std::endl;
@@ -18,7 +19,20 @@ void Scrypt::printV(std::vector<Token> tokens){
     std::cout << "_______" << std::endl;
 }
 
+bool Scrypt::isBool(Value value){
+	if(std::holds_alternative<bool>(value)){
+		if(value == Value(true)) return true;
+		else return false;
+	}
 
+	std::ostringstream error;
+        error << "Runtime error: condition is not a bool.";
+        throw std::runtime_error(error.str());
+	
+	//This will never happen
+	return true;
+
+}
 
 Value Scrypt::evaluateExpression(std::vector<Token> tokens, std::map<std::string, Value>& variables){
     //Return nothing if tokens vector is empty or just END
@@ -161,7 +175,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
 
             int blockEnd = i;
             std::vector<Token> conditionExpr(tokens.begin() + conditionStart, tokens.begin() + conditionEnd);
-            while (evaluateExpression(conditionExpr, variables) == Value{true}) {
+            while (isBool(evaluateExpression(conditionExpr, variables)) == true) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + blockEnd);
                 parseBlock(block, variables, inFunc);
             }
@@ -183,7 +197,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
                 else if (tokens[i].token == "}") blockParen--;
             }
             
-            if (evaluateExpression(conditionExpr, variables) == Value{true}) {
+            if (isBool(evaluateExpression(conditionExpr, variables)) == true) {
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
                 parseBlock(block, variables, inFunc);
                 prevCond = true;
@@ -250,7 +264,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
                 else if (tokens[i].token == "}") blockParen--;
             }
 
-            if(prevCond == false && (evaluateExpression(conditionExpr, variables) == true)){
+            if(prevCond == false && (isBool(evaluateExpression(conditionExpr, variables)) == true)){
                 std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i);
                 parseBlock(block, variables, inFunc);
                 prevCond = true;
