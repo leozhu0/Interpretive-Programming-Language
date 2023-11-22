@@ -471,11 +471,11 @@ Value InfixParser::stringToValue(Token& token) {
     result = std::stod(token.token);
   }
 
-  /*
+  
   else if (token.type == NILL) {
     result = nullptr;
   }
-  */
+  
 
   return result;
 }
