@@ -82,7 +82,14 @@ InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>
 
       else if (key->lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
 
-      variables[keyStr] = data->getValue(variables);
+      try {
+	data->getValue(variables);
+        variables[keyStr] = data->getValue(variables);
+      }
+
+      catch (...) {
+        continue;
+      }
       //isBool[pair.first] = (pair.second->returnType == BOOL ? true : false);
     }
   }
