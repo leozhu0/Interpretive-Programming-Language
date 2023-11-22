@@ -556,7 +556,7 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
 
   Value varData = variables[value];
 
-  if (std::holds_alternative<double>(varData) || std::holds_alternative<bool>(varData)) {
+  if (std::holds_alternative<double>(varData) || std::holds_alternative<bool>(varData) || std::holds_alternative<std::nullptr_t>(varData)) {
     if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
     else if (arguments.size() != 0) throw std::runtime_error("Runtime error: not a function.");
     else return varData;
@@ -599,7 +599,7 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
     }
   }
 
-  std::cout << "This error should never happen. Did you forget varaible being able to be null?" << std::endl;
+  std::cout << "This error should never happen. In VarNode::getValue" << std::endl;
   exit(2);
 }
 
@@ -781,7 +781,13 @@ Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variab
   }
   */
 
-  rhs->getValue(variables);  
+  std::streambuf* coutBuffer = std::cout.rdbuf();
+  std::stringstream tempStream;
+  std::cout.rdbuf(tempStream.rdbuf());
+
+  rhs->getValue(variables);
+  std::cout.rdbuf(coutBuffer);
+
   return lhs->getValue(variables);
 }
 
