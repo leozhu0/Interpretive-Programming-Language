@@ -343,13 +343,16 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
         else {
           size_t argParenNum = 1;
           size_t j = index + 1;
+	  size_t bracketNum = 0;
 
 	  while (true) {
 	    if (tokens[j].token == "(") ++argParenNum;
 	    else if (tokens[j].token == ")") --argParenNum;
+	    else if (tokens[j].token == "[") ++bracketNum;
+	    else if (tokens[j].token == "]") --bracketNum;
 
             if (argParenNum == 0) break;
-	    else if (tokens[j].type == COMMA) tempNode->arguments.push_back(createTree(nextNode(tokens), 0, tokens));
+	    else if (tokens[j].type == COMMA && (argParenNum == 1 && bracketNum == 0)) tempNode->arguments.push_back(createTree(nextNode(tokens), 0, tokens));
             // may need to increment index by one after comma case is called; currently unsure
 
             ++j;
@@ -410,13 +413,16 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 
       size_t bracketNum = 1;
       int j = index + 1;
+      size_t innerParenNum = 0;
 
       while (true) {
         if (tokens[j].token == "[") ++bracketNum;
 	else if (tokens[j].token == "]") --bracketNum;
+        else if (tokens[j].token == "(") ++innerParenNum;
+	else if (tokens[j].token == ")") --innerParenNum;
 
 	if (bracketNum == 0) break;
-	else if (tokens[j].type == COMMA) tempNode->value.push_back(createTree(nextNode(tokens), 0, tokens));
+	else if (tokens[j].type == COMMA && (bracketNum == 1 && innerParenNum == 0)) tempNode->value.push_back(createTree(nextNode(tokens), 0, tokens));
 
 	++j;
       }
