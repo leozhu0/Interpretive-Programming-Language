@@ -547,6 +547,7 @@ Value InfixParser::calculate() {
 
       std::cout.rdbuf(coutBuffer);
     }
+  }
 
   return root->getValue(varCache);
 }
