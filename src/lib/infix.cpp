@@ -733,7 +733,8 @@ std::string OpNode::toString() {
 
 Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   if (!(lhs->isVar)) {
-    if (lhs->isValidArrayAssignment) return rhs->getValue(variables);
+    if (lookup != nullptr) return rhs->getValue(variables);
+    //if (lhs->isValidArrayAssignment) return rhs->getValue(variables);
 
     std::ostringstream error;
     error << "Runtime error: invalid assignee.";
