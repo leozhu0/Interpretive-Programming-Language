@@ -769,8 +769,8 @@ Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variab
   }
 
   //returnType = rhs->getReturnType(variables);
-  if (variables.find(((VarNode*)lhs)->value) == variables.end()) return rhs->getValue(variables);
-  else if (lhs->value == rhs->value) return lhs->getValue(variables);
+  //if (variables.find(((VarNode*)lhs)->value) == variables.end()) return rhs->getValue(variables);
+  //else if (lhs->value == rhs->value) return lhs->getValue(variables);
   rhs->getValue(variables);
   return lhs->getValue(variables);
 }
