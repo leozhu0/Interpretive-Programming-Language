@@ -512,18 +512,18 @@ Value InfixParser::calculate() {
       if (key->arguments.size() != 0 || key->noArgs) continue;
 
       // if the variable is already defined and has lookup
-      if (variables.find(key->value) != variables.end() && key->lookUp != nullptr) {
+      if (varCache.find(key->value) != varCache.end() && key->lookUp != nullptr) {
         // checking if the variable is an array, and if so, we only want to change the value of a specific index
-        if (std::holds_alternative<Array>(variables[key->value])) {
-          if (!(std::holds_alternative<double>(key->lookUp->getValue(variables)))) throw std::runtime_error("Runtime error: index is not a number.");
+        if (std::holds_alternative<Array>(varCache[key->value])) {
+          if (!(std::holds_alternative<double>(key->lookUp->getValue(varCache)))) throw std::runtime_error("Runtime error: index is not a number.");
 
-          double arrayIndex = std::get<double>(key->lookUp->getValue(variables));
-          Array tempArray = std::get<Array>(variables[key->value]);
+          double arrayIndex = std::get<double>(key->lookUp->getValue(varCache));
+          Array tempArray = std::get<Array>(varCache[key->value]);
 
           if (std::fmod(arrayIndex, 1) != 0) throw std::runtime_error("Runtime error: index is not an integer.");
           if (arrayIndex >= tempArray->size() || arrayIndex < 0) throw std::runtime_error("Runtime error: index out of bounds.");
 
-          tempArray->at(arrayIndex) = data->getValue(variables);
+          tempArray->at(arrayIndex) = data->getValue(varCache);
           continue;
         }
 
@@ -531,15 +531,15 @@ Value InfixParser::calculate() {
       }
 
       // if variable is not defined and has lookup
-      else if (variables.find(key->value) == variables.end() && key->lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
+      else if (varCache.find(key->value) == varCache.end() && key->lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
 
       std::streambuf* coutBuffer = std::cout.rdbuf();
       std::stringstream tempStream;
       std::cout.rdbuf(tempStream.rdbuf());
 
       try {
-        data->getValue(variables);
-        variables[keyValue] = data->getValue(variables);
+        data->getValue(varCache);
+        varCache[keyValue] = data->getValue(varCache);
       } catch (...) {
         std::cout.rdbuf(coutBuffer);
         continue;
