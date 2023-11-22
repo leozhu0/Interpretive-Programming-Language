@@ -44,6 +44,11 @@ std::ostream& operator << (std::ostream& os, const Value& value) {
     return os;
   }
 
+  if (std::holds_alternative<std::nullptr_t>(value)) {
+    os << "null";
+    return os;
+  }
+
   else if (std::holds_alternative<bool>(value)) {
     if (std::get<bool>(value)) os << "true";
     else os << "false";

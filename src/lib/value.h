@@ -22,14 +22,14 @@ class Function {
 };
 
 //class Function;
-struct Value : public std::variant<double, 
-                                    bool,
-				   std::shared_ptr<Function>,
-				    std::shared_ptr<std::vector<Value>>
-                                    > { //std::nullptr_t
-    using variant::variant;
-
-    
+struct Value : public std::variant<
+  double, 
+  bool,
+  std::shared_ptr<Function>,
+  std::shared_ptr<std::vector<Value>>,//,
+  std::nullptr_t
+> {
+  using variant::variant;
 };
 
 using Array = std::shared_ptr<std::vector<Value>>;
