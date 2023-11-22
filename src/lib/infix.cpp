@@ -497,7 +497,10 @@ Value NumNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
 }
 
 std::string NumNode::toString() {
-  std::string result = std::to_string(std::get<double>(value));
+  std::ostringstream result;
+  result << std::to_string(std::get<double>(value));
+
+  /*
   bool hasDecimal = false;
 
   // removing trailing 0s after the decimal
@@ -513,6 +516,7 @@ std::string NumNode::toString() {
   }
 
   if (result.back() == '.') result.pop_back();
+  */
 
   return result;
 }
