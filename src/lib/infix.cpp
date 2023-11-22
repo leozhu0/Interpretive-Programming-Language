@@ -49,7 +49,7 @@ InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>
       Node* data = pair.second;
 
       VarNode* varKey = (VarNode*) key;
-      if (varKey->arguments.size() != 0) continue;
+      if (varKey->arguments.size() != 0 || varKey->noArgs) continue;
 
       std::string keyStr = pair.first->toString();
       if (keyStr.back() == ']') {
@@ -499,9 +499,7 @@ Value NumNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
 std::string NumNode::toString() {
   std::ostringstream result;
 
-  result << std::to_string(std::get<double>(value));
-
-  if (lookUp != nullptr) result << "[" << lookUp->toString() << "]";
+  result << std::get<double>(value);
 
   /*
   bool hasDecimal = false;
@@ -520,6 +518,8 @@ std::string NumNode::toString() {
 
   if (result.back() == '.') result.pop_back();
   */
+
+  if (lookUp != nullptr) result << "[" << lookUp->toString() << "]";
 
   return result.str();
 }
