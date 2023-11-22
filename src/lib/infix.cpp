@@ -440,7 +440,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 	tempNode->lookUp = createTree(nextNode(tokens), 0, tokens);
 	++index;
 
-	if (tokens[index + 1].token == "=") tempNode->isValidArrayAssignment = true;
+	//if (tokens[index + 1].token == "=") tempNode->isValidArrayAssignment = true;
       }
 
       return tempNode;

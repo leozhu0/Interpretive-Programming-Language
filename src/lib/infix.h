@@ -12,7 +12,7 @@ struct Node {
   Value value;
   TokenType returnType;
   bool isVar = false;
-  bool isValidArrayAssignment = false;
+  //bool isValidArrayAssignment = false;
   Node* lookUp = nullptr;
 
   Node(TokenType type = NUMBER) : returnType(type) {}
