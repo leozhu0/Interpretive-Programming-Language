@@ -384,7 +384,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
     }
 
     else if (tokens[i].token == "(") {
-      if (tokens[i + 1].token == ")" || tokens[i + 1].type == OPERATOR || tokens[i + 1].type == ASSIGNMENT) {
+      if (tokens[i + 1].token == ")" || tokens[i + 1].type == OPERATOR || tokens[i + 1].type == ASSIGNMENT || tokens[i + 1].type == COMMA) {
         std::ostringstream error;
         error << "Unexpected token at line " << tokens[i + 1].line << " column " << tokens[i + 1].column << ": " << tokens[i + 1].token;
 	throw std::runtime_error(error.str());
