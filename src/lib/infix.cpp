@@ -785,7 +785,14 @@ Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variab
   std::stringstream tempStream;
   std::cout.rdbuf(tempStream.rdbuf());
 
-  rhs->getValue(variables);
+  try {
+    rhs->getValue(variables);
+  }
+  catch (...) {
+    std::cout.rdbuf(coutBuffer);
+    throw;
+  }
+
   std::cout.rdbuf(coutBuffer);
 
   return lhs->getValue(variables);
