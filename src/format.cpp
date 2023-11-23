@@ -27,6 +27,8 @@ void format(std::vector<Token>& tokens, std::string indent) {
 	++i;
       }
 
+      if (tokens[i].token == ";") continue;
+
       std::vector<Token> tempTokens{tokens[i]};
       ++i;
 
