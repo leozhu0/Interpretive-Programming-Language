@@ -6,7 +6,15 @@
 #include "lib/value.h"
 
 void format(std::vector<Token>& tokens, std::string indent) {
-  if (tokens.back().token != "}" || tokens.back().token != ";") {
+  if (tokens.back().type == END) {
+    if (tokens[tokens.size() - 2].token != "}" || tokens[tokens.size() - 2].token != ";") {
+      std::ostringstream error;
+      error << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column << ": " << tokens[tokens.size() - 2].token;
+      throw std::runtime_error(error.str());
+    }
+  }
+
+  else if (tokens.back().token != "}" || tokens.back().token != ";") {
     std::ostringstream error;
     error << "Unexpected token at line " << tokens.back().line << " column " << tokens.back().column << ": " << tokens.back().token;
     throw std::runtime_error(error.str());
