@@ -28,7 +28,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
       }
 
       if (tokens[i].token == ";") {
-        cout << ";";
+	std::cout << ";";
         continue;
       }
 
