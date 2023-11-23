@@ -16,6 +16,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
     std::cout << indent;
 
     // expression, print, and return case
+    // prints return/print then treats it as a normal expression
     if ((tokens[i].type != COMMAND && tokens[i].type != FUNCTION) || tokens[i].token == "print") {
       if (tokens[i].token == "print") {
         std::cout << "print";
@@ -79,6 +80,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
 
       else std::cout << "def ";
 
+      // parsing condition or argument
       ++i;
       std::vector<Token> condition;
 
@@ -92,6 +94,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
       InfixParser parser = InfixParser(condition, variables);
       std::cout << parser.toString() << " {" << std::endl;
 
+      // parsing function body
       size_t numCurly = 1;
       std::vector<Token> body;
 
