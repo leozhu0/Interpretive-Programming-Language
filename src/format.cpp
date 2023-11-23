@@ -47,15 +47,18 @@ void format(std::vector<Token>& tokens, std::string indent) {
       std::vector<Token> tempTokens{tokens[i]};
       ++i;
 
-      // potentially need to add the case where the vector ends with a ";"
-      while (tokens[i].token != ";") {
+      while (i != tokens.size() && tokens[i].token != ";") {
 	tempTokens.push_back(tokens[i]);
 	++i;
       }
 
-      tempTokens.push_back(tokens[i]);
-      tempTokens.back().token = "END";
-      tempTokens.back().type = END;
+      if (i != tokens.size()) {
+        tempTokens.push_back(tokens[i]);
+        tempTokens.back().token = "END";
+        tempTokens.back().type = END;
+      }
+
+      else tempTokens.push_back({0, 0, "END", END});
 
       InfixParser parser = InfixParser(tempTokens, variables);
       std::cout << parser.toString() << ";" << std::endl;
