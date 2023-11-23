@@ -100,7 +100,7 @@ std::vector<Token> Lexer::lexer(){
                         element += rawInput;
                     } else {
                          //When the number input stops, insert it and then insert what you land on
-                        pushSeq(element, NUMBER, line, i - element.size(), sequence);
+                        pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
                         pushSeq(rawInputString, type, line, i, sequence);
@@ -286,7 +286,7 @@ std::vector<Token> Lexer::lexer(std::string raw){
                         }
                         element += rawInput;
                     } else {
-                        pushSeqThrow(element, NUMBER, line, i - element.size(), sequence);
+                        pushSeqThrow(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
                         numDecimal = 0;
                         std::string rawInputString(1, rawInput);
                         pushSeqThrow(rawInputString, type, line, i, sequence);
