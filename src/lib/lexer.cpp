@@ -121,13 +121,13 @@ std::vector<Token> Lexer::lexer(){
                         }
 
                         else if (element == "else f" && rawInput == 'f'){
-                            pushSeq("else if", VARIABLE, line, i - element.size(), sequence);
+                            pushSeq("else if", COMMAND, line, i - element.size(), sequence);
                             numDecimal = 0;
                             element = "";
                         }
 
                         else {
-                            pushSeq(element, VARIABLE, line, i - element.size(), sequence);
+                            pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
                             numDecimal = 0;
                             std::string rawInputString(1, rawInput);
                             pushSeq(rawInputString, type, line, i, sequence);
@@ -307,13 +307,13 @@ std::vector<Token> Lexer::lexer(std::string raw){
                         }
 
                         else if (element == "else f" && rawInput == 'f'){
-                            pushSeq("else if", VARIABLE, line, i - element.size(), sequence);
+                            pushSeq("else if", COMMAND, line, i - element.size(), sequence);
                             numDecimal = 0;
                             element = "";
                         }
 
                         else {
-                            pushSeq(element, VARIABLE, line, i - element.size(), sequence);
+                            pushSeq(element, Token::tokenType(element[0]), line, i - element.size(), sequence);
                             numDecimal = 0;
                             std::string rawInputString(1, rawInput);
                             pushSeq(rawInputString, type, line, i, sequence);
