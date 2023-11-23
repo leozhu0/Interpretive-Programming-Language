@@ -380,6 +380,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
           size_t argParenNum = 1;
           size_t j = index + 1;
 	  size_t bracketNum = 0;
+	  size_t prevComma = j;
 
 	  while (true) {
 	    if (tokens[j].token == "(") ++argParenNum;
@@ -388,11 +389,27 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 	    else if (tokens[j].token == "]") --bracketNum;
 
             if (argParenNum == 0) break;
-	    else if (tokens[j].type == COMMA && (argParenNum == 1 && bracketNum == 0)) tempNode->arguments.push_back(createTree(nextNode(tokens), 0, tokens));
-            // may need to increment index by one after comma case is called; currently unsure
+
+	    else if (tokens[j].type == COMMA && (argParenNum == 1 && bracketNum == 0)) {
+	      if (j - prevComma == 1) {
+	        std::ostringstream error;
+		error << "Unexpected token at line " << tokens[j].line << " column " << tokens[j].column << ": " << tokens[j].token;
+		throw std::runtime_error(error.str());
+	      }
+
+	      // may need to increment index by one after comma case is called; currently unsure
+              tempNode->arguments.push_back(createTree(nextNode(tokens), 0, tokens));
+              prevComma = j;
+	    }
 
             ++j;
 	  }
+
+	  if (j - prevComma == 1) {
+            std::ostringstream error;
+            error << "Unexpected token at line " << tokens[j].line << " column " << tokens[j].column << ": " << tokens[j].token;
+            throw std::runtime_error(error.str());
+          }
 	  
 	  ++parenNum;
           tempNode->arguments.push_back(createTree(nextNode(tokens), 0, tokens));
