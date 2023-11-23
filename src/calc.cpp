@@ -8,6 +8,10 @@ int main() {
   std::string line;
   std::map<std::string, Value> variables;
 
+  variables["len"] = nullptr;
+  variables["pop"] = nullptr;
+  variables["push"] = nullptr;
+
   while (std::getline(std::cin, line)) {
     try {
       InfixParser infixParser = InfixParser(lexer.lexer(line), variables);

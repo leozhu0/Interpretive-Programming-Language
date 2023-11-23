@@ -9,12 +9,37 @@
 //std::map<std::string, Value> variables;
 //std::map<std::string, bool> isBool;
 
+Value len(Value value) {
+  if (!std::holds_alternative<Array>(value)) throw std::runtime_error("Runtime error: not an array.");
+
+  return (double) std::get<Array>(value)->size();
+}
+
+Value pop(Value value) {
+  if (!std::holds_alternative<Array>(value)) throw std::runtime_error("Runtime error: not an array.");
+
+  Array tempArray = std::get<Array>(value);
+
+  if (tempArray->size() == 0) throw std::runtime_error("Runtime error: underflow.");
+
+  Value last = tempArray->back();
+  tempArray->pop_back();
+  return last;
+}
+
+Value push(Value value, Value element) {
+  if (!std::holds_alternative<Array>(value)) throw std::runtime_error("Runtime error: not an array.");
+
+  std::get<Array>(value)->push_back(element);
+  return nullptr;
+}
+
 InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>& variables) : varCache(variables) {
   //std::cout << "__begin__" << std::endl;
   //for (Token token : tokens) {
-  //  std::cout << token.token << std::endl;
+  //  std::cout << token.token;
   //}
-  //std::cout << "__end__" << std::endl;
+  //std::cout << std::endl << "__end__" << std::endl;
 
   if (tokens.size() == 1) {
     std::ostringstream error;
@@ -40,6 +65,7 @@ InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>
     throw std::runtime_error(error.str());
   }
 
+  /*
   if (updateVariables) {
     for (const auto& pair : variableBuffer) {
       if (!(pair.first->isVar)) continue;
@@ -81,20 +107,30 @@ InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>
 
       else if (key->lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
 
+      std::streambuf* coutBuffer = std::cout.rdbuf();
+      std::stringstream tempStream;
+      std::cout.rdbuf(tempStream.rdbuf());
+
       try {
+	//std::cout << "hi" << std::endl;
 	data->getValue(variables);
         variables[keyStr] = data->getValue(variables);
+	//std::cout << "bye" << std::endl;
       }
 
       catch (...) {
+	std::cout.rdbuf(coutBuffer);
         continue;
       }
+
+      std::cout.rdbuf(coutBuffer);
       //isBool[pair.first] = (pair.second->returnType == BOOL ? true : false);
     }
   }
+  */
   
   index = 0;
-  updateVariables = true;
+  //updateVariables = true;
 }
 
 InfixParser::~InfixParser() {
@@ -366,7 +402,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
       }
 
       // do not update stored variables when there is an error
-      if (tokens[i + 1].token != "=" /*&& !(std::holds_alternative<Func>(variables[tempNode->value]))*/) {
+      if (tokens[i + 1].token != "=" && (tempNode->value != "push" && tempNode->value != "pop")/*&& !(std::holds_alternative<Func>(variables[tempNode->value]))*/) {
         std::streambuf* coutBuffer = std::cout.rdbuf();
 
         try {
@@ -491,6 +527,53 @@ std::string InfixParser::toString() {
 }
 
 Value InfixParser::calculate() {
+  if (updateVariables) {
+    for (const auto& pair : variableBuffer) {
+      if (!(pair.first->isVar)) continue;
+
+      VarNode* key = (VarNode*) pair.first;
+      Node* data = pair.second;
+
+      if (key->arguments.size() != 0 || key->noArgs) continue;
+
+      // if the variable is already defined and has lookup
+      if (varCache.find(key->value) != varCache.end() && key->lookUp != nullptr) {
+        // checking if the variable is an array, and if so, we only want to change the value of a specific index
+        if (std::holds_alternative<Array>(varCache[key->value])) {
+          if (!(std::holds_alternative<double>(key->lookUp->getValue(varCache)))) throw std::runtime_error("Runtime error: index is not a number.");
+
+          double arrayIndex = std::get<double>(key->lookUp->getValue(varCache));
+          Array tempArray = std::get<Array>(varCache[key->value]);
+
+          if (std::fmod(arrayIndex, 1) != 0) throw std::runtime_error("Runtime error: index is not an integer.");
+          if (arrayIndex >= tempArray->size() || arrayIndex < 0) throw std::runtime_error("Runtime error: index out of bounds.");
+
+          tempArray->at(arrayIndex) = data->getValue(varCache);
+          continue;
+        }
+
+        else throw std::runtime_error("Runtime error: not an array.");
+      }
+
+      // if variable is not defined and has lookup
+      else if (varCache.find(key->value) == varCache.end() && key->lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
+
+      std::streambuf* coutBuffer = std::cout.rdbuf();
+      std::stringstream tempStream;
+      std::cout.rdbuf(tempStream.rdbuf());
+
+      try {
+        data->getValue(varCache);
+        varCache[key->value] = data->getValue(varCache);
+      } catch (...) {
+        std::cout.rdbuf(coutBuffer);
+        continue;
+      }
+
+      std::cout.rdbuf(coutBuffer);
+    }
+  }
+
   return root->getValue(varCache);
 }
 
@@ -553,10 +636,28 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
   }
 
   //returnType = (std::holds_alternative<bool>(variables[value]) ? BOOL : NUMBER);
+  
+  if (value == "len") {
+    if (arguments.size() != 1) throw std::runtime_error("Runtime error: incorrect argument count.");
+
+    return len(arguments[0]->getValue(variables));
+  }
+
+  else if (value == "pop") {
+    if (arguments.size() != 1) throw std::runtime_error("Runtime error: incorrect argument count.");
+
+    return pop(arguments[0]->getValue(variables));
+  }
+
+  else if (value == "push") {
+    if (arguments.size() != 2) throw std::runtime_error("Runtime error: incorrect argument count.");
+
+    return push(arguments[0]->getValue(variables), arguments[1]->getValue(variables));
+  }
 
   Value varData = variables[value];
 
-  if (std::holds_alternative<double>(varData) || std::holds_alternative<bool>(varData)) {
+  if (std::holds_alternative<double>(varData) || std::holds_alternative<bool>(varData) || std::holds_alternative<std::nullptr_t>(varData)) {
     if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
     else if (arguments.size() != 0) throw std::runtime_error("Runtime error: not a function.");
     else return varData;
@@ -599,7 +700,7 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
     }
   }
 
-  std::cout << "This error should never happen. Did you forget varaible being able to be null?" << std::endl;
+  std::cout << "This error should never happen. In VarNode::getValue" << std::endl;
   exit(2);
 }
 
@@ -768,11 +869,33 @@ Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variab
     throw std::runtime_error(error.str());
   }
 
-  //returnType = rhs->getReturnType(variables);
-  //if (variables.find(((VarNode*)lhs)->value) == variables.end()) return rhs->getValue(variables);
-  //else if (lhs->value == rhs->value) return lhs->getValue(variables);
-  
-  rhs->getValue(variables);
+  /*
+  else if (!(rhs->isVar)) return lhs->getValue(variables);
+
+  else if (rhs->lookUp != nullptr) {
+    if (!(std::holds_alternative<double>(rhs->lookUp->getValue(variables)))) throw std::runtime_error("Runtime error: index is not a number.");
+    
+    double arrayIndex = std::get<double>(rhs->lookUp->getValue(variables));
+
+    if (std::fmod(arrayIndex, 1) != 0) throw std::runtime_error("Runtime error: index is not an integer.");
+    if (arrayIndex < 0) throw std::runtime_error("Runtime error: index out of bounds.");
+  }
+  */
+
+  //std::streambuf* coutBuffer = std::cout.rdbuf();
+  //std::stringstream tempStream;
+  //std::cout.rdbuf(tempStream.rdbuf());
+
+  try {
+    rhs->getValue(variables);
+  }
+  catch (...) {
+    //std::cout.rdbuf(coutBuffer);
+    throw;
+  }
+
+  //std::cout.rdbuf(coutBuffer);
+
   return lhs->getValue(variables);
 }
 
