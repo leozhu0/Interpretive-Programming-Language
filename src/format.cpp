@@ -32,7 +32,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
         continue;
       }
 
-      else if (tokens[i].token != "print" && tokens[i].token != "return") std::cout << " ";
+      else if (tokens[i].token == "print" || tokens[i].token == "return") std::cout << " ";
 
       std::vector<Token> tempTokens{tokens[i]};
       ++i;
