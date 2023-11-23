@@ -434,6 +434,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
   throw std::runtime_error(error.str());
 }
 
+// helper function that converts a string from a token to data stored in the Value class
 Value InfixParser::stringToValue(Token& token) {
   Value result;
 
@@ -459,6 +460,7 @@ std::string InfixParser::toString() {
   return root->toString();
 }
 
+// updates the values of variables first before returning the root's getValue
 Value InfixParser::calculate() {
   if (updateVariables) {
     for (const auto& pair : variableBuffer) {
@@ -510,7 +512,8 @@ Value InfixParser::calculate() {
   return root->getValue(varCache);
 }
 
-//___________________________________________________________________________________________________
+// Node class and its inherited classes's definitions start here
+//_____________________________________________________________________________________________________________________
 Node::~Node() {
   if (lookUp != nullptr) delete lookUp;
 }
@@ -546,6 +549,7 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
     throw std::runtime_error(error.str());
   }
   
+  // special cases for the built in functions
   if (value == "len") {
     if (arguments.size() != 1) throw std::runtime_error("Runtime error: incorrect argument count.");
 
@@ -566,12 +570,14 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
 
   Value varData = variables[value];
 
+  // bool, double, and null case
   if (std::holds_alternative<double>(varData) || std::holds_alternative<bool>(varData) || std::holds_alternative<std::nullptr_t>(varData)) {
     if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
     else if (arguments.size() != 0) throw std::runtime_error("Runtime error: not a function.");
     else return varData;
   }
 
+  // array case
   else if (std::holds_alternative<Array>(varData)) {
     if (arguments.size() != 0) throw std::runtime_error("Runtime error: not a function.");
 
@@ -591,6 +597,7 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
     }
   }
 
+  // function case
   else if (std::holds_alternative<Func>(varData)) {
     if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
 
