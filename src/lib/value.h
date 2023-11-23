@@ -12,10 +12,12 @@ struct Value;
 
 class Function {
     public:
+	std::string n;
         std::vector<Token> arguments;
         std::vector<Token> block;
         std::map<std::string, Value> variables;
         Value getValue(std::vector<Value> argVals);
+	Function(std::vector<Token> arguments_a, std::vector<Token> block_a, std::map<std::string, Value> variables_a, std::string name);
 };
 
 //class Function;
