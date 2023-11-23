@@ -47,7 +47,7 @@ void format(std::vector<Token>& tokens, std::string indent) {
       std::vector<Token> tempTokens{tokens[i]};
       ++i;
 
-      while (i == tokens.size() || tokens[i].token != ";") {
+      while (i != tokens.size() && tokens[i].token != ";") {
 	tempTokens.push_back(tokens[i]);
 	++i;
       }
