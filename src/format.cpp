@@ -20,19 +20,26 @@ void format(std::vector<Token>& tokens, std::string indent) {
       if (tokens[i].token == "print") {
         std::cout << "print";
 	++i;
+
+	if (tokens[i+1].token == ";") {
+          std::cout << ";" << std::endl;
+          continue;
+        }
+
+        else std::cout << " ";
       }
 
       else if (tokens[i].token == "return") {
         std::cout << "return";
 	++i;
-      }
 
-      if (tokens[i].token == ";") {
-	std::cout << ";" << std::endl;
-        continue;
-      }
+	if (tokens[i+1].token == ";") {
+          std::cout << ";" << std::endl;
+          continue;
+        }
 
-      else if (tokens[i].token == "print" || tokens[i].token == "return") std::cout << " ";
+        else std::cout << " ";
+      }
 
       std::vector<Token> tempTokens{tokens[i]};
       ++i;
