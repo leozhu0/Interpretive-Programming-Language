@@ -18,12 +18,12 @@ void format(std::vector<Token>& tokens, std::string indent) {
     // expression, print, and return case
     if ((tokens[i].type != COMMAND && tokens[i].type != FUNCTION) || tokens[i].token == "print") {
       if (tokens[i].token == "print") {
-        std::cout << "print ";
+        std::cout << "print";
 	++i;
       }
 
       else if (tokens[i].token == "return") {
-        std::cout << "return ";
+        std::cout << "return";
 	++i;
       }
 
@@ -31,6 +31,8 @@ void format(std::vector<Token>& tokens, std::string indent) {
 	std::cout << ";" << std::endl;
         continue;
       }
+
+      else if (tokens[i].token != "print" && tokens[i].token != "return") std::cout << " ";
 
       std::vector<Token> tempTokens{tokens[i]};
       ++i;
