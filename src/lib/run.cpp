@@ -46,6 +46,7 @@ Value Scrypt::evaluateExpression(std::vector<Token> tokens, std::map<std::string
     }
 
     InfixParser parser = InfixParser(tempRow, variables);
+    
     return parser.calculate();
 }
 
@@ -89,10 +90,10 @@ bool Scrypt::isKeyword(Token token){
 }
 
 Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value>& variables, bool inFunc) {
-    /*variables["len"] = std::make_shared<Value>(Value(nullptr));
-    variables["pop"] = std::make_shared<Value>(Value(nullptr));
-    variables["push"] = std::make_shared<Value>(Value(nullptr));
-*/
+    variables["len"] = nullptr;
+    variables["pop"] = nullptr;
+    variables["push"] = nullptr;
+
     //The last token must always have an end (to know when to terminate later)
     if(tokens.back().type != END){
         tokens.push_back(Token{tokens.back().line, tokens.back().column+1,"END", END});
@@ -130,6 +131,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
         }
 
         if (tokens[i].token == "return") {
+		
 	    if(!inFunc){
 		    std::ostringstream error;
 		    error << "Runtime error: unexpected return.";
@@ -237,12 +239,14 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
                 else if (tokens[i].token == "}") blockParen--;
             }
             
-            
+	    //variables[funcName] = std::make_shared<Function>(Function());            
             std::vector<Token> block(tokens.begin() + blockStart, tokens.begin() + i); 
  		          
-            variables[funcName] = std::make_shared<Function>(Function{arguments, block, variables});
-
-            i++;
+            variables[funcName] = std::make_shared<Function>(Function(arguments, block, variables, funcName));
+	    //variables[funcName] = std::make_shared<Function>(Function{arguments, block, variables});
+	   // std::get<Func>(variables[funcName])->variables = variables;
+	    
+	    i++;
         } 
         
        
@@ -310,7 +314,7 @@ Value Scrypt::parseBlock(std::vector<Token>& tokens, std::map<std::string, Value
         else {
             int blockStart = i;
             
-            while(i < (int)tokens.size() && tokens[i].type != COMMAND && tokens[i].type != FUNCTION && tokens[i].token != "}"){
+            while(i < (int)tokens.size() && tokens[i].type != COMMAND && tokens[i].type != FUNCTION && tokens[i].token != "return" && tokens[i].token != "}"){
                 i++;
             }
             int blockEnd = i;
