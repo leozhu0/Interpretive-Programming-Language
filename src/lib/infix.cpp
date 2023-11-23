@@ -388,10 +388,8 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 	    else if (tokens[j].token == "]") --bracketNum;
 
             if (argParenNum == 0) break;
-	    else if (tokens[j].type == COMMA && (argParenNum == 1 && bracketNum == 0)) {
-              tempNode->arguments.push_back(createTree(nextNode(tokens), 0, tokens));
-	      // may need to increment index by one after comma case is called; currently unsure
-	    }
+	    else if (tokens[j].type == COMMA && (argParenNum == 1 && bracketNum == 0)) tempNode->arguments.push_back(createTree(nextNode(tokens), 0, tokens));
+	    // may need to increment index by one after comma case is called; currently unsure
 
             ++j;
 	  }

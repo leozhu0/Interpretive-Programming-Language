@@ -6,6 +6,12 @@
 #include "lib/value.h"
 
 void format(std::vector<Token>& tokens, std::string indent) {
+  if (tokens.back().token != "}" || tokens.back().token != ";") {
+    std::ostringstream error;
+    error << "Unexpected token at line " << tokens.back().line << " column " << tokens.back().column << ": " << tokens.back().token;
+    throw std::runtime_error(error.str());
+  }
+
   size_t ifCounter = 0;
   std::map<std::string, Value> variables;
 
