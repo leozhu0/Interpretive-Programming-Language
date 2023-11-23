@@ -6,9 +6,6 @@
 #include <cmath>
 #include <iomanip>
 
-//std::map<std::string, Value> variables;
-//std::map<std::string, bool> isBool;
-
 Value len(Value value) {
   if (!std::holds_alternative<Array>(value)) throw std::runtime_error("Runtime error: not an array.");
 
@@ -35,12 +32,6 @@ Value push(Value value, Value element) {
 }
 
 InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>& variables) : varCache(variables) {
-  //std::cout << "__begin__" << std::endl;
-  //for (Token token : tokens) {
-  //  std::cout << token.token;
-  //}
-  //std::cout << std::endl << "__end__" << std::endl;
-
   if (tokens.size() == 1) {
     std::ostringstream error;
     error << "Unexpected token at line " << tokens[0].line << " column " << tokens[0].column << ": " << tokens[0].token;
@@ -65,72 +56,7 @@ InfixParser::InfixParser(std::vector<Token> tokens, std::map<std::string, Value>
     throw std::runtime_error(error.str());
   }
 
-  /*
-  if (updateVariables) {
-    for (const auto& pair : variableBuffer) {
-      if (!(pair.first->isVar)) continue;
-
-      Node* key = pair.first;
-      Node* data = pair.second;
-
-      VarNode* varKey = (VarNode*) key;
-      if (varKey->arguments.size() != 0 || varKey->noArgs) continue;
-
-      std::string keyStr = pair.first->toString();
-      if (keyStr.back() == ']') {
-        size_t openIndex = keyStr.find('[');
-	size_t closeIndex = keyStr.size() - 1;
-	keyStr.erase(openIndex, closeIndex - openIndex + 1);
-      }
-
-      // checking if the variable is already defined
-      if (variables.find(keyStr) != variables.end()) {
-	// if there is no look up, we can treat the variable value normally
-        if (key->lookUp != nullptr) {
-          // checking if the variable is an array, and if so, we only want to change the value of a specific index
-	  if (std::holds_alternative<Array>(variables[keyStr])) {
-            if (!(std::holds_alternative<double>(key->lookUp->getValue(variables)))) throw std::runtime_error("Runtime error: index is not a number.");
-
-            double arrayIndex = std::get<double>(key->lookUp->getValue(variables));
-	    Array tempArray = std::get<Array>(variables[keyStr]);
-
-            if (std::fmod(arrayIndex, 1) != 0) throw std::runtime_error("Runtime error: index is not an integer.");
-            if (arrayIndex >= tempArray->size() || arrayIndex < 0) throw std::runtime_error("Runtime error: index out of bounds.");
-
-	    tempArray->at(arrayIndex) = data->getValue(variables);
-	    continue;
-	  }
-
-          else throw std::runtime_error("Runtime error: not an array.");
-	}
-      }
-
-      else if (key->lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
-
-      std::streambuf* coutBuffer = std::cout.rdbuf();
-      std::stringstream tempStream;
-      std::cout.rdbuf(tempStream.rdbuf());
-
-      try {
-	//std::cout << "hi" << std::endl;
-	data->getValue(variables);
-        variables[keyStr] = data->getValue(variables);
-	//std::cout << "bye" << std::endl;
-      }
-
-      catch (...) {
-	std::cout.rdbuf(coutBuffer);
-        continue;
-      }
-
-      std::cout.rdbuf(coutBuffer);
-      //isBool[pair.first] = (pair.second->returnType == BOOL ? true : false);
-    }
-  }
-  */
-  
   index = 0;
-  //updateVariables = true;
 }
 
 InfixParser::~InfixParser() {
@@ -217,8 +143,6 @@ Node* InfixParser::createTree(Node* leftHandSide, int minPrecedence, std::vector
 
     if (currOp == "=") {
       variableBuffer.push_back({leftHandSide, rightHandSide});
-      tempNode->returnType = rightHandSide->returnType;
-      leftHandSide->returnType = rightHandSide->returnType;
     }
 
     leftHandSide = tempNode;
@@ -259,7 +183,7 @@ Token& InfixParser::peak(std::vector<Token> tokens) {
   for (size_t i = index + 1; i < tokens.size(); ++i) {
     if (tokens[i].type == OPERATOR || tokens[i].type == ASSIGNMENT || tokens[i].type == COMPARE || tokens[i].type == LOGIC || tokens[i].type == COMMA) {
 
-      if ((tokens[i - 1].token == "(") /*|| (tokens[i].type == ASSIGNMENT && tokens[i - 1].type != VARIABLE)*/) {
+      if (tokens[i - 1].token == "(") {
         std::ostringstream error;
         error << "Unexpected token at line " << tokens[i].line << " column " << tokens[i].column << ": " << tokens[i].token;
 	throw std::runtime_error(error.str());
@@ -402,7 +326,6 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 	      delete tempNode;
               throw std::runtime_error(error.str()); 
 	    }
-	    // may need to increment index by one after comma case is called; currently unsure
 
             ++j;
 	    validSyntax = true;
@@ -486,15 +409,6 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 
       if (j != index + 1) tempNode->value.push_back(createTree(nextNode(tokens), 0, tokens));
 
-      /*
-      while (tokens[index + 1].token != "]") {
-        tempNode->value.push_back(createTree(nextNode(tokens), 0, tokens));
-        
-	if (tokens[index + 1].token == "]") break;
-	++index;
-      }
-      */
-
       ++index;
 
       // Parsing array lookup
@@ -502,8 +416,6 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
         ++index;
 	tempNode->lookUp = createTree(nextNode(tokens), 0, tokens);
 	++index;
-
-	//if (tokens[index + 1].token == "=") tempNode->isValidArrayAssignment = true;
       }
 
       return tempNode;
@@ -603,10 +515,6 @@ Node::~Node() {
   if (lookUp != nullptr) delete lookUp;
 }
 
-TokenType Node::getReturnType([[maybe_unused]] std::map<std::string, Value>& variables) {
-  return returnType;
-}
-
 Value NumNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
 
@@ -617,24 +525,6 @@ std::string NumNode::toString() {
   std::ostringstream result;
 
   result << std::get<double>(value);
-
-  /*
-  bool hasDecimal = false;
-
-  // removing trailing 0s after the decimal
-  for (char digit : result) {
-    if (digit == '.') {
-      hasDecimal = true;
-      break;
-    }
-  }
-
-  while (hasDecimal == true && result.back() == '0') {
-    result.pop_back();
-  }
-
-  if (result.back() == '.') result.pop_back();
-  */
 
   if (lookUp != nullptr) result << "[" << lookUp->toString() << "]";
 
@@ -655,8 +545,6 @@ Value VarNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables
     error <<"Runtime error: unknown identifier " << value;
     throw std::runtime_error(error.str());
   }
-
-  //returnType = (std::holds_alternative<bool>(variables[value]) ? BOOL : NUMBER);
   
   if (value == "len") {
     if (arguments.size() != 1) throw std::runtime_error("Runtime error: incorrect argument count.");
@@ -749,11 +637,6 @@ std::string VarNode::toString() {
   return result.str();
 }
 
-TokenType VarNode::getReturnType([[maybe_unused]] std::map<std::string, Value>& variables) {
-  if (std::holds_alternative<bool>(variables[value])) return BOOL;
-  else return NUMBER;
-}
-
 Value BoolNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
   if (lookUp != nullptr) throw std::runtime_error("Runtime error: not an array.");
 
@@ -839,8 +722,6 @@ OpNode::~OpNode() {
 }
 
 Value OpNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
-  //if (lhs->getReturnType(variables) != NUMBER || rhs->getReturnType(variables) != NUMBER) {
-
   if (!(std::holds_alternative<double>(lhs->getValue(variables)) && std::holds_alternative<double>(rhs->getValue(variables)))) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";
@@ -883,73 +764,21 @@ Value AssignNode::getValue([[maybe_unused]] std::map<std::string, Value>& variab
       lhs->getValue(variables);
       return rhs->getValue(variables);
     }
-    //if (lhs->isValidArrayAssignment) return rhs->getValue(variables);
 
     std::ostringstream error;
     error << "Runtime error: invalid assignee.";
     throw std::runtime_error(error.str());
   }
 
-  /*
-  else if (!(rhs->isVar)) return lhs->getValue(variables);
-
-  else if (rhs->lookUp != nullptr) {
-    if (!(std::holds_alternative<double>(rhs->lookUp->getValue(variables)))) throw std::runtime_error("Runtime error: index is not a number.");
-    
-    double arrayIndex = std::get<double>(rhs->lookUp->getValue(variables));
-
-    if (std::fmod(arrayIndex, 1) != 0) throw std::runtime_error("Runtime error: index is not an integer.");
-    if (arrayIndex < 0) throw std::runtime_error("Runtime error: index out of bounds.");
-  }
-  */
-
-  //std::streambuf* coutBuffer = std::cout.rdbuf();
-  //std::stringstream tempStream;
-  //std::cout.rdbuf(tempStream.rdbuf());
-
-  try {
-    rhs->getValue(variables);
-  }
-  catch (...) {
-    //std::cout.rdbuf(coutBuffer);
-    throw;
-  }
-
-  //std::cout.rdbuf(coutBuffer);
+  rhs->getValue(variables);
 
   return lhs->getValue(variables);
 }
 
-TokenType AssignNode::getReturnType([[maybe_unused]] std::map<std::string, Value>& variables) {
-  return lhs->getReturnType(variables);
-}
-
 Value CompareNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
-
-/*
-  if ((value == "==" || value == "!=") && lhs->getReturnType(variables) != rhs->getReturnType(variables)) return false;
-
-  if (std::holds_alternative<double>(lhs->getValue(variables))) {
-    if (value == "==") return std::get<double>(lhs->getValue(variables)) == std::get<double>(rhs->getValue(variables));
-    else if (value == "!=") return std::get<double>(lhs->getValue(variables)) != std::get<double>(rhs->getValue(variables));
-  }
-
-  else if (std::holds_alternative<bool>(lhs->getValue(variables))) {
-    if (value == "==") return std::get<bool>(lhs->getValue(variables)) == std::get<bool>(rhs->getValue(variables));
-    else if (value == "!=") return std::get<bool>(lhs->getValue(variables)) != std::get<bool>(rhs->getValue(variables));
-  }
-*/
   if (value == "==") return lhs->getValue(variables) == rhs->getValue(variables);
 
   if (value == "!=") return lhs->getValue(variables) != rhs->getValue(variables);
-
-/*
-  if (lhs->getReturnType(variables) != rhs->getReturnType(variables) || lhs->getReturnType(variables) == BOOL) {
-    std::ostringstream error;
-    error << "Runtime error: invalid operand type.";
-    throw std::runtime_error(error.str());
-  }
-*/
 
   if (!(std::holds_alternative<double>(lhs->getValue(variables)) && std::holds_alternative<double>(rhs->getValue(variables)))) {
     std::ostringstream error;
@@ -972,8 +801,6 @@ Value CompareNode::getValue([[maybe_unused]] std::map<std::string, Value>& varia
 }
 
 Value LogicNode::getValue([[maybe_unused]] std::map<std::string, Value>& variables) {
-  //if (lhs->getReturnType(variables) != BOOL || rhs->getReturnType(variables) != BOOL) {
-
   if (!(std::holds_alternative<bool>(lhs->getValue(variables)) && std::holds_alternative<bool>(rhs->getValue(variables)))) {
     std::ostringstream error;
     error << "Runtime error: invalid operand type.";

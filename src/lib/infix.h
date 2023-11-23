@@ -10,16 +10,13 @@
 
 struct Node {
   Value value;
-  TokenType returnType;
   bool isVar = false;
   //bool isValidArrayAssignment = false;
   Node* lookUp = nullptr;
 
-  Node(TokenType type = NUMBER) : returnType(type) {}
   virtual ~Node();
   virtual Value getValue([[maybe_unused]] std::map<std::string, Value>& variables) = 0;
   virtual std::string toString() = 0;
-  virtual TokenType getReturnType([[maybe_unused]] std::map<std::string, Value>& variables);
 };
 
 struct NumNode : public Node {
@@ -36,12 +33,9 @@ struct VarNode : public Node {
   VarNode() {isVar = true;}
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
   std::string toString();
-  TokenType getReturnType([[maybe_unused]] std::map<std::string, Value>& variables);
 };
 
 struct BoolNode : public Node {
-  BoolNode() : Node(BOOL) {}
-
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
   std::string toString();
 };
@@ -64,7 +58,6 @@ struct OpNode : public Node {
   Node* lhs;
   Node* rhs;
 
-  OpNode(TokenType type = NUMBER) : Node(type) {}
   ~OpNode();
   virtual Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
   std::string toString();
@@ -72,18 +65,13 @@ struct OpNode : public Node {
 
 struct AssignNode : public OpNode {
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
-  TokenType getReturnType([[maybe_unused]] std::map<std::string, Value>& variables);
 };
 
 struct CompareNode : public OpNode {
-  CompareNode() : OpNode(BOOL) {}
-
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
 };
 
 struct LogicNode : public OpNode {
-  LogicNode() : OpNode(BOOL) {}
-
   Value getValue([[maybe_unused]] std::map<std::string, Value>& variables);
 };
 
