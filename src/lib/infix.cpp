@@ -399,6 +399,7 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 	      
 	      std::ostringstream error;
               error << "Unexpected token at line " << tokens[j].line << " column " << tokens[j].column << ": " << tokens[j].token;
+	      delete tempNode;
               throw std::runtime_error(error.str()); 
 	    }
 	    // may need to increment index by one after comma case is called; currently unsure
@@ -410,7 +411,8 @@ Node* InfixParser::nextNode(std::vector<Token> tokens) {
 	  if (!(validSyntax)) {
             std::ostringstream error;
             error << "Unexpected token at line " << tokens[j].line << " column " << tokens[j].column << ": " << tokens[j].token;
-            throw std::runtime_error(error.str());
+            delete tempNode;
+	    throw std::runtime_error(error.str());
 	  }
 	  
 	  ++parenNum;
