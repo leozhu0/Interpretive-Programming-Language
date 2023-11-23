@@ -26,7 +26,7 @@ int main() {
     catch (const std::exception& e) {
       std::cout << e.what() << std::endl;
       return 3;
-    }
+    } catch(...){}
 
     return 0;
 }

@@ -1,8 +1,7 @@
-//#pragma once
 #ifndef RUN_H
 #define RUN_H
-#include "lexer.h" // cpp
-#include "infix.h" //cpp
+#include "lexer.h" 
+#include "infix.h" 
 #include "value.h"
 #include <iostream>
 #include <iomanip>
@@ -21,6 +20,6 @@ class Scrypt {
 		bool isKeyword(Token token);
 		bool isBool(Value value);
 	public:
-		Value parseBlock(std::vector<Token>& tokens, std::map<std::string, Value>& variables, bool inFunc);
+		void parseBlock(std::vector<Token>& tokens, std::map<std::string, Value>& variables, bool inFunc);
 };
 #endif

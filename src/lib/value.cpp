@@ -25,20 +25,25 @@ Value Function::getValue(std::vector<Value> argVals){
      //Add these variables to the map
      variablesCopy[arguments[i].token] = argVals[i];
   }
- variablesCopy[n] = std::make_shared<Function>(Function(arguments, block, variables, n));
   Scrypt scrypt = Scrypt();
-  return scrypt.parseBlock(block, variablesCopy, true);
+
+  Value output;	
+  try{
+      scrypt.parseBlock(block, variablesCopy, true); 
+  }
+  catch (Value value){
+	output = value;
+  }
+
+
+  return output;
 }
 
 
-Function::Function(std::vector<Token> arguments_a, std::vector<Token> block_a, std::map<std::string, Value> variables_a, std::string name){
+Function::Function(std::vector<Token> arguments_a, std::vector<Token> block_a, std::map<std::string, Value> variables_a){
      arguments = arguments_a;
      block = block_a;
      variables = variables_a;
-    n = name;
-    
-     //std::cout << name;
-     //variables[name] = std::shared_ptr<Function>(this);
 }
 
 
