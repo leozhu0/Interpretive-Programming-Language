@@ -6,20 +6,6 @@
 #include "lib/value.h"
 
 void format(std::vector<Token>& tokens, std::string indent) {
-  if (tokens.back().type == END) {
-    if (tokens[tokens.size() - 2].token != "}" || tokens[tokens.size() - 2].token != ";") {
-      std::ostringstream error;
-      error << "Unexpected token at line " << tokens[tokens.size() - 2].line << " column " << tokens[tokens.size() - 2].column << ": " << tokens[tokens.size() - 2].token;
-      throw std::runtime_error(error.str());
-    }
-  }
-
-  else if (tokens.back().token != "}" || tokens.back().token != ";") {
-    std::ostringstream error;
-    error << "Unexpected token at line " << tokens.back().line << " column " << tokens.back().column << ": " << tokens.back().token;
-    throw std::runtime_error(error.str());
-  }
-
   size_t ifCounter = 0;
   std::map<std::string, Value> variables;
 
@@ -61,15 +47,18 @@ void format(std::vector<Token>& tokens, std::string indent) {
       std::vector<Token> tempTokens{tokens[i]};
       ++i;
 
-      // potentially need to add the case where the vector ends with a ";"
-      while (tokens[i].token != ";") {
+      while (i == tokens.size() || tokens[i].token != ";") {
 	tempTokens.push_back(tokens[i]);
 	++i;
       }
 
-      tempTokens.push_back(tokens[i]);
-      tempTokens.back().token = "END";
-      tempTokens.back().type = END;
+      if (i != tokens.size()) {
+        tempTokens.push_back(tokens[i]);
+        tempTokens.back().token = "END";
+        tempTokens.back().type = END;
+      }
+
+      else tempTokens.push_back({0, 0, "END", END});
 
       InfixParser parser = InfixParser(tempTokens, variables);
       std::cout << parser.toString() << ";" << std::endl;
